@@ -21,5 +21,5 @@ module.exports = {
     numberEplison: 0.000001,
     eatAddRadiusRatio: 0.1,
     entityInitTime: 3000,
-    nameMaxLength: 8
+    nameMaxLength: 8,
 }

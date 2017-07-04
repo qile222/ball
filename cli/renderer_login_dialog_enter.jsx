@@ -3,8 +3,9 @@ import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
 import commonRes from './res_common'
+import {eventDispatcher} from './global'
 
-export default class EnterDialogRenderer extends DialogRenderer {
+export default class LoginEnterDialogRenderer extends DialogRenderer {
 
     constructor(props) {
         super(props)
@@ -21,10 +22,25 @@ export default class EnterDialogRenderer extends DialogRenderer {
             ],
             selectServerIdx: '0'
         }
+        eventDispatcher.addListener(
+            this.props.manager,
+            'LoginManager_getWorldServerList',
+            this,
+            this.onGetWorldServerList)
+    }
+
+    isValid() {
+        return this.nameInput && this.nameInput.value != '' &&
+            this.props.manager.getWorldServerList().length > 0
     }
 
     componentDidUpdate(prevProps, prevState) {
+        this.state.btns[0].disable = !this.isValid()
         super.componentDidUpdate()
+    }
+
+    onGetWorldServerList() {
+        this.forceUpdate()
     }
 
     renderContent() {
@@ -61,9 +77,7 @@ export default class EnterDialogRenderer extends DialogRenderer {
     }
 
     onInputName(e) {
-        this.state.btns[0].disable =
-            this.nameInput.value == '' || this.serverSelect.value == ''
-        this.setState({btns: this.state.btns})
+        this.componentDidUpdate(this.props, this.props)
     }
 
     onSelectServer(e) {
@@ -79,7 +93,7 @@ export default class EnterDialogRenderer extends DialogRenderer {
 
     onSubmitForm(e) {
         e.preventDefault()
-        if (this.nameInput.value != '' && this.serverSelect.value != '') {
+        if (this.isValid) {
             this.onClickEnter()
         }
     }

@@ -2,7 +2,7 @@ import Renderer from './renderer'
 import ReactDOM from 'react-dom'
 import React from 'react'
 import mainStyle from './style_main'
-import eventDispatcher from './global'
+import {eventDispatcher} from './global'
 
 export default class GameSettingBoxRenderer extends Renderer {
 
@@ -39,7 +39,8 @@ export default class GameSettingBoxRenderer extends Renderer {
                     <h4>
                         {this.state.title}
                         {
-                            !this.state.hideClose && <svg
+                            !this.state.hideClose &&
+                            <svg
                                 onClick={this.onClickClose.bind(this)}
                                 aria-hidden="true">
                                 <use xlinkHref="#icon-close"></use>

@@ -1,16 +1,16 @@
 import Renderer from './renderer'
 import React from 'react'
+import WorldStartDialogRenderer from './renderer_world_dialog_start'
 
 export default class WolrdRenderer extends Renderer {
 
     constructor(props) {
         super(props)
-        this.state = { liked: false }
     }
 
     render() {
-        return <p onClick={this.handleClick.bind(this)}>
-            You {this.text} this. Click to toggle.ha
-        </p>
+        return <div>
+            <WorldStartDialogRenderer {...this.props}/>
+        </div>
     }
 }

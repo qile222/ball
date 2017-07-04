@@ -38,7 +38,7 @@ class GameAgent extends Agent {
             }
         }
         let gameServers = cache.get('gameServers')
-        let gameServer = games[Math.floor(Math.random() * games.length)]
+        let gameServer = gameServers[Math.floor(Math.random() * gameServers.length)]
         if (token) {
             token.setExpireTime(token_expire_time)
         } else {
@@ -46,7 +46,7 @@ class GameAgent extends Agent {
             tokens[id] = token = new Token(id, playerID, tokenExpireTime, {gameServerID:gameServer.id})
         }
         let gameServerData = {
-            server: gameServer.addr,
+            addr: gameServer.addr,
             port: gameServer.port,
             name: gameServer.name,
             token: token.getID(),

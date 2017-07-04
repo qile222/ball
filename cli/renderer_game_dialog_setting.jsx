@@ -39,7 +39,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
     }
 
     onClickExitGame() {
-        eventDispatcher.emit(this, 'GameDialogSettingRenderer_exit_game')
+        this.props.manager.backToHall()
     }
 
 }

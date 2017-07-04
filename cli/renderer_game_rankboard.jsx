@@ -112,7 +112,8 @@ export default class GameRankBoardRenderer extends Renderer {
             {rankList}
             {this.state.isShowSetting &&
             <GameDialogSettingRenderer {...this.props} />}
-            {this.state.isShowExitDialog && <SelectDialogRenderer
+            {this.state.isShowExitDialog &&
+            <SelectDialogRenderer
                 {...this.props}
                 confirmCb={this.onClickExitDialogConfirm.bind(this)}
                 cancelCb={this.onClickExitDialogCancel.bind(this)} >

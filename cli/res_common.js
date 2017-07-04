@@ -1,4 +1,7 @@
 import commonRes from './res_svr_common'
+
+window.DEBUG = true
+
 module.exports = Object.assign({
     fps: Math.floor(1000/60),
     gridPixel: 30,

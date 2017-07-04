@@ -46,5 +46,5 @@ module.exports = {
         "react/jsx-uses-vars": "error",
         "max-len": [1, 80, 2]
     },
-    "globals": {}
+    "globals": {'DEBUG':true}
 };

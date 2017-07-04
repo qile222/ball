@@ -59,9 +59,9 @@ export default class Util {
         return disDiff <= numberEplison
     }
 
-    static request(url, header, data, cb, timeout) {
+    static request(url, method, header, data, cb, timeout) {
         let xhr = new XMLHttpRequest()
-        xhr.open('POST', url, true)
+        xhr.open(method, url, true)
         xhr.responseType = 'text'
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
@@ -80,7 +80,7 @@ export default class Util {
                 cb(isSucceed, resData)
             }
         }
-        xhr.timeout = timeout || 15
+        xhr.timeout = timeout || 15000
         xhr.ontimeout = () => cb(false, 'time out')
         xhr.onerror = (e) => cb(false, e)
         if (header) {

@@ -1,4 +1,7 @@
-import {loginManager, scheduler} from './global'
+import {loginManager, scheduler, display} from './global'
+
+display.showStat(DEBUG)
+
 loginManager.enter()
 
 function mainLoop() {

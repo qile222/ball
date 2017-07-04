@@ -1,6 +1,6 @@
 import style from './style_main'
 import ReactDOM from 'react-dom'
-import {Rect, Size} from './global'
+import {Rect, Size, scheduler, eventDispatcher} from './global'
 
 export default class Display {
 
@@ -27,23 +27,28 @@ export default class Display {
                 this.fpsRenderer = document.createElement('div')
                 this.fpsRenderer.id = style.stat
                 document.body.appendChild(this.fpsRenderer)
+                this.timerID = scheduler.schedule(0, this.update.bind(this))
             }
         } else if (this.fpsRenderer) {
             this.stage.removeChild(this.fpsRenderer)
             this.fpsRenderer = null
+            scheduler.unschedule(this.timerID)
+            this.timerID = null
         }
     }
 
     update(dt) {
-        ++this.frameCount
-        this.dtTotal += dt
-        if (this.dtTotal > 500) {
-            this.fpsRenderer.innerHTML =
-                'fps:' + (1000 / this.dtTotal * this.frameCount).toFixed(2)
-            this.frameCount = 0
-            this.dtTotal = 0
+        if (this.fpsRenderer) {
+            ++this.frameCount
+            this.dtTotal += dt
+            if (this.dtTotal > 500) {
+                this.fpsRenderer.innerText =
+                    (1000 / this.dtTotal * this.frameCount).toFixed(2) + 'FPS'
+                this.frameCount = 0
+                this.dtTotal = 0
+            }
         }
-        if(this.runningRenderer && this.runningRenderer.update) {
+        if (this.runningRenderer && this.runningRenderer.update) {
             this.runningRenderer.update(dt)
         }
     }
@@ -65,7 +70,7 @@ export default class Display {
             this.stage.clientWidth,
             this.stage.clientHeight
         )
-        this.runningRenderer.onStageSizeChanged(this.stageSize)
+        eventDispatcher.emit(this, 'display_stage_size_changed', this.stageSize)
     }
 
 }

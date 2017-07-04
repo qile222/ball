@@ -9,7 +9,7 @@ import protocolRes from './res_protocol'
 import React from 'react'
 import GameRenderer from './renderer_game'
 import {util, memCache, netManager, console,
-    scheduler, display, eventDispatcher} from './global'
+    scheduler, display, eventDispatcher, worldManager} from './global'
 
 const fastForwardTimeScale = commonRes.fastForwardTimeScale
 const gameState = commonRes.gameState
@@ -43,7 +43,7 @@ export default class GameManager extends Manager {
         this.offlineMode = false
         this.selectedResID = resID
         this.state = gameState.pendding
-        netManager.connect('game',  + ':' + port, 'token=' + token)
+        netManager.connect('game', addr + ':' + port, 'token=' + token)
     }
 
     startInOfflineMode() {
@@ -63,7 +63,7 @@ export default class GameManager extends Manager {
         })
     }
 
-    updateLogic(dt) {
+    update(dt) {
         while (dt > 0) {
             let frameDelta = this.cmdLogic.getKeyFrameDelta()
             if (frameDelta < 1) {
@@ -79,7 +79,7 @@ export default class GameManager extends Manager {
                 return
             } else if (frameDelta > 10000) {
                 console.log('delta too much, will exit', frameDelta)
-                this.exitGame()
+                this.endGame()
                 return
             } else if (frameDelta > 2) {
                 if (this.state == gameState.playing) {
@@ -109,11 +109,6 @@ export default class GameManager extends Manager {
             this.cmdLogic.update(minDt)
             dt -= minDt
         }
-    }
-
-    update(dt) {
-        this.updateLogic(dt)
-        display.update(dt)
     }
 
     getRunningTime(dt) {
@@ -193,13 +188,13 @@ export default class GameManager extends Manager {
 
     onServerDisconnect(netManager, name) {
         if (name == 'game') {
-            this.exitGame()
+            this.endGame()
         }
     }
 
     onServerError(netManager, name) {
         if (name == 'game') {
-            this.exitGame()
+            this.endGame()
         }
     }
 
@@ -226,7 +221,7 @@ export default class GameManager extends Manager {
 
         let updateCount = data.frames.length * data.keyFrameInterval
         for (let i = 0; i < updateCount; ++i) {
-            this.updateLogic(data.keyFrameInterval)
+            this.update(data.keyFrameInterval)
             if (this.state == gameState.ended) {
                 return
             }
@@ -311,13 +306,13 @@ export default class GameManager extends Manager {
         }
     }
 
-    exitGame() {
+    endGame() {
+        if (this.state == gameState.ended) {
+            return
+        }
         console.log('game exit')
         this.state = gameState.ended
         netManager.disconnect('game')
-        if (!this.controllLogic) {
-            return
-        }
         this.controllLogic.destructor()
         delete this.controllLogic
         this.cmdLogic.destructor()
@@ -334,12 +329,8 @@ export default class GameManager extends Manager {
         }
     }
 
-    resInited() {
-
-    }
-
     onGameEnd(message) {
-        this.exitGame()
+        this.endGame()
     }
 
     onSettlement(message) {
@@ -347,7 +338,8 @@ export default class GameManager extends Manager {
     }
 
     backToHall() {
-
+        this.endGame()
+        worldManager.showWorld()
     }
 
     getSettlementData() {

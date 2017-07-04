@@ -19,7 +19,7 @@ module.exports = {
     leftTime: 'Left Time',
     enterName: 'Enter You Name:',
     enterGame: 'Enter Game',
-    nameInputHint: 'less than 8 characters, exclude <>&',
+    nameInputHint: 'less than 8 characters',
     serverList: 'Server List:',
     noServer: 'No valid servers',
     enter: 'Enter'

@@ -8,10 +8,17 @@ export default class LoginManager extends Manager {
 
     constructor() {
         super()
+        this.serverList = []
     }
 
     enter() {
-        util.request(commonRes.agent, {}, {}, this.onGetWorldServer.bind(this))
+        util.request(
+            commonRes.agent,
+            'POST',
+            null,
+            null,
+            this.onGetWorldServer.bind(this)
+        )
         display.replaceRenderer(
             <LoginRenderer
                 manager={this}

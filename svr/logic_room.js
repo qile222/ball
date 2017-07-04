@@ -32,8 +32,8 @@ class RoomLogic {
         this.id = id
         this.frameData = []
         this.keyFrameData = null
-        this.startTime = util.time()
-        this.seed = util.time()
+        this.startTime = Util.time()
+        this.seed = Util.time()
         this.state = gameState.playing
         this.settlementData = null
 
@@ -62,7 +62,7 @@ class RoomLogic {
     }
 
     getDuration() {
-        return util.time() - this.startTime
+        return Util.time() - this.startTime
     }
 
     getState() {
@@ -80,7 +80,7 @@ class RoomLogic {
         if (this.state != gameState.playing) {
             return null
         }
-        let frameIndex = Math.floor((util.time() - this.startTime) / keyFrameInterval)
+        let frameIndex = Math.floor((Util.time() - this.startTime) / keyFrameInterval)
         if (frameIndex > this.keyFrameData.index) {
             this.keyFrameData.cmds.sort((c1, c2) => {
                 return c1.time - c2.time
@@ -102,7 +102,7 @@ class RoomLogic {
         if (this.state != gameState.playing) {
             return
         }
-        this.keyFrameData.cmds.push(new Cmd(playerID, cmd.action, cmd.data, util.time() - this.startTime))
+        this.keyFrameData.cmds.push(new Cmd(playerID, cmd.action, cmd.data, Util.time() - this.startTime))
     }
 
     handleSettlementData(data) {

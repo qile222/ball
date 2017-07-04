@@ -10,10 +10,6 @@ export default class GameRenderer extends Renderer {
         super(props)
     }
 
-    update(dt) {
-        this.refs.map.update(dt)
-    }
-
     render() {
         let props = {
             manager: this.props.manager,
@@ -26,12 +22,7 @@ export default class GameRenderer extends Renderer {
     }
 
     componentDidMount() {
-        this.props.manager.resInited()
-    }
-
-    onStageSizeChanged(size) {
-        this.refs.map.onStageSizeChanged(size)
-        this.refs.ui.onStageSizeChanged(size)
+        super.componentDidMount()
     }
 
 }

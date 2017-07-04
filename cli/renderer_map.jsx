@@ -3,7 +3,7 @@ import mainStyle from './style_main'
 import commonRes from './res_common'
 import React from 'react'
 import * as EntityRenderers from './renderer_entity'
-import {display, eventDispatcher, Rect} from './global'
+import {display, eventDispatcher, Rect, scheduler} from './global'
 
 const floor = Math.floor
 
@@ -15,10 +15,22 @@ export default class MapRenderer extends Renderer {
         document.addEventListener('keydown', keyEventHandler, false)
         document.addEventListener('keyup', keyEventHandler, false)
         eventDispatcher.addListener(
-            props.mapLogic, 'map_entity_add', this, this.onEntityAdd
+            props.mapLogic,
+            'map_entity_add',
+            this,
+            this.onEntityAdd
         )
         eventDispatcher.addListener(
-            props.mapLogic, 'map_entity_die', this, this.onEntityDie
+            props.mapLogic,
+            'map_entity_die',
+            this,
+            this.onEntityDie
+        )
+        eventDispatcher.addListener(
+            null,
+            'display_stage_size_changed',
+            this,
+            this.onStageSizeChanged.bind(this)
         )
         this.watchingEntityLogic = null
         this.entities = []
@@ -28,6 +40,7 @@ export default class MapRenderer extends Renderer {
                 this.createEntityRenderer(entityLogic, props.manager, this)
             )
         }
+        this.timerID = scheduler.schedule(0, this.update.bind(this))
     }
 
     getViewPort() {
@@ -83,6 +96,12 @@ export default class MapRenderer extends Renderer {
 
     componentDidMount() {
         this.refs.map.getContext('2d').setTransform(1, 0, 0, 1, 0, 0)
+    }
+
+    componentWillUnmount() {
+        super.componentDidMount()
+        scheduler.unschedule(this.timerID)
+        this.timerID = null
     }
 
     render() {
@@ -151,7 +170,7 @@ export default class MapRenderer extends Renderer {
         throw new Error('')
     }
 
-    onStageSizeChanged(size) {
+    onStageSizeChanged(display, size) {
         this.refs.map.width = size.width
         this.refs.map.height = size.height
         this.viewPort.width = size.width

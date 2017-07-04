@@ -1,6 +1,9 @@
 import Manager from './manager'
 import protocolRes from './res_protocol'
-import {netManager, gameManager, eventDispatcher} from './global'
+import {netManager, gameManager, eventDispatcher,
+    memCache, scheduler, display} from './global'
+import WorldRenderer from './renderer_world'
+import React from 'react'
 
 export default class WorldManager extends Manager {
 
@@ -20,11 +23,14 @@ export default class WorldManager extends Manager {
         )
     }
 
+    update(dt) {
+        let time = memCache.get('time')
+        memCache.set('time', time + dt)
+    }
+
     enter(addr, port, playerName) {
         netManager.connect(
-            'world',
-            addr + ':' + port,
-            'playerName=' + playerName
+            'world', addr + ':' + port, 'playerName=' + playerName
         )
     }
 
@@ -48,23 +54,32 @@ export default class WorldManager extends Manager {
     }
 
     onEnterWorld(message) {
-        // let data = message.data
-        // memCache.set('player_info', {
-        //     id: data.playerID,
-        //     name: data.playerName
-        // })
-        // memCache.set('time', data.serverTime)
-        // netManager.send('world', {
-        //     head: protocolRes.getGameServerCW
-        // })
+        let data = message.data
+        memCache.set('player_info', {
+            id: data.playerID,
+            name: data.playerName
+        })
+        memCache.set('time', data.serverTime)
+        scheduler.schedule(1000, this.update.bind(this))
+        this.showWorld()
+    }
+
+    showWorld() {
+        display.replaceRenderer(<WorldRenderer manager={this} />)
+    }
+
+    startGame() {
+        netManager.send('world', {
+            head: protocolRes.getGameServerCW
+        })
     }
 
     onGetGameServer(message) {
-        let server = message.data.server
+        let addr = message.data.addr
         let port = message.data.port
         let token = message.data.token
         let resID = 10000
-        gameManager.start(server, port, token, resID)
+        gameManager.enter(addr, port, token, resID)
     }
 
 }

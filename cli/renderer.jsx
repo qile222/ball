@@ -16,12 +16,7 @@ export default class Renderer extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(
-            'will receive props component',
-            this.constructor.name,
-            nextProps,
-            this.props
-        )
+        console.log('will receive props component', this.constructor.name)
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -44,10 +39,6 @@ export default class Renderer extends React.Component {
 
     render() {
         return null
-    }
-
-    onStageSizeChanged(size) {
-
     }
 
 }
