@@ -1,0 +1,7 @@
+node_modules/
+logs/
+pid
+build/
+.vscode/
+cli/res_svr_*.js
+*.log

@@ -1,0 +1,374 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+}
+@borderRaidus: 5px;
+@fontColor: #cdcdcd;
+@boxTitleColor: #00aa00;
+
+button {
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    width: 100px;
+    background-color: @boxTitleColor;
+    color: #ffffff;
+    border: solid 1px @fontColor;
+    border-radius: @borderRaidus;
+    margin-left: 10px;
+    font-size: 16px;
+    &:disabled {
+        background: #cccccc;
+    }
+}
+
+.svgSprite {
+    width: 1em; height: 1em;
+    vertical-align: -0.15em;
+    fill: @fontColor;
+    overflow: hidden;
+}
+@boxOpenDuration: 0.25s;
+@keyframes ScaleToMax {
+    0% {
+        transform: scale(0) translate(-50%, -50%);
+        opacity: 0;
+    }
+    75% {
+        transform: scale(1.2) translate(-50%, -50%);
+    }
+
+    100% {
+        transform: scale(1.1) translate(-50%, -50%);
+        opacity: 100%;
+    }
+}
+
+@keyframes ScaleToMin {
+    0% {
+        transform: scale(1.1) translate(-50%, -50%);
+        opacity: 100%;
+    }
+    75% {
+        transform: scale(0.25) translate(-50%, -50%);
+    }
+
+    100% {
+        transform: scale(0) translate(-50%, -50%);
+        opacity: 0;
+    }
+}
+
+@keyframes FadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+@keyframes FadeOut {
+    0% {
+        opacity: 100%;
+    }
+    100% {
+        opacity: 0%;
+    }
+}
+
+#container {
+    width:100%;
+    height: 100%;
+    margin:0;
+    padding:0;
+}
+
+#stat {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    color: @fontColor;
+}
+
+.game {
+    width: 100%;
+    height: 100%;
+    background: #ffc0fb;
+}
+
+.gameUI {
+    position: fixed;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.15);
+    text-align: center;
+}
+
+.gameTimer {
+    color: @fontColor;
+}
+
+.gameRankBoard {
+    @rankLiHeight: 25px;
+    @rankTitleCount: 3;
+    @rankTitleWidth: 50px;
+    @rankTitleBorderWidth: 10px;
+    @rankCount: 10;
+
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    right: 10px;
+    top: 140%;
+    border-radius: @borderRaidus;
+    color: #adadad;
+    font-size: 16px;
+    > h4 {
+        margin: 10px 0;
+        font-size: 16px;
+        text-align: center;
+        vertical-align: middle;
+        > span {
+            > svg {
+                width: 24px;
+                height: 24px;
+                vertical-align: -0.4em;
+            }
+        }
+        > svg {
+            width: 24px;
+            height: 24px;
+            display: block;
+            position: absolute;
+            right: 10px;
+            top: 0.5em;
+            &:hover {
+                fill: #999999;
+            }
+        }
+    }
+    > ol {
+        list-style: none outside none;
+        text-align: left;
+        height: @rankLiHeight * @rankCount;
+        padding: 0;
+        margin: 0;
+        > li {
+            font-size: 14px;
+            text-align: left;
+            height: @rankLiHeight;
+            padding-left: @rankTitleWidth;
+            > span {
+                display: block;
+                z-index: 1;
+                position: absolute;
+                width: @rankTitleWidth;
+                text-align: center;
+                left: 0;
+            }
+
+            .first-three-li(@rankTitleCount);
+            .first-three-li(@n, @i: 1) when (@i =< @n) {
+                &:nth-child(@{i}) {
+                    &> span {
+                        color: @fontColor;
+                    }
+                    &::before {
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        border-radius: 50%;
+                        border: solid @rankTitleBorderWidth rgb((200/@i), (100/@i), (0/@i));
+                        left: @rankTitleWidth / 2 - @rankTitleBorderWidth;
+                        z-index: 0;
+                    }
+                }
+                .first-three-li(@n, (@i + 1));
+            }
+        }
+        &:last-of-type {
+            height: @rankLiHeight;
+            padding-top: 5px;
+            color: @boxTitleColor;
+            border-top: solid 2px #aaaaaa;
+            > li {
+                &> span {
+                    color: @boxTitleColor;
+                }
+                position: absolute;
+                &::before {
+                    border: none;
+                }
+            }
+        }
+    }
+}
+
+.gameMap {
+    text-align: center;
+}
+
+.box {
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    left: 0;
+    top: 0;
+    animation-name: FadeIn;
+    animation-duration: @boxOpenDuration;
+}
+
+@dialogCellPadding: 10px;
+.gameSettingBox {
+    border-radius: @borderRaidus;
+    animation-duration: @boxOpenDuration;
+    animation-name: ScaleToMax;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: 0 0;
+    color: @boxTitleColor;
+    width: 400px;
+    // height: 300px;
+    background-color: rgba(247, 254, 223, 1);
+    display: table;
+
+    > div {
+        display: table-row;
+    }
+
+    > .dialogTitle {
+        > h4 {
+            margin: 0;
+            font-size: 20px;
+            text-decoration: underline;
+            vertical-align: middle;
+            border-bottom: solid 1px #cdcdcd;
+            box-sizing: border-box;
+            padding: @dialogCellPadding;
+            > svg {
+                width: 1.6em;
+                height: 1.6em;
+                fill: @boxTitleColor;
+                display: block;
+                float: right;
+                :hover {
+                    fill: #008800;
+                }
+            }
+            display: table-cell;
+        }
+    } 
+    > .dialogContent {
+        > div {
+            display: table-cell;
+            box-sizing: border-box;
+            height: 100%;
+            padding: @dialogCellPadding;
+        }
+    }
+
+    > .dialogButtons {
+        > div {
+            text-align: right;
+            display: table-cell;
+            box-sizing: border-box;
+            padding: @dialogCellPadding;
+        }
+    }
+}
+
+.gameSettlementDialog {
+    width: 550px;
+    > h1 {
+        text-align: center;
+        margin: 0;
+        font-weight: normal;
+        font-size: 20px;
+        > span {
+            text-decoration: underline;
+            color: pink;
+            font-size: 1.5em;
+        }
+    }
+
+    > div {
+        padding: 0px;
+        text-align: center;
+    }
+
+    > div:nth-of-type(2) {
+        padding: @dialogCellPadding / 2 0;
+        background-color: #00dd66;
+        margin-left: -@dialogCellPadding;
+        width: calc(~"100% + @{dialogCellPadding} * 2");
+        > span {
+            display: block;
+            color: #008800;
+            &:nth-of-type(2) {
+                font-size: 2em;
+            }
+        }
+    }
+
+    > div:nth-of-type(1) {
+        &:after {
+            clear: both;
+            display: block;
+            height: 0;
+            content: "";
+        }
+        margin: @dialogCellPadding*2 0;
+        > div {
+            color: #cdcdcd;
+            width: calc(~"100% / 3 - @{dialogCellPadding} * 2");
+            height: 0;
+            padding-bottom: calc(~"100% / 6 - @{dialogCellPadding} + 2em");
+            padding-top: calc(~"100% / 6 - @{dialogCellPadding} - 2em");
+            border-radius: 50%;
+            margin: 0 @dialogCellPadding;
+            float: left;
+            > span {
+                display: block;
+                &:nth-of-type(2) {
+                    font-size: 2em;
+                    color: #ffffff;
+                }
+            }
+            &:nth-of-type(1) {
+                background: linear-gradient(to bottom, #ff6600, #ffaa00)
+            }
+            &:nth-of-type(2) {
+                background: linear-gradient(to bottom, #ff0044, #ff0088)
+            }
+            &:nth-of-type(3) {
+                background: linear-gradient(to bottom, #00aa00, #00ee00)
+            }
+        }
+    }
+
+}
+
+.enterDialog {
+    font-size: 18px;
+    > label {
+        display: block;
+        margin: 10px 0;
+    }
+    > input, > select {
+        display: block;
+        font-size: 18px;
+        box-sizing: border-box;
+        width: 100%;
+        border-radius: @borderRaidus;
+        border: solid 1px #cdcdcd;
+        padding: 10px 5px;
+    }
+}

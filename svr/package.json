@@ -1,0 +1,28 @@
+{
+  "name": "svr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "async": "^2.1.5",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.1",
+    "memory-cache": "^0.1.6",
+    "moment": "^2.17.1",
+    "node-schedule": "^1.2.0",
+    "pm2": "^2.4.2",
+    "seedrandom": "^2.4.2",
+    "shortid": "^2.2.8",
+    "socket.io": "^1.7.3",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "socket.io-client": "^1.7.3"
+  }
+}
