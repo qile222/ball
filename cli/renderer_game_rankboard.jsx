@@ -32,11 +32,6 @@ export default class GameRankBoardRenderer extends Renderer {
             'GameDialogSettingRenderer_save',
             this,
             this.onGameDialogSettingSave)
-        eventDispatcher.addListener(
-            null,
-            'GameDialogSettingRenderer_exit_game',
-            this,
-            this.oneGameDialogSettingExitGame)
     }
 
     onEatEntity(entity) {
@@ -142,10 +137,6 @@ export default class GameRankBoardRenderer extends Renderer {
     onGameDialogSettingSave(gameSettingDialog, options) {
         //TODO save
         this.setState({ isShowSetting: false })
-    }
-
-    oneGameDialogSettingExitGame() {
-        this.setState({ isShowExitDialog: true })
     }
 
     onClickExitDialogConfirm() {

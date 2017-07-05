@@ -1,6 +1,6 @@
 import style from './style_main'
 import ReactDOM from 'react-dom'
-import {Rect, Size, scheduler, eventDispatcher} from './global'
+import {Rect, Size, scheduler, eventDispatcher, netManager} from './global'
 
 export default class Display {
 
@@ -42,8 +42,13 @@ export default class Display {
             ++this.frameCount
             this.dtTotal += dt
             if (this.dtTotal > 500) {
-                this.fpsRenderer.innerText =
-                    (1000 / this.dtTotal * this.frameCount).toFixed(2) + 'FPS'
+                let statStr =
+                    (1000 / this.dtTotal * this.frameCount).toFixed(2) + 'FPS '
+                let connections = netManager.getConnectionsLag()
+                for (let connection of connections) {
+                    statStr += connection.name + connection.lag + 'MS '
+                }
+                this.fpsRenderer.innerText = statStr
                 this.frameCount = 0
                 this.dtTotal = 0
             }

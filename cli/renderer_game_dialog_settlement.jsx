@@ -16,9 +16,9 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
                     name: 'Continue'
                 },
                 {
-                    title: lanRes.exitGame,
-                    onClick: this.onClickExitGame.bind(this),
-                    name: 'ExitGame'
+                    title: lanRes.backToHall,
+                    onClick: this.onClickBackToHall.bind(this),
+                    name: 'BackToHall'
                 }
             ]
         }
@@ -78,7 +78,7 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
         eventDispatcher.emit(this, 'GameDialogSettlementRenderer_continue_game')
     }
 
-    onClickExitGame() {
+    onClickBackToHall() {
         this.props.manager.backToHall()
     }
 

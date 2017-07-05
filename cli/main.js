@@ -1,11 +1,21 @@
-import {loginManager, scheduler, display} from './global'
+import {loginManager, scheduler, display, eventDispatcher} from './global'
+
+let end = false
+window.onerror = function (...params) {
+    end = true
+    eventDispatcher.emit(window, 'runtime_error')
+    alert('runtime error')
+    return false
+}
 
 display.showStat(DEBUG)
 
 loginManager.enter()
 
 function mainLoop() {
-    scheduler.update()
-    requestAnimationFrame(mainLoop)
+    if (!end) {
+        scheduler.update()
+        requestAnimationFrame(mainLoop)
+    }
 }
 requestAnimationFrame(mainLoop)

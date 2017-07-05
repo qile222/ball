@@ -11,6 +11,7 @@ import MemCache from './cache_mem'
 import Util from './util'
 
 const numberEplison = commonRes.numberEplison
+
 export class Size {
 
     constructor(width, height) {
@@ -84,6 +85,26 @@ export class Color4B {
 
 }
 
+class ConsoleImpl {
+
+    log() {
+
+    }
+
+    warn() {
+
+    }
+
+    assert() {
+
+    }
+
+    error() {
+
+    }
+
+}
+
 export const util = Util
 export const eventDispatcher = new EventDispatcher()
 export const cache = new Cache()
@@ -94,11 +115,4 @@ export const netManager = new NetManager()
 export const gameManager = new GameManager()
 export const worldManager = new WorldManager()
 export const loginManager = new LoginManager()
-export const console = window.console
-
-window.onerror = function (...params) {
-    eventDispatcher.emit(window, 'runtime_error')
-    scheduler.unscheduleAll()
-    alert('runtime error')
-    return false
-}
+export const console = DEBUG && window.console || new ConsoleImpl

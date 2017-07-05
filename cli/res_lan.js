@@ -22,5 +22,12 @@ module.exports = {
     nameInputHint: 'less than 8 characters',
     serverList: 'Server List:',
     noServer: 'No valid servers',
-    enter: 'Enter'
+    enter: 'Enter',
+    backToHall: 'Back To Hall',
+    startGame: 'Start Game',
+    gameEnd: 'Game End',
+    eatenRank: 'Eaten Rank',
+    weightRank: 'Weight Rank',
+    playerName: 'Player Name',
+    rank: 'Rank'
 }

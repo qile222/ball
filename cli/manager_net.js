@@ -1,13 +1,23 @@
 import Manager from './manager'
 import io from 'socket.io-client'
 import protocolRes from './res_protocol'
-import {console, eventDispatcher} from './global'
+import {console, eventDispatcher, util, scheduler} from './global'
 
 export default class NetManager extends Manager {
 
     constructor() {
         super()
         this.connections = {}
+        scheduler.schedule(1000, this.heartBeatTest.bind(this))
+    }
+
+    heartBeatTest() {
+        for (let i in this.connections) {
+            this.connections[i].lastHeartBeatTime = util.time()
+            this.connections[i].socket.send({
+                head:protocolRes.headbeatCS
+            })
+        }
     }
 
     send(name, message) {
@@ -20,6 +30,17 @@ export default class NetManager extends Manager {
             }
         }
         console.error('unknown protocol head ', name, message)
+    }
+
+    getConnectionsLag() {
+        let ret = []
+        for (let i in this.connections) {
+            ret.push({
+                name: this.connections[i].name,
+                lag: this.connections[i].lag,
+            })
+        }
+        return ret
     }
 
     disconnectAll() {
@@ -56,7 +77,9 @@ export default class NetManager extends Manager {
             name: name,
             addr: addr,
             handshake: handshake,
-            socket: socket
+            socket: socket,
+            lag: -1,
+            lastHeartBeatTime: util.time()
         }
 
         return name
@@ -76,6 +99,8 @@ export default class NetManager extends Manager {
     }
 
     onConnect(name) {
+        let connection = this.connections[name]
+        connection.lag = util.time() - connection.lastHeartBeatTime
         console.log('net on connect', name)
     }
 
@@ -99,6 +124,11 @@ export default class NetManager extends Manager {
     }
 
     handleMessageData(name, headStr, message) {
+        if (message.head == protocolRes.headbeatSC) {
+            let connection = this.connections[name]
+            connection.lag = util.time() - connection.lastHeartBeatTime
+            return
+        }
         if (message.head != protocolRes.frameDataGC) {
             console.log('message', headStr, message)
         }

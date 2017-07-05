@@ -1,3 +1,5 @@
+@import './style_static.less';
+
 html, body {
     padding: 0;
     margin: 0;
@@ -7,14 +9,14 @@ html, body {
 }
 @borderRaidus: 5px;
 @fontColor: #cdcdcd;
-@boxTitleColor: #00aa00;
+@dialogTitleColor: #00aa00;
 
 button {
     margin: 0;
     padding: 0;
     height: 40px;
     width: 100px;
-    background-color: @boxTitleColor;
+    background-color: @dialogTitleColor;
     color: #ffffff;
     border: solid 1px @fontColor;
     border-radius: @borderRaidus;
@@ -25,13 +27,18 @@ button {
     }
 }
 
+.static_bg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .svgSprite {
     width: 1em; height: 1em;
     vertical-align: -0.15em;
     fill: @fontColor;
     overflow: hidden;
 }
-@boxOpenDuration: 0.25s;
+@dialogOpenDuration: 0.25s;
 @keyframes ScaleToMax {
     0% {
         transform: scale(0) translate(-50%, -50%);
@@ -95,16 +102,18 @@ button {
     color: @fontColor;
 }
 
-.game {
+.scene {
     width: 100%;
     height: 100%;
-    background: #ffc0fb;
+    background: @static_bg;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 .gameUI {
     top: 0;
     left: 0;
-    position: fixed;
+    position: absolute;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.15);
     text-align: center;
@@ -195,11 +204,11 @@ button {
         &:last-of-type {
             height: @rankLiHeight;
             padding-top: 5px;
-            color: @boxTitleColor;
+            color: @dialogTitleColor;
             border-top: solid 2px #aaaaaa;
             > li {
                 &> span {
-                    color: @boxTitleColor;
+                    color: @dialogTitleColor;
                 }
                 position: absolute;
                 &::before {
@@ -211,10 +220,12 @@ button {
 }
 
 .gameMap {
-    text-align: center;
+    margin: 0;
+    padding: 0;
+    position: absolute;
 }
 
-.box {
+.dialog {
     display: block;
     position: fixed;
     width: 100%;
@@ -223,20 +234,20 @@ button {
     left: 0;
     top: 0;
     animation-name: FadeIn;
-    animation-duration: @boxOpenDuration;
+    animation-duration: @dialogOpenDuration;
 }
 
 @dialogCellPadding: 10px;
-.gameSettingBox {
+.gameSettingDialog {
     border-radius: @borderRaidus;
-    animation-duration: @boxOpenDuration;
+    animation-duration: @dialogOpenDuration;
     animation-name: ScaleToMax;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     transform-origin: 0 0;
-    color: @boxTitleColor;
+    color: @dialogTitleColor;
     width: 400px;
     // height: 300px;
     background-color: rgba(247, 254, 223, 1);
@@ -252,13 +263,13 @@ button {
             font-size: 20px;
             text-decoration: underline;
             vertical-align: middle;
-            border-bottom: solid 1px #cdcdcd;
+            border-bottom: solid 1px @fontColor;
             box-sizing: border-box;
             padding: @dialogCellPadding;
             > svg {
                 width: 1.6em;
                 height: 1.6em;
-                fill: @boxTitleColor;
+                fill: @dialogTitleColor;
                 display: block;
                 float: right;
                 :hover {
@@ -329,7 +340,7 @@ button {
         }
         margin: @dialogCellPadding*2 0;
         > div {
-            color: #cdcdcd;
+            color: @fontColor;
             width: calc(~"100% / 3 - @{dialogCellPadding} * 2");
             height: 0;
             padding-bottom: calc(~"100% / 6 - @{dialogCellPadding} + 2em");
@@ -370,7 +381,82 @@ button {
         box-sizing: border-box;
         width: 100%;
         border-radius: @borderRaidus;
-        border: solid 1px #cdcdcd;
+        border: solid 1px @fontColor;
         padding: 10px 5px;
+    }
+}
+
+.switchPanel {
+    > div:first-child {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+        border: solid 1px @fontColor;
+        border-radius: @borderRaidus;
+        > span {
+            font-size: 20px;
+            text-align: center;
+            display: table-cell;
+            background-color: @dialogTitleColor;
+            padding: 10px 0;
+            color: #ffffff;
+            &[data-selected] {
+                background-color: #ffffff;
+                color: @dialogTitleColor;
+            }
+            &:first-child {
+                border-top-left-radius: @borderRaidus;
+                border-bottom-left-radius: @borderRaidus;
+            }
+            &:last-child {
+                border-top-right-radius: @borderRaidus;
+                border-bottom-right-radius: @borderRaidus;
+            }
+        }
+    }
+}
+
+.gameEndDialog {
+    max-height: 300px;
+    > div {
+        width: 100%;
+        display: table;
+        border-collapse: separate;
+        table-layout: fixed;
+        border-spacing: 0 5px;
+        overflow: scroll;
+        font-size: 16px;
+        text-align: center;
+        &:first-child {
+            font-size: 12px;
+        }
+        > span {
+            padding: 5px 0;
+            border-bottom: solid 1px @dialogTitleColor;
+            border-top: solid 1px @dialogTitleColor;
+            display: table-cell;
+            &:nth-child(1) {
+                width: 10%;
+            }
+            &:nth-child(2) {
+                width: 40%;
+            }
+            &:nth-child(3) {
+                width: 25%;
+            }
+            &:nth-child(4) {
+                width: 25%;
+            }
+            &:first-child {
+                border-left: solid 1px @dialogTitleColor;
+                border-top-left-radius: @borderRaidus;
+                border-bottom-left-radius: @borderRaidus;
+            }
+            &:last-child {
+                border-right: solid 1px @dialogTitleColor;
+                border-top-right-radius: @borderRaidus;
+                border-bottom-right-radius: @borderRaidus;
+            }
+        }
     }
 }

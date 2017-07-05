@@ -4,7 +4,7 @@ import React from 'react'
 import mainStyle from './style_main'
 import {eventDispatcher} from './global'
 
-export default class GameSettingBoxRenderer extends Renderer {
+export default class DialogRenderer extends Renderer {
 
     constructor(props) {
         super(props)
@@ -13,7 +13,7 @@ export default class GameSettingBoxRenderer extends Renderer {
 
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate()
-        this.openBox()
+        this.openDialog()
     }
 
     componentDidMount() {
@@ -23,13 +23,13 @@ export default class GameSettingBoxRenderer extends Renderer {
 
     componentWillUnmount() {
         super.componentWillUnmount()
-        this.closeBox()
+        this.closeDialog()
     }
 
-    openBox() {
+    openDialog() {
         if (!this.node) {
             this.node = document.createElement('div')
-            this.node.className = mainStyle.box
+            this.node.className = mainStyle.dialog
             document.body.appendChild(this.node)
         }
         let components = []
@@ -76,12 +76,12 @@ export default class GameSettingBoxRenderer extends Renderer {
         }
         ReactDOM.unstable_renderSubtreeIntoContainer(
             this,
-            <div className={mainStyle.gameSettingBox}>{components}</div>,
+            <div className={mainStyle.gameSettingDialog}>{components}</div>,
             this.node
         )
     }
 
-    closeBox() {
+    closeDialog() {
         if (this.node) {
             ReactDOM.unmountComponentAtNode(this.node)
             document.body.removeChild(this.node)

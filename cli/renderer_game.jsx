@@ -15,7 +15,7 @@ export default class GameRenderer extends Renderer {
             manager: this.props.manager,
             mapLogic: this.props.manager.getMapLogic()
         }
-        return <div ref='renderer' className={mainStyle.game}>
+        return <div className={mainStyle.scene}>
             <MapRenderer ref='map' {...props}/>
             <GameUIRenderer ref='ui' {...props}/>
         </div>

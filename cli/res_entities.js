@@ -29,7 +29,7 @@ module.exports = {
         speed: 0,
         states: [],
         radius: 8,
-        probability: 20,
+        probability: 30,
         isFood: true,
         ext: {
             sideCount: 4
@@ -64,13 +64,13 @@ module.exports = {
         name: 'Saboteur',
         speed: 0,
         states: ['split'],
-        radius: 20,
-        probability: 20,
+        radius: 30,
+        probability: 10,
         isFood: false,
         ext: {
-            sideCount: 8,
+            sideCount: 6,
             sideWidth: 3,
-            rotateAniTime: 1000
+            rotateAniTime: 500
         }
     }
 }

@@ -329,17 +329,37 @@ export default class GameManager extends Manager {
         }
     }
 
+    getGameEndData() {
+        return {
+            rankList: [
+                {
+                    playerName: 'pppppp1',
+                    eatenCount: 1234,
+                    weight: 123,
+                    liveTime: 12345
+                },
+                {
+                    playerName: '阿斯蒂芬暗色是',
+                    eatenCount: 123,
+                    weight: 1234,
+                    liveTime: 12345
+                },
+                {
+                    playerName: 'p2',
+                    eatenCount: 12,
+                    weight: 12345,
+                    liveTime: 12345
+                }
+            ]
+        }
+    }
+
     onGameEnd(message) {
         this.endGame()
     }
 
     onSettlement(message) {
         
-    }
-
-    backToHall() {
-        this.endGame()
-        worldManager.showWorld()
     }
 
     getSettlementData() {
@@ -360,6 +380,11 @@ export default class GameManager extends Manager {
             this.localPlayerLogic
         )
         this.localPlayerLogic = null
+    }
+
+    backToHall() {
+        this.endGame()
+        worldManager.showWorld()
     }
 
 }
