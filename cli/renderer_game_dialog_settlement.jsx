@@ -35,7 +35,7 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
     }
 
     renderContent() {
-        let settlementData = this.props.manager.getSettlementData()
+        let settlementData = this.props.settlementData
         return <div className={mainStyle.gameSettlementDialog}>
             <h1
                 dangerouslySetInnerHTML={

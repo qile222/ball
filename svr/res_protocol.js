@@ -1,23 +1,26 @@
 const protocol = {
     /***************error*****************/
     error: -1,
-    pingCW: 0,
-    pingWC: 1,
+    heartbeatCS: 0,
+    heartbeatSC: 1,
 
     /***************world server*****************/
-    playerInfoWC: 10000,
-    getGameServerCW: 10001,
-    getGameServerWC: 10002,
+    playerInfoCW: 10001,
+    playerInfoWC: 10001,
+    getGameServerCW: 10002,
+    getGameServerWC: 10003,
 
     /***************game server*****************/
-    createMapGC: 20009,
-    createMapCG: 20010,
-    frameDataGC: 20011,
-    frameDataCG: 20012,
+    createMapCG: 20009,
+    createMapGC: 20010,
+    frameDataCG: 20011,
+    frameDataGC: 20012,
     gameEndCG: 20013,
     gameEndGC: 20014,
-    settlementCG: 20015,
-    settlementGC: 20016,
+    sendGameDataCG: 20015,
+    sendGameDataGC: 20016,
+    abnormalCG: 20018,
+    abnormalGC: 20018,
 }
 
 module.exports = protocol

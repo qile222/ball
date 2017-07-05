@@ -1,3 +1,3 @@
 import protocol from './res_svr_protocol'
 
-module.exports = protocol
+module.exports = Object.assign({}, protocol)

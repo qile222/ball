@@ -6,7 +6,7 @@ module.exports = {
     keyFrameInterval: 100,
     gameState: {
         playing: 0,
-        settlementing: 1,
+        ending: 1,
         ended: 2
     },
     roomEntityLimit: 20,
@@ -16,8 +16,8 @@ module.exports = {
         height: 2400
     },
     mapRandomEntityLimit: 300,
-    gameOverTime: 605000,
-    settlementTime: 600000,
+    gameOverTime: 5500,
+    gameEndTime: 3000,
     numberEplison: 0.000001,
     eatAddRadiusRatio: 0.1,
     entityInitTime: 3000,

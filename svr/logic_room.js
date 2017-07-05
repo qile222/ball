@@ -35,7 +35,7 @@ class RoomLogic {
         this.startTime = Util.time()
         this.seed = Util.time()
         this.state = gameState.playing
-        this.settlementData = null
+        this.gameEndData = null
 
         this.pushBackKeyFrame()
     }
@@ -48,9 +48,9 @@ class RoomLogic {
         this.state = gameState.ended
     }
 
-    settlement() {
-        this.state = gameState.settlementing
-        this.settlementData = {}
+    willEnd() {
+        this.state = gameState.ending
+        this.gameEndData = []
     }
 
     getSeed() {
@@ -105,14 +105,13 @@ class RoomLogic {
         this.keyFrameData.cmds.push(new Cmd(playerID, cmd.action, cmd.data, Util.time() - this.startTime))
     }
 
-    handleSettlementData(data) {
-        this.settlementData.push(data)
+    handleGameEndData(data) {
+        this.gameEndData.push(data)
     }
 
-    getSettlementResult() {
-        let result = {}
+    getGameEndData() {
         this.end()
-        return result
+        return this.gameEndData[0]
     }
 
 }

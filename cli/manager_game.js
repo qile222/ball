@@ -94,7 +94,7 @@ export default class GameManager extends Manager {
             }
             let minDt = min(dt, this.keyFrameInterval)
             this.runningTime += minDt
-            this.leftTime = this.settlementTime - this.runningTime
+            this.leftTime = this.gameEndTime - this.runningTime
             if (this.leftTime < 0) {
                 this.leftTime = 0
             }
@@ -142,7 +142,7 @@ export default class GameManager extends Manager {
     }
 
     getPlayerLogic(playerID) {
-        for (var i = 0; i < this.playerLogics.length; ++i) {
+        for (let i in this.playerLogics) {
             if (this.playerLogics[i].getID() == playerID) {
                 return this.playerLogics[i]
             }
@@ -153,8 +153,8 @@ export default class GameManager extends Manager {
         return this.localPlayerLogic
     }
 
-    getSettlementTime() {
-        return this.settlementTime
+    getGameEndTime() {
+        return this.gameEndTime
     }
 
     getLeftTime() {
@@ -172,12 +172,16 @@ export default class GameManager extends Manager {
                 this.onGetFrameData(message)
                 break
 
-            case protocolRes.gameEndCG:
-                this.onGameEnd(message)
+            case protocolRes.sendGameDataGC:
+                this.onSendGameData(message)
                 break
 
-            case protocolRes.settlementCG:
-                this.onSettlement(message)
+            case protocolRes.abnormalGC:
+                this.onAbnormal(message)
+                break
+
+            case protocolRes.gameEndGC:
+                this.onGameEnd(message)
                 break
 
             default:
@@ -202,7 +206,7 @@ export default class GameManager extends Manager {
         let data = message.data
         util.setSeed(data.seed)
         this.controllLogic = new ControllLogic(this)
-        this.settlementTime = data.settlementTime
+        this.gameEndTime = data.gameEndTime
         this.keyFrameInterval = data.keyFrameInterval
         this.startTime = data.startTime
         this.cmdLogic = new CmdLogic(this, data.frames, data.keyFrameInterval)
@@ -213,7 +217,7 @@ export default class GameManager extends Manager {
         )
         this.playerLogics = []
         this.runningTime = 0
-        this.leftTime = this.settlementTime
+        this.leftTime = this.gameEndTime
         this.scaleStartTime = util.time()
         this.keyFrameInterval = data.keyFrameInterval
         this.fixedUpdateLastTime = 0
@@ -248,7 +252,6 @@ export default class GameManager extends Manager {
         let playerID = data.playerID
         let playerLogic = new PlayerLogic(this, playerID, name)
         if (playerID == memCache.get('player_info').id) {
-            this.settlementData = null
             this.localPlayerLogic = playerLogic
         }
         this.playerLogics.push(playerLogic)
@@ -256,8 +259,7 @@ export default class GameManager extends Manager {
     }
 
     onRemovePlayerCmd(playerID) {
-        let playersLength = this.playerLogics.length
-        for (var i = 0; i < playersLength; ++i) {
+        for (let i in this.playerLogics) {
             let playerLogic = this.playerLogics[i]
             if (playerLogic.getID() == playerID) {
                 if (playerLogic == this.localPlayerLogic) {
@@ -329,46 +331,34 @@ export default class GameManager extends Manager {
         }
     }
 
-    getGameEndData() {
-        return {
-            rankList: [
-                {
-                    playerName: 'pppppp1',
-                    eatenCount: 1234,
-                    weight: 123,
-                    liveTime: 12345
-                },
-                {
-                    playerName: '阿斯蒂芬暗色是',
-                    eatenCount: 123,
-                    weight: 1234,
-                    liveTime: 12345
-                },
-                {
-                    playerName: 'p2',
-                    eatenCount: 12,
-                    weight: 12345,
-                    liveTime: 12345
-                }
-            ]
-        }
-    }
-
     onGameEnd(message) {
         this.endGame()
+        eventDispatcher.emit(this, 'GameManager_end', message.data)
     }
 
-    onSettlement(message) {
-        
-    }
-
-    getSettlementData() {
-        return this.settlementData
+    onSendGameData(message) {
+        let data = {
+            rankList: []
+        }
+        for (let playerLogic of this.playerLogics) {
+            let entityLogic = playerLogic.getEntityLogic()
+            data.rankList.push({
+                id: playerLogic.getID(),
+                playerName: playerLogic.getName(),
+                eatenCount: entityLogic.getEatenCount(),
+                weight: entityLogic.getRadius(),
+                liveTime: entityLogic.getLiveTime()
+            })
+        }
+        netManager.send('game', {
+            head: protocolRes.sendGameDataCG,
+            data: data
+        })
     }
 
     settlementGame() {
         let entityLogic = this.localPlayerLogic.getEntityLogic()
-        this.settlementData = {
+        let settlementData = {
             weight: entityLogic.getRadius(),
             liveTime: entityLogic.getLiveTime(),
             eatenCount: entityLogic.getEatenCount(),
@@ -377,7 +367,7 @@ export default class GameManager extends Manager {
         eventDispatcher.emit(
             this,
             'GameManager_settlement',
-            this.localPlayerLogic
+            settlementData
         )
         this.localPlayerLogic = null
     }
@@ -385,6 +375,10 @@ export default class GameManager extends Manager {
     backToHall() {
         this.endGame()
         worldManager.showWorld()
+    }
+
+    onAbnormal(message) {
+        this.endGame()
     }
 
 }

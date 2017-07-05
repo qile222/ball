@@ -7,13 +7,11 @@ export default class SelectDialogRenderer extends DialogRenderer {
     constructor(props) {
         super(props)
         this.state = {
-            title: lanRes.notice,
             btns: [
                 {
-                    title: lanRes.ok,
+                    title: lanRes.confirm,
                     onClick: this.onClickConfirm.bind(this),
-                    disable: true,
-                    name: 'Ok'
+                    name: 'Confirm'
                 },
             ],
         }
@@ -24,7 +22,7 @@ export default class SelectDialogRenderer extends DialogRenderer {
     }
 
     onClickConfirm() {
-        this.onClickClose()
+        this.props.onClickClose()
     }
 
 }

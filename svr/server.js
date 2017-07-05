@@ -82,8 +82,8 @@ class Server extends EventEmitter {
     handleRequest(cliSocket, message) {
         let head = message.head
         switch (head) {
-            case protocolRes.pingCW:
-                cliSocket.send(new Message(protocolRes.pingWC, null))
+            case protocolRes.heartbeatCS:
+                cliSocket.send(new Message(protocolRes.heartbeatSC, null))
                 break
 
             default:

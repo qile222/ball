@@ -32,6 +32,7 @@ class WorldServer extends Server {
             case protocolRes.getGameServerCW:
                 this.handleGetGameServer(cliSocket, message)
                 break
+
             default:
                 super.handleRequest(cliSocket, message)
         }

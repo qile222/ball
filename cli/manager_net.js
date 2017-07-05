@@ -15,7 +15,7 @@ export default class NetManager extends Manager {
         for (let i in this.connections) {
             this.connections[i].lastHeartBeatTime = util.time()
             this.connections[i].socket.send({
-                head:protocolRes.headbeatCS
+                head: protocolRes.heartbeatCS
             })
         }
     }
@@ -124,7 +124,7 @@ export default class NetManager extends Manager {
     }
 
     handleMessageData(name, headStr, message) {
-        if (message.head == protocolRes.headbeatSC) {
+        if (message.head == protocolRes.heartbeatSC) {
             let connection = this.connections[name]
             connection.lag = util.time() - connection.lastHeartBeatTime
             return

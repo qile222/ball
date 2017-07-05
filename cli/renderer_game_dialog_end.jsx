@@ -32,8 +32,7 @@ export default class GameEndDialogRenderer extends DialogRenderer {
     }
 
     contentAtIdx(idx) {
-        let endData = this.props.manager.getGameEndData()
-        let rankList = endData.rankList
+        let rankList = this.props.endData.rankList
         let sortFunc
         if (idx == 0) {
             sortFunc = (p1, p2) => {

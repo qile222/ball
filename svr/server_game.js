@@ -13,7 +13,7 @@ const actionRes = require('./res_action')
 const playerState = commonRes.playerState
 const gameState = commonRes.gameState
 const gameOverTime = commonRes.gameOverTime
-const settlementTime = commonRes.settlementTime
+const gameEndTime = commonRes.gameEndTime
 const mapDefaultSize = commonRes.mapDefaultSize
 const keyFrameInterval = commonRes.keyFrameInterval
 const mapInitEntityCount = commonRes.mapRandomEntityLimit
@@ -40,8 +40,8 @@ class GameServer extends Server {
                 this.handleFrameData(cliSocket, message)
                 break
 
-            case protocol.settlementCG:
-                this.handleSettlementData(cliSocket, message)
+            case protocol.sendGameDataCG:
+                this.handleGameEndData(cliSocket, message)
                 break
 
             default:
@@ -109,7 +109,7 @@ class GameServer extends Server {
             frames: roomLogic.getFrameData(0),
             seed: roomLogic.getSeed(),
             startTime: roomLogic.getStartTime(),
-            settlementTime: settlementTime,
+            gameEndTime: gameEndTime,
             gameOverTime: gameOverTime
         }))
         player.setState(playerState.gaming)
@@ -154,35 +154,41 @@ class GameServer extends Server {
             let room = this.rooms[i]
             let state = room.logic.getState()
             if (state == gameState.playing) {
-                if (room.logic.getDuration() >= settlementTime) {
-                    this.settlementGame(room)
+                if (room.logic.getDuration() >= gameEndTime) {
+                    this.willEnd(room)
                 } else {
                     this.boardcastKeyFrame(room)
                 }
-            } else if (state == gameState.settlementing) {
+            } else if (state == gameState.ending) {
                 if (room.logic.getDuration() >= gameOverTime) {
-                    this.endGame(room)
+                    this.forceEndGame(room)
                 }
             }
         }
     }
 
-    endGame(room) {
-        let settlementData = room.logic.getSettlementResult()
-        this.socket.in(room.id).send(new Message(protocol.gameEndGC, null, settlementData))
+    willEnd(room) {
+        room.logic.willEnd()
+        this.socket.in(room.id).send(new Message(protocol.sendGameDataGC, null))
+    }
+
+    forceEndGame(room) {
+        let endData = room.logic.getGameEndData()
+        room.logic.end()
+        if (endData) {
+            this.socket.in(room.id).send(new Message(protocol.gameEndGC, null, endData))
+        } else {
+            this.socket.in(room.id).send(new Message(protocol.abnormalGC, null))
+        }
         for (let i in room.sockets) {
             this.clients[i].disconnect(true)
         }
     }
 
-    settlementGame(room) {
-        room.logic.settlement()
-        this.socket.in(room.id).send(new Message(protocol.settlementGC, null, {}))
-    }
-
-    handleSettlementData(cliSocke, message) {
+    handleGameEndData(cliSocket, message) {
         let room = this.getPlayerRoom(cliSocket)
-        room.logic.handleSettlementData(message.settlementData)
+        room.logic.handleGameEndData(message.data)
+        this.forceEndGame(room)
     }
 
     boardcastKeyFrame(room) {

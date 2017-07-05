@@ -46,7 +46,7 @@ function initWorldClient() {
     worldio = io(deployRes.world.addr + ':' + deployRes.world.port)
     worldio.once('connect', () => {
         worldio.send({
-            head: protocolRes.getGameServerCW
+            head: protocolRes.getGameServerWS
         })
     })
     worldio.on('message', data => {
