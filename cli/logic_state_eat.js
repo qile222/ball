@@ -2,7 +2,7 @@ import StateLogic from './logic_state'
 import commonRes from './res_common'
 import {util} from './global'
 
-const numberEplison = commonRes.numberEplison
+const epsilon = commonRes.epsilon
 const abs = Math.abs
 const lifeCycle = commonRes.lifeCycle
 
@@ -33,7 +33,7 @@ export default class EatStateLogic extends StateLogic {
                 entity.getFixedPosition(),
                 entityRadius)) {
                 let radiusDiff = radius - entityRadius
-                if (abs(radiusDiff) <= numberEplison || radiusDiff < 0) {
+                if (abs(radiusDiff) <= epsilon || radiusDiff < 0) {
                     entity.eat(this.entity)
                 } else {
                     this.entity.eat(entity)

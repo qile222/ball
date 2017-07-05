@@ -10,7 +10,7 @@ import Cache from './cache'
 import MemCache from './cache_mem'
 import Util from './util'
 
-const numberEplison = commonRes.numberEplison
+const epsilon = commonRes.epsilon
 
 export class Size {
 
@@ -40,17 +40,17 @@ export class Rect {
     }
 
     isContainPoint(vec2) {
-        return vec2.x - this.x > numberEplison &&
-               vec2.y - this.y > numberEplison &&
-               vec2.x - this.x + this.width < numberEplison &&
-               vec2.y <= this.y + this.height < numberEplison
+        return vec2.x - this.x > epsilon &&
+               vec2.y - this.y > epsilon &&
+               vec2.x - this.x + this.width < epsilon &&
+               vec2.y <= this.y + this.height < epsilon
     }
 
     isIntersection(rect) {
-        return this.x - rect.x - rect.width < numberEplison &&
-               rect.x - this.x - this.width < numberEplison &&
-               this.y - rect.y - rect.height < numberEplison  &&
-               rect.y - this.y - this.height < numberEplison
+        return this.x - rect.x - rect.width < epsilon &&
+               rect.x - this.x - this.width < epsilon &&
+               this.y - rect.y - rect.height < epsilon  &&
+               rect.y - this.y - this.height < epsilon
     }
 
 }

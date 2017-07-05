@@ -1,6 +1,6 @@
 import seedrandom from 'seedrandom'
 import commonRes from './res_common'
-const numberEplison = commonRes.numberEplison
+const epsilon = commonRes.epsilon
 
 export default class Util {
 
@@ -56,7 +56,7 @@ export default class Util {
         let y = p1.y - p2.y
         let centerDis = Math.sqrt(x * x + y * y)
         let disDiff = centerDis - (r1 + r2)
-        return disDiff <= numberEplison
+        return disDiff <= epsilon
     }
 
     static request(url, method, header, data, cb, timeout) {

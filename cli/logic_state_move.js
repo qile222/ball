@@ -3,7 +3,7 @@ import actionRes from './res_action'
 import commonRes from './res_common'
 import {util, eventDispatcher} from './global'
 
-const numberEplison = commonRes.numberEplison
+const epsilon = commonRes.epsilon
 const abs = Math.abs
 const lifeCycle = commonRes.lifeCycle
 
@@ -73,12 +73,12 @@ export default class MoveStateLogic extends StateLogic {
 
         let maxValue = this.entity.getMaxPosition()[direction]
         let diff = position[direction] - maxValue
-        if (diff > numberEplison) {
+        if (diff > epsilon) {
             position[direction] = maxValue
         } else {
             let minValue = this.entity.getMinPosition()[direction]
             diff = position[direction] - minValue
-            if (diff < numberEplison) {
+            if (diff < epsilon) {
                 position[direction] = minValue
             } else {
                 return
