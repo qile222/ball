@@ -18,7 +18,7 @@ export default class EntityLogic extends Logic {
         this.id = id
         this.res = entityRes[resID]
         this.lifeCycle = lifeCycle.init
-        this.liveTime = manager.getFixedUpdateLastTime() - addTime
+        this.liveTime = addTime ? manager.getFixedUpdateLastTime() - addTime : 0
         this.attacker = null
         this.rotation = 0
         this.eatenCount = 0

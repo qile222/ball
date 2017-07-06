@@ -101,7 +101,6 @@ export default class MoveStateLogic extends StateLogic {
             fixedPosition[this.direction] += this.speed * extraDt
         }
         this.entity.setFixedPosition(fixedPosition)
-        console.log(this.entity.getLiveTime())
     }
 
 }
