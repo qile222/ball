@@ -108,13 +108,6 @@ export default class EntityLogic extends Logic {
         this.position = position
     }
 
-    getBoundingBox() {
-        return new Rect(this.position.x - this.radius,
-            this.position.y - this.radius,
-            this.radius * 2,
-            this.radius * 2)
-    }
-
     handleCmd(cmd) {
         for (let state of this.states) {
             if (state.handleAction(cmd.action, cmd.data, cmd.time)) {

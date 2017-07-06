@@ -46,11 +46,18 @@ export class Rect {
                vec2.y <= this.y + this.height < epsilon
     }
 
-    isIntersection(rect) {
+    isIntersection1(rect) {
         return this.x - rect.x - rect.width < epsilon &&
                rect.x - this.x - this.width < epsilon &&
                this.y - rect.y - rect.height < epsilon  &&
                rect.y - this.y - this.height < epsilon
+    }
+
+    isIntersection2(x, y, width, height) {
+        return this.x - x - width < epsilon &&
+               x - x - this.width < epsilon &&
+               this.y - y - height < epsilon &&
+               y - y - this.height < epsilon
     }
 
 }

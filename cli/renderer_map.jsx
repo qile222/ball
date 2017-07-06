@@ -84,6 +84,7 @@ export default class MapRenderer extends Renderer {
             viewPort.height, 0, 0, viewPort.width, viewPort.height)
         let entities = this.entities
         // let drawCount = 0
+        // let d1 = Date.now()
         for (let entity of entities) {
             ctx.save()
             if (entity.draw(ctx)) {
@@ -91,6 +92,7 @@ export default class MapRenderer extends Renderer {
             }
             ctx.restore()
         }
+        // console.log(Date.now() - d1)
         // console.log(drawCount)
     }
 
