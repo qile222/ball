@@ -9,7 +9,7 @@ const eatAddRadiusRatio = commonRes.eatAddRadiusRatio
 
 export default class EntityLogic extends Logic {
 
-    constructor(manager, mapLogic, id, resID, position) {
+    constructor(manager, mapLogic, id, resID, position, addTime) {
         super()
         this.manager = manager
         this.mapLogic = mapLogic
@@ -18,18 +18,15 @@ export default class EntityLogic extends Logic {
         this.id = id
         this.res = entityRes[resID]
         this.lifeCycle = lifeCycle.init
-        this.liveTime = 0
+        this.liveTime = manager.getFixedUpdateLastTime() - addTime
         this.attacker = null
         this.rotation = 0
         this.eatenCount = 0
         this.setRadius(this.res.radius)
-        this.states = new Map()
+        this.states = []
         for (let name of this.res.states) {
             let stateConstructor = require('./logic_state_' + name).default
-            this.states.set(
-                name,
-                new (stateConstructor)(manager, mapLogic, this)
-            )
+            this.states.push(new (stateConstructor)(manager, mapLogic, this))
         }
     }
 
@@ -118,12 +115,8 @@ export default class EntityLogic extends Logic {
             this.radius * 2)
     }
 
-    getState(name) {
-        return this.states.get(name)
-    }
-
     handleCmd(cmd) {
-        for (let [, state] of this.states) {
+        for (let state of this.states) {
             if (state.handleAction(cmd.action, cmd.data, cmd.time)) {
                 return
             }
@@ -131,7 +124,7 @@ export default class EntityLogic extends Logic {
     }
 
     update(dt) {
-        for (let [, state] of this.states) {
+        for (let state of this.states) {
             state.update(dt)
         }
     }
@@ -145,7 +138,7 @@ export default class EntityLogic extends Logic {
         } else if (this.lifeCycle == lifeCycle.live) {
             this.liveTime += dt
         }
-        for (let [, state] of this.states) {
+        for (let state of this.states) {
             state.fixedUpdate(dt)
         }
     }

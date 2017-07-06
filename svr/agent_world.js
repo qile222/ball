@@ -19,17 +19,16 @@ class WorldAgent extends Agent {
         super(port)
     }
 
-    getServer(req, res) {
+    handleGetServer(req, res) {
         let worldServer = cache.get('worldServer')
         let worldData = [{
             addr: worldServer.addr,
             port: worldServer.port,
             name: worldServer.name
         }]
-        res.setHeader('Access-Control-Allow-Origin', '*')
-        res.json(new Message(undefined, null, {
-            serverList: worldData
-        }))
+        res.json(
+            new Message(undefined, null, {serverList: worldData })
+        )
     }
 
 }

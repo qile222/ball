@@ -1,7 +1,8 @@
 import React from 'react'
 import Manager from './manager'
 import commonRes from './res_common'
-import {util, cache, display, worldManager, eventDispatcher} from './global'
+import {util, cache, display, worldManager,
+    eventDispatcher, scheduler} from './global'
 import LoginRenderer from './renderer_login'
 
 export default class LoginManager extends Manager {
@@ -11,14 +12,18 @@ export default class LoginManager extends Manager {
         this.serverList = []
     }
 
-    enter() {
+    requestWorldAddr() {
         util.request(
-            commonRes.agent,
-            'POST',
-            null,
-            null,
-            this.onGetWorldServer.bind(this)
+            {
+                url: commonRes.agent,
+                method: 'POST',
+                cb: this.onGetWorldServer.bind(this)
+            }
         )
+    }
+
+    enter() {
+        this.requestWorldAddr()
         display.replaceRenderer(
             <LoginRenderer
                 manager={this}
@@ -27,9 +32,11 @@ export default class LoginManager extends Manager {
     }
 
     onGetWorldServer(isSucceed, message) {
-        if (isSucceed) {
+        if (isSucceed && message) {
             this.serverList = message.data.serverList
             eventDispatcher.emit(this, 'LoginManager_getWorldServerList')
+        } else {
+            scheduler.scheduleOnce(3000, this.requestWorldAddr.bind(this))
         }
     }
 

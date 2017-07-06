@@ -14,6 +14,7 @@ export default class MoveStateLogic extends StateLogic {
         this.action = actionRes.stand
         this.direction = null
         this.speed = this.entity.getRes().speed
+        this.startPosition = this.entity.getPosition()
     }
 
     destructor() {
@@ -96,8 +97,11 @@ export default class MoveStateLogic extends StateLogic {
         let leftDt = runningTime % dt
         let extraDt = runningTime - leftDt - this.startTime
         let fixedPosition = util.shadowCopy(this.startPosition)
-        fixedPosition[this.direction] += this.speed * extraDt
+        if (this.direction) {
+            fixedPosition[this.direction] += this.speed * extraDt
+        }
         this.entity.setFixedPosition(fixedPosition)
+        console.log(this.entity.getLiveTime())
     }
 
 }

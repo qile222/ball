@@ -13,24 +13,32 @@ class Agent extends EventEmittter {
     constructor(port) {
         super()
         this.app = express()
+        this.server = http.createServer(this.app)
         this.app.use(bodyParser.json())
-        this.app.use((error, req, res, next) => {
-            if (error) {
-                res.json(new Message(undefined, null, 'invalid json body'))
+        this.app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', req.headers.origin)
+            res.header('Access-Control-Allow-Headers', 'Content-Type')
+            res.header('Access-Control-Allow-Methods', 'POST')
+            if (req.originalUrl == '/getServer') {
+                if (req.method == 'OPTIONS') {
+                    res.sendStatus(200)
+                } else if (req.method == 'POST') {
+                    this.handleGetServer(req, res)
+                } else {
+                    res.status(404).send('world hello')
+                }
             } else {
-                next()
+                res.status(404).send('hello world')
             }
         })
-        this.server = http.createServer(this.app)
-        this.app.post('/getServer', this.getServer.bind(this))
         this.app.listen(port, () => {
             logger.info(`${this.constructor.name} listening on port ${port}`)
             this.emit('initFinished')
         })
     }
 
-    getServer(req, res) {
-        res.json(new Message(undefined, null, 'invalid playerID'))
+    handleGetServer(req, res) {
+        res.json(new Message(null, null, 'invalid req'))
     }
 
 }

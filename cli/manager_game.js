@@ -64,6 +64,9 @@ export default class GameManager extends Manager {
     }
 
     update(dt) {
+        if (this.leftTime < 1) {
+            return
+        }
         while (dt > 0) {
             let frameDelta = this.cmdLogic.getKeyFrameDelta()
             if (frameDelta < 1) {
@@ -92,18 +95,23 @@ export default class GameManager extends Manager {
                     this.scaleStartTime = util.time()
                 }
             }
-            let minDt = min(dt, this.keyFrameInterval)
+            let fixedInterval = this.keyFrameInterval
+            let minDt = min(dt, fixedInterval)
             this.runningTime += minDt
             this.leftTime = this.gameEndTime - this.runningTime
             if (this.leftTime < 0) {
+                minDt += this.leftTime
                 this.leftTime = 0
+                this.runningTime = this.gameEndTime
             }
             let fixDt = this.runningTime - this.fixedUpdateLastTime
-            if (fixDt >= this.keyFrameInterval) {
-                this.fixedUpdateLastTime += this.keyFrameInterval
-                this.mapLogic.fixedUpdate(this.keyFrameInterval)
-            } else {
-                //
+            if (fixDt >= fixedInterval) {
+                this.fixedUpdateLastTime += fixedInterval
+                this.mapLogic.fixedUpdate(fixedInterval)
+            }
+            if (this.leftTime < 1) {
+                console.log(minDt, this.runningTime)
+                this.onSendGameData()
             }
             this.mapLogic.update(minDt)
             this.cmdLogic.update(minDt)
@@ -113,6 +121,10 @@ export default class GameManager extends Manager {
 
     getRunningTime(dt) {
         return this.runningTime
+    }
+
+    getFixedUpdateLastTime() {
+        return this.fixedUpdateLastTime
     }
 
     getMapLogic() {
@@ -172,9 +184,9 @@ export default class GameManager extends Manager {
                 this.onGetFrameData(message)
                 break
 
-            case protocolRes.sendGameDataGC:
-                this.onSendGameData(message)
-                break
+            // case protocolRes.sendGameDataGC:
+            //     this.onSendGameData(message)
+            //     break
 
             case protocolRes.abnormalGC:
                 this.onAbnormal(message)
@@ -223,7 +235,7 @@ export default class GameManager extends Manager {
         this.fixedUpdateLastTime = 0
         this.gameTimer = scheduler.schedule(0, this.update.bind(this))
 
-        let updateCount = data.frames.length * data.keyFrameInterval
+        let updateCount = data.frames.length
         for (let i = 0; i < updateCount; ++i) {
             this.update(data.keyFrameInterval)
             if (this.state == gameState.ended) {
@@ -250,12 +262,12 @@ export default class GameManager extends Manager {
         let name = data.name
         let resID = data.resID
         let playerID = data.playerID
-        let playerLogic = new PlayerLogic(this, playerID, name)
+        let playerLogic = new PlayerLogic(this, playerID, name, cmd.time)
         if (playerID == memCache.get('player_info').id) {
             this.localPlayerLogic = playerLogic
         }
         this.playerLogics.push(playerLogic)
-        this.mapLogic.addEntity(resID, null, playerLogic)
+        this.mapLogic.addEntity(resID, null, playerLogic, cmd.time)
     }
 
     onRemovePlayerCmd(playerID) {
@@ -336,7 +348,7 @@ export default class GameManager extends Manager {
         eventDispatcher.emit(this, 'GameManager_end', message.data)
     }
 
-    onSendGameData(message) {
+    onSendGameData() {
         let data = {
             rankList: []
         }
@@ -347,7 +359,8 @@ export default class GameManager extends Manager {
                 playerName: playerLogic.getName(),
                 eatenCount: entityLogic.getEatenCount(),
                 weight: entityLogic.getRadius(),
-                liveTime: entityLogic.getLiveTime()
+                liveTime: entityLogic.getLiveTime(),
+                position: entityLogic.getFixedPosition()
             })
         }
         netManager.send('game', {

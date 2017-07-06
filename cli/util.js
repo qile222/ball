@@ -59,37 +59,31 @@ export default class Util {
         return disDiff <= epsilon
     }
 
-    static request(url, method, header, data, cb, timeout) {
+    static request(params) {
         let xhr = new XMLHttpRequest()
-        xhr.open(method, url, true)
-        xhr.responseType = 'text'
+        xhr.responseType = 'json'
         xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
-                let resData
-                let isSucceed = false
-                if (xhr.status == 200 || xhr.status == 304) {
-                    try {
-                        resData = JSON.parse(xhr.responseText)
-                        isSucceed = true
-                    } catch (e) {
-                        resData = e
-                    }
-                } else {
-                    resData = xhr.statusText
+            if (xhr.readyState == 4 &&
+                (xhr.status == 200 || xhr.status== 304)) {
+                if (params.cb) {
+                    params.cb(true, xhr.response)
                 }
-                cb(isSucceed, resData)
             }
         }
-        xhr.timeout = timeout || 15000
-        xhr.ontimeout = () => cb(false, 'time out')
-        xhr.onerror = (e) => cb(false, e)
-        if (header) {
-            for (let k in header) {
-                xhr.setRequestHeader(k, header[k])
+        xhr.timeout = params.timeout || 5000
+        if (params.cb) {
+            xhr.ontimeout =
+                params.cb.bind(null, false, `timeout ${xhr.timeout}MS`)
+            xhr.onerror = params.cb.bind(null, false)
+        }
+        if (params.header) {
+            for (let k in params.header) {
+                xhr.setRequestHeader(k, params.header[k])
             }
         }
-        // xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.send(data)
+        xhr.open(params.method, params.url, true)
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
+        xhr.send(JSON.stringify(params.data))
     }
 
     static shadowCopy(obj) {
@@ -113,7 +107,7 @@ export default class Util {
                         arr[i + 1] = arr[i]
                     }
                     arr[first] = tmp
-                        ++middle
+                    ++middle
                 }
             }
         }

@@ -35,7 +35,6 @@ class RoomLogic {
         this.startTime = Util.time()
         this.seed = Util.time()
         this.state = gameState.playing
-        this.gameEndData = null
 
         this.pushBackKeyFrame()
     }
@@ -50,7 +49,6 @@ class RoomLogic {
 
     willEnd() {
         this.state = gameState.ending
-        this.gameEndData = []
     }
 
     getSeed() {
@@ -102,18 +100,61 @@ class RoomLogic {
         if (this.state != gameState.playing) {
             return
         }
-        this.keyFrameData.cmds.push(new Cmd(playerID, cmd.action, cmd.data, Util.time() - this.startTime))
+        this.keyFrameData.cmds.push(
+            new Cmd(playerID, cmd.action, cmd.data, Util.time() - this.startTime)
+        )
     }
 
     handleGameEndData(data) {
-        this.gameEndData.push(data)
+        let tmpArr = Object.keys(data).map(key => data[key])
+        let dataArr = []
+        for (let endData of tmpArr) {
+            if (endData) {
+                dataArr.push(endData)
+            }
+        }
+        if (dataArr.length < 2) {
+            return dataArr[0]
+        }
+        let abs = Math.abs
+        let refEndData = dataArr[0]
+        for (let j = 1; j < dataArr.length; ++j) {
+            let endData = dataArr[j]
+            if (endData.rankList.length != refEndData.rankList.length) {
+                logger.info('unexpected data %j', data)
+                return
+            }
+            for (let i = 0; i < endData.rankList.length; ++i) {
+                let playerData = endData.rankList[i]
+                let refPlayerData = refEndData.rankList[i]
+                if (playerData.id != refPlayerData.id) {
+                    logger.info('unexpected player id %j', data)
+                    return
+                }
+                if (abs(playerData.weight - refPlayerData.weight) > commonRes.epsilon) {
+                    logger.info('unexpected player weight %j', data)
+                    return
+                }
+                if (playerData.liveTime != refPlayerData.liveTime) {
+                    logger.info('unexpected player liveTime %j', data)
+                    return
+                }
+                if (playerData.eatenCount != refPlayerData.eatenCount) {
+                    logger.info('unexpected player eatenCount %j', data)
+                    return
+                }
+                if (abs(playerData.position.x - refPlayerData.position.x) > commonRes.epsilon) {
+                    logger.info('unexpected player px %j', data)
+                    return
+                }
+                if (abs(playerData.position.y - refPlayerData.position.y) > commonRes.epsilon) {
+                    logger.info('unexpected player py %j', data)
+                    return
+                }
+            }
+        }
+        return refEndData
     }
-
-    getGameEndData() {
-        this.end()
-        return this.gameEndData[0]
-    }
-
 }
 
 module.exports = RoomLogic

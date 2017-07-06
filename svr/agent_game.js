@@ -23,7 +23,7 @@ class GameAgent extends Agent {
         scheduler.scheduleJob(tokenInspectRule, this.inspectTokens.bind(this))
     }
 
-    getServer(req, res) {
+    handleGetServer(req, res) {
         let playerID = req.body.playerID
         if (!playerID) {
             res.json(new Message(undefined, null, 'invalid playerID'))

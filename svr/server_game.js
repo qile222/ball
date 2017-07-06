@@ -154,10 +154,9 @@ class GameServer extends Server {
             let room = this.rooms[i]
             let state = room.logic.getState()
             if (state == gameState.playing) {
+                this.boardcastKeyFrame(room)
                 if (room.logic.getDuration() >= gameEndTime) {
                     this.willEnd(room)
-                } else {
-                    this.boardcastKeyFrame(room)
                 }
             } else if (state == gameState.ending) {
                 if (room.logic.getDuration() >= gameOverTime) {
@@ -169,14 +168,18 @@ class GameServer extends Server {
 
     willEnd(room) {
         room.logic.willEnd()
-        this.socket.in(room.id).send(new Message(protocol.sendGameDataGC, null))
+        room.endData = {}
+        for (let i in room.sockets) {
+            room.endData[i] = null
+        }
+        // this.socket.in(room.id).send(new Message(protocol.sendGameDataGC, null))
     }
 
     forceEndGame(room) {
-        let endData = room.logic.getGameEndData()
+        let gameResult = room.logic.handleGameEndData(room.endData)
         room.logic.end()
-        if (endData) {
-            this.socket.in(room.id).send(new Message(protocol.gameEndGC, null, endData))
+        if (gameResult) {
+            this.socket.in(room.id).send(new Message(protocol.gameEndGC, null, gameResult))
         } else {
             this.socket.in(room.id).send(new Message(protocol.abnormalGC, null))
         }
@@ -187,7 +190,12 @@ class GameServer extends Server {
 
     handleGameEndData(cliSocket, message) {
         let room = this.getPlayerRoom(cliSocket)
-        room.logic.handleGameEndData(message.data)
+        room.endData[cliSocket.id] = message.data
+        for (let i in room.endData) {
+            if (!room.endData[i]) {
+                return
+            }
+        }
         this.forceEndGame(room)
     }
 
@@ -200,7 +208,7 @@ class GameServer extends Server {
 
     getPlayerRoom(cliSocket) {
         let rooms = cliSocket.adapter.rooms
-        return rooms[Object.getOwnPropertyNames(rooms)[0]]
+        return rooms[Object.keys(rooms)[0]]
     }
 }
 

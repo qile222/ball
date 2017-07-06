@@ -53,7 +53,7 @@ export default class MapLogic extends Logic {
         }
     }
 
-    addEntity(resID, position, player) {
+    addEntity(resID, position, player, addTime) {
         if (!position) {
             position = new Vec2(
                 floor(this.size.width / 2),
@@ -65,7 +65,8 @@ export default class MapLogic extends Logic {
             this,
             ++this.idCursor,
             resID,
-            position
+            position,
+            addTime
         )
         this.entities.push(entity)
         if (player) {
