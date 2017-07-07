@@ -11,7 +11,6 @@ const eatAniRadians = commonRes.eatAniRadians
 const eatAniTime = commonRes.eatAniTime
 const eatAniHalfTime = eatAniTime / 2
 const eatAniRatio = eatAniRadians / eatAniTime / 2
-const lifeCycle = commonRes.lifeCycle
 
 class EntityRenderer {
 
@@ -21,7 +20,6 @@ class EntityRenderer {
         this.mapRenderer = mapRenderer
         this.scale = 1
         this.rotation = 0
-        this.radius = this.logic.getRadius()
         eventDispatcher.addListener(
             this.logic,
             'entity_changeDirection',
@@ -37,7 +35,7 @@ class EntityRenderer {
     }
 
     onEat(entity, target) {
-        this.radius = this.logic.getRadius()
+
     }
 
     onChangeDirection(entity, moveState) {
@@ -56,7 +54,7 @@ class EntityRenderer {
 
     draw(ctx) {
         let viewPort = this.mapRenderer.getViewPort()
-        let radius = this.radius
+        let radius = this.logic.getRadius()
         let position = this.logic.getPosition()
         let x = position.x - radius
         let y = position.y - radius
@@ -93,14 +91,16 @@ export class CircleEntityRenderer extends EntityRenderer {
     }
 
     draw(ctx) {
-        if (!super.draw(ctx)) {
+        //too expensive
+        // if (!super.draw(ctx)) {
+        if (!EntityRenderer.prototype.draw.call(this, ctx)) {
             return false
         }
         ctx.beginPath()
         let now = util.time()
         let timeDiff = (now - this.startTime) % eatAniTime
         let eatAniCurRadians = abs(eatAniRatio * (timeDiff - eatAniHalfTime))
-        let radius = this.logic.radius
+        let radius = this.logic.getRadius()
         ctx.arc(0, 0, radius, eatAniCurRadians, -eatAniCurRadians - 0.15, false)
         ctx.lineTo(radius / -3, 0)
         let initedTime = now - this.startTime
@@ -134,20 +134,22 @@ export class PolygonEntityRenderer extends EntityRenderer {
         let randomInt = util.randomInt
         this.rotation = randomInt(twoPI * 100) / 100
         this.sideCount = this.logic.getRes().ext.sideCount
-        this.radius = this.radius
+        this.radius = this.logic.getRadius()
         this.color = new Color4B(randomInt(256), randomInt(256), randomInt(256))
         this.colorStr = this.color.toString()
     }
 
     draw(ctx) {
-        if (!super.draw(ctx)) {
+        // if (!super.draw(ctx)) {
+        if (!EntityRenderer.prototype.draw.call(this, ctx)) {
             return false
         }
         ctx.beginPath()
+        let radius = this.logic.getRadius()
         let step = twoPI / this.sideCount
         for (var i = 0; i <= this.sideCount; i++) {
             var curStep = i * step
-            ctx.lineTo(this.radius * cos(curStep), this.radius * sin(curStep))
+            ctx.lineTo(radius * cos(curStep), radius * sin(curStep))
         }
         ctx.fillStyle = this.colorStr
         ctx.fill()
@@ -165,7 +167,8 @@ export class SaboteurEntityRenderer extends PolygonEntityRenderer {
     }
 
     draw(ctx) {
-        if (!super.draw(ctx)) {
+        // if (!super.draw(ctx)) {
+        if (!PolygonEntityRenderer.prototype.draw.call(this, ctx)) {
             return false
         }
         let now = util.time()

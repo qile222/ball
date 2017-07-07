@@ -15,7 +15,7 @@ module.exports = {
         width: 2400,
         height: 2400
     },
-    mapRandomEntityLimit: 300,
+    mapRandomEntityLimit: 200,
     gameOverTime: 1500000,
     gameEndTime: 1000000,
     epsilon: 0.000001,

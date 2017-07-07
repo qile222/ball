@@ -1,6 +1,5 @@
 import seedrandom from 'seedrandom'
 import commonRes from './res_common'
-const epsilon = commonRes.epsilon
 
 export default class Util {
 

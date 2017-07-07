@@ -23,21 +23,20 @@ export default class EatStateLogic extends StateLogic {
 
         let entities = this.mapLogic.getEntities()
         for (let entity of entities) {
-            if (!entity || entity == this.entity || !entity.getRes().isFood
-                || entity.getLifeCycle() != lifeCycle.live) {
-                continue
-            }
-            let entityRadius = entity.getRadius()
-            let entityFixedPosition = entity.getFixedPosition()
-            let x = fixedPosition.x - entityFixedPosition.x
-            let y = fixedPosition.y - entityFixedPosition.y
-            let centerDis = sqrt(x * x + y * y)
-            if(centerDis - radius - entityRadius <= epsilon) {
-                let radiusDiff = radius - entityRadius
-                if (abs(radiusDiff) <= epsilon || radiusDiff < 0) {
-                    entity.eat(this.entity)
-                } else {
-                    this.entity.eat(entity)
+            if (entity != this.entity && entity.getRes().isFood
+                && entity.getLifeCycle() == lifeCycle.live) {
+                let entityRadius = entity.getRadius()
+                let entityFixedPosition = entity.getFixedPosition()
+                let x = fixedPosition.x - entityFixedPosition.x
+                let y = fixedPosition.y - entityFixedPosition.y
+                let centerDis = sqrt(x * x + y * y)
+                if(centerDis - radius - entityRadius <= epsilon) {
+                    let radiusDiff = radius - entityRadius
+                    if (abs(radiusDiff) <= epsilon || radiusDiff < 0) {
+                        entity.eat(this.entity)
+                    } else {
+                        this.entity.eat(entity)
+                    }
                 }
             }
         }
