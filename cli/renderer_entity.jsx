@@ -47,22 +47,24 @@ class EntityRenderer {
         let viewPort = this.mapRenderer.getViewPort()
         let radius = this.logic.getRadius()
         let position = this.logic.getPosition()
-        if (!viewPort.isIntersection2(
-            position.x, position.y, radius, radius)) {
+        let x = position.x - radius
+        let y = position.y - radius
+        let width = radius * 2
+        let height = radius * 2
+        if (!viewPort.isIntersection2(x, y, width, height)) {
             return false
         }
         let cos = Math.cos(this.rotation)
         let sin = Math.sin(this.rotation)
         ctx.setTransform(
-            1,0,0,1,
+            cos,
+            sin,
+            -sin,
+            cos,
             position.x - viewPort.x,
             position.y - viewPort.y
         )
-        // ctx.rotate(this.rotation)
-        // ctx.scale(this.scale, this.scale)
-        // this.doDraw(ctx)
-        // ctx.fillStyle = 'white'
-        // ctx.fillRect(0, 0, 1, 1)
+
         return true
     }
 
@@ -79,7 +81,9 @@ export class CircleEntityRenderer extends EntityRenderer {
     }
 
     draw(ctx) {
-        super.draw(ctx)
+        if (!super.draw(ctx)) {
+            return false
+        }
         ctx.beginPath()
         let now = util.time()
         let timeDiff = (now - this.startTime) % eatAniTime
@@ -102,6 +106,7 @@ export class CircleEntityRenderer extends EntityRenderer {
         }
         ctx.fillStyle = colorStr
         ctx.fill()
+        return true
     }
 
 }
@@ -119,7 +124,9 @@ export class PolygonEntityRenderer extends EntityRenderer {
     }
 
     draw(ctx) {
-        super.draw(ctx)
+        if (!super.draw(ctx)) {
+            return false
+        }
         ctx.beginPath()
         let step = twoPI / this.sideCount
         for (var i = 0; i <= this.sideCount; i++) {
@@ -128,6 +135,7 @@ export class PolygonEntityRenderer extends EntityRenderer {
         }
         ctx.fillStyle = this.colorStr
         ctx.fill()
+        return true
     }
 
 }
@@ -140,11 +148,14 @@ export class SaboteurEntityRenderer extends PolygonEntityRenderer {
         this.rotateAniTime = this.logic.getRes().ext.rotateAniTime
     }
 
-    doDraw(ctx) {
-        super.draw(ctx)
+    draw(ctx) {
+        if (!super.draw(ctx)) {
+            return false
+        }
         let now = util.time()
         let timeDiff = (now - this.startTime) % eatAniTime
         this.rotation = twoPI * timeDiff / this.rotateAniTime
+        return true
     }
 
 }

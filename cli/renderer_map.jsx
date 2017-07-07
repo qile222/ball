@@ -83,17 +83,20 @@ export default class MapRenderer extends Renderer {
         ctx.drawImage(this.grid, viewPort.x, viewPort.y, viewPort.width,
             viewPort.height, 0, 0, viewPort.width, viewPort.height)
         let entities = this.entities
-        // let drawCount = 0
-        // let d1 = Date.now()
+        let drawCount = 0
         for (let entity of entities) {
             ctx.save()
             if (entity.draw(ctx)) {
-                // ++drawCount
+                ++drawCount
             }
             ctx.restore()
         }
-        // console.log(Date.now() - d1)
-        // console.log(drawCount)
+        if (DEBUG) {
+            ctx.setTransform(1, 0, 0, 1, 0, 0)
+            ctx.font = '20px Verdana'
+            ctx.fillText('draw ' + drawCount + '/' + entities.length, 30, 30)
+            ctx.fillStyle = '#ffffff'
+        }
     }
 
     componentDidMount() {

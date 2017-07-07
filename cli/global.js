@@ -55,9 +55,9 @@ export class Rect {
 
     isIntersection2(x, y, width, height) {
         return this.x - x - width < epsilon &&
-               x - x - this.width < epsilon &&
+               x - this.x - this.width < epsilon &&
                this.y - y - height < epsilon &&
-               y - y - this.height < epsilon
+               y - this.y - this.height < epsilon
     }
 
 }
