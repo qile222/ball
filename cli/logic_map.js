@@ -22,7 +22,9 @@ export default class MapLogic extends Logic {
         this.manager = manager
         this.size = size
         this.entities = []
+        this.activityEntities = []
         this.idCursor = 0
+        this.updateRank = false
         this.createRandomEntities(initEntityCount)
     }
 
@@ -60,19 +62,23 @@ export default class MapLogic extends Logic {
                 floor(this.size.height / 2)
             )
         }
+        let res = entityRes[resID]
         let entity = new EntityLogic(
             this.manager,
             this,
             ++this.idCursor,
-            resID,
+            res,
             position,
             addTime
         )
         this.entities.push(entity)
+        if (!res.static) {
+            this.activityEntities.push(entity)
+        }
         if (player) {
             entity.setPlayerLogic(player)
             player.setEntityLogic(entity)
-            this.updatePlayerRank()
+            this.updateRank = true
         }
         eventDispatcher.emit(this, 'map_entity_add', entity)
     }
@@ -92,49 +98,46 @@ export default class MapLogic extends Logic {
                 return p1.getID() < p2.getID()
             }
         })
+        this.updateRank = false
         eventDispatcher.emit(this, 'map_rank_update')
     }
 
     onEntityDie(entity, attacker) {
-
+        let player = entity.getPlayerLogic()
+        if (player) {
+            this.manager.onRemovePlayerCmd(player.getID())
+            player.setEntityLogic(null)
+        }
+        entity.destructor()
+        eventDispatcher.emit(this, 'map_entity_die', entity)
+        this.updateRank = true
     }
 
     forceDieEntity(entity) {
-        entity.die(this, true)
+        if (entity.getLifeCycle() != lifeCycle.die) {
+            entity.die(this, true)
+        }
     }
     
     update(dt) {
-        let length = this.entities.length
-        for (let i = 0; i < length; ++i) {
-            let entity = this.entities[i]
-            if (entity.getLifeCycle() != lifeCycle.die) {
-                entity.update(dt)
-            }
+        for (let entity of this.activityEntities) {
+            entity.update(dt)
         }
     }
 
     fixedUpdate(dt) {
-        let isRemovedEntity = false
-        let length = this.entities.length
+        let length = this.activityEntities.length
         for (let i = 0; i < length; ++i) {
-            let entity = this.entities[i]
+            let entity = this.activityEntities[i]
             if (entity.getLifeCycle() == lifeCycle.die) {
-                isRemovedEntity = true
-                let player = entity.getPlayerLogic()
-                if (player) {
-                    this.manager.onRemovePlayerCmd(player.getID())
-                    player.setEntityLogic(null)
-                }
-                entity.destructor()
-                eventDispatcher.emit(this, 'map_entity_die', entity)
-                this.entities.splice(i, 1)
+                this.activityEntities.splice(i, 1)
                 --i
                 --length
             } else {
                 entity.fixedUpdate(dt)
             }
         }
-        if (isRemovedEntity) {
+        if (this.updateRank) {
             this.updatePlayerRank()
         }
     }

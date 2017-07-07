@@ -4,6 +4,7 @@ import {util} from './global'
 
 const epsilon = commonRes.epsilon
 const abs = Math.abs
+const sqrt = Math.sqrt
 const lifeCycle = commonRes.lifeCycle
 
 export default class EatStateLogic extends StateLogic {
@@ -27,18 +28,17 @@ export default class EatStateLogic extends StateLogic {
                 continue
             }
             let entityRadius = entity.getRadius()
-            if (util.isCircleIntersection(
-                fixedPosition,
-                radius,
-                entity.getFixedPosition(),
-                entityRadius)) {
+            let entityFixedPosition = entity.getFixedPosition()
+            let x = fixedPosition.x - entityFixedPosition.x
+            let y = fixedPosition.y - entityFixedPosition.y
+            let centerDis = sqrt(x * x + y * y)
+            if(centerDis - radius - entityRadius <= epsilon) {
                 let radiusDiff = radius - entityRadius
                 if (abs(radiusDiff) <= epsilon || radiusDiff < 0) {
                     entity.eat(this.entity)
                 } else {
                     this.entity.eat(entity)
                 }
-                return
             }
         }
     }

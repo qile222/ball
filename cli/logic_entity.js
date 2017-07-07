@@ -1,7 +1,6 @@
 import Logic from './logic'
 import commonRes from './res_common'
-import entityRes from './res_entities'
-import {util, Vec2, Rect} from './global'
+import {util, Vec2, eventDispatcher} from './global'
 
 const lifeCycle = commonRes.lifeCycle
 const entityInitTime = commonRes.entityInitTime
@@ -9,15 +8,15 @@ const eatAddRadiusRatio = commonRes.eatAddRadiusRatio
 
 export default class EntityLogic extends Logic {
 
-    constructor(manager, mapLogic, id, resID, position, addTime) {
+    constructor(manager, mapLogic, id, res, position, addTime) {
         super()
         this.manager = manager
         this.mapLogic = mapLogic
         this.position = position
         this.fixedPosition = util.shadowCopy(position)
         this.id = id
-        this.res = entityRes[resID]
-        this.lifeCycle = lifeCycle.init
+        this.res = res
+        this.lifeCycle = res.initState
         this.liveTime = addTime ? manager.getFixedUpdateLastTime() - addTime : 0
         this.attacker = null
         this.rotation = 0
@@ -62,6 +61,7 @@ export default class EntityLogic extends Logic {
         ++this.eatenCount
         this.setRadius(this.radius + entity.getRadius() * eatAddRadiusRatio)
         entity.die(this)
+        eventDispatcher.emit(this, 'entity_eat', entity)
     }
 
     die(attacker, force) {
@@ -117,8 +117,10 @@ export default class EntityLogic extends Logic {
     }
 
     update(dt) {
-        for (let state of this.states) {
-            state.update(dt)
+        if (this.lifeCycle != lifeCycle.die) {
+            for (let state of this.states) {
+                state.update(dt)
+            }
         }
     }
 
@@ -130,6 +132,8 @@ export default class EntityLogic extends Logic {
             }
         } else if (this.lifeCycle == lifeCycle.live) {
             this.liveTime += dt
+        } else {
+            return
         }
         for (let state of this.states) {
             state.fixedUpdate(dt)
@@ -146,7 +150,7 @@ export default class EntityLogic extends Logic {
 
     getName() {
         if (this.playerLogic) {
-            this.playerLogic.getName()
+            return this.playerLogic.getName()
         } else {
             return this.res.name
         }

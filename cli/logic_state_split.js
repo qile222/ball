@@ -3,6 +3,8 @@ import commonRes from './res_common'
 import {util} from './global'
 
 const lifeCycle = commonRes.lifeCycle
+const epsilon = commonRes.epsilon
+const sqrt = Math.sqrt
 
 export default class MoveStateLogic extends StateLogic {
 
@@ -25,11 +27,13 @@ export default class MoveStateLogic extends StateLogic {
                 entity.getLifeCycle() != lifeCycle.live) {
                 continue
             }
-            if (util.isCircleIntersection(
-                fixedPosition,
-                radius,
-                entity.getFixedPosition(),
-                entity.getRadius())) {
+
+            let entityRadius = entity.getRadius()
+            let entityFixedPosition = entity.getFixedPosition()
+            let x = fixedPosition.x - entityFixedPosition.x
+            let y = fixedPosition.y - entityFixedPosition.y
+            let centerDis = sqrt(x * x + y * y)
+            if(centerDis - radius - entityRadius <= epsilon) {
                 this.entity.eat(entity)
                 return
             }

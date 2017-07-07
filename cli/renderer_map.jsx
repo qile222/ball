@@ -32,6 +32,7 @@ export default class MapRenderer extends Renderer {
             this,
             this.onStageSizeChanged.bind(this)
         )
+        this.textureCache = {}
         this.watchingEntityLogic = null
         this.entities = []
         let entities = props.mapLogic.getEntities()
@@ -55,7 +56,6 @@ export default class MapRenderer extends Renderer {
 
     update(dt) {
         let map = this.refs.map
-        let ctx = map.getContext('2d')
         let viewPort = this.viewPort
         if (this.watchingEntityLogic) {
             let mapSize = this.props.mapLogic.getSize()
@@ -79,28 +79,34 @@ export default class MapRenderer extends Renderer {
                 }
             }
         }
-        ctx.clearRect(0, 0, map.width, map.height)
-        ctx.drawImage(this.grid, viewPort.x, viewPort.y, viewPort.width,
-            viewPort.height, 0, 0, viewPort.width, viewPort.height)
+        this.ctx.clearRect(0, 0, map.width, map.height)
+        this.ctx.drawImage(
+            this.textureCache.grid, viewPort.x, viewPort.y, viewPort.width,
+            viewPort.height, 0, 0, viewPort.width, viewPort.height
+        )
         let entities = this.entities
         let drawCount = 0
         for (let entity of entities) {
-            ctx.save()
-            if (entity.draw(ctx)) {
+            if (entity.draw(this.ctx)) {
                 ++drawCount
             }
-            ctx.restore()
         }
         if (DEBUG) {
-            ctx.setTransform(1, 0, 0, 1, 0, 0)
-            ctx.font = '20px Verdana'
-            ctx.fillText('draw ' + drawCount + '/' + entities.length, 30, 30)
-            ctx.fillStyle = '#ffffff'
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0)
+            // this.ctx.font = '20px Verdana'
+            this.ctx.fillStyle = '#ffffff'
+            this.ctx.fillText(
+                'draw ' + drawCount + '/' + entities.length, 60, map.height - 40
+            )
         }
     }
 
     componentDidMount() {
-        this.refs.map.getContext('2d').setTransform(1, 0, 0, 1, 0, 0)
+        this.ctx = this.refs.map.getContext('2d')
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0)
+        this.ctx.font = '15px Verdana'
+        this.ctx.textAlign = 'center'
+        this.ctx.textBaseline = 'middle'
     }
 
     componentWillUnmount() {
@@ -110,6 +116,7 @@ export default class MapRenderer extends Renderer {
     }
 
     render() {
+        //cache static image objects
         let mapSize = this.props.manager.getMapLogic().getSize()
         let canvas = document.createElement('canvas')
         var ctx = canvas.getContext('2d')
@@ -134,8 +141,8 @@ export default class MapRenderer extends Renderer {
         ctx.lineWidth = 1
         ctx.strokeStyle = commonRes.gameGridBorderColor
         ctx.stroke()
-        this.grid = new Image()
-        this.grid.src = ctx.canvas.toDataURL('img/png')
+        this.textureCache.grid = new Image()
+        this.textureCache.grid.src = ctx.canvas.toDataURL('img/png')
 
         let stageSize = display.getStageSize()
         this.viewPort = new Rect(0, 0, stageSize.width, stageSize.height)

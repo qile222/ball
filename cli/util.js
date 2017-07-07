@@ -51,14 +51,6 @@ export default class Util {
         return Math.round(number * p) / p
     }
 
-    static isCircleIntersection(p1, r1, p2, r2) {
-        let x = p1.x - p2.x
-        let y = p1.y - p2.y
-        let centerDis = Math.sqrt(x * x + y * y)
-        let disDiff = centerDis - (r1 + r2)
-        return disDiff <= epsilon
-    }
-
     static request(params) {
         let xhr = new XMLHttpRequest()
         xhr.responseType = 'json'

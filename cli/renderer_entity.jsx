@@ -11,6 +11,7 @@ const eatAniRadians = commonRes.eatAniRadians
 const eatAniTime = commonRes.eatAniTime
 const eatAniHalfTime = eatAniTime / 2
 const eatAniRatio = eatAniRadians / eatAniTime / 2
+const lifeCycle = commonRes.lifeCycle
 
 class EntityRenderer {
 
@@ -20,13 +21,23 @@ class EntityRenderer {
         this.mapRenderer = mapRenderer
         this.scale = 1
         this.rotation = 0
-        this.skew = 0
+        this.radius = this.logic.getRadius()
         eventDispatcher.addListener(
             this.logic,
             'entity_changeDirection',
             this,
             this.onChangeDirection
         )
+        eventDispatcher.addListener(
+            this.logic,
+            'entity_eat',
+            this,
+            this.onEat
+        )
+    }
+
+    onEat(entity, target) {
+        this.radius = this.logic.getRadius()
     }
 
     onChangeDirection(entity, moveState) {
@@ -45,7 +56,7 @@ class EntityRenderer {
 
     draw(ctx) {
         let viewPort = this.mapRenderer.getViewPort()
-        let radius = this.logic.getRadius()
+        let radius = this.radius
         let position = this.logic.getPosition()
         let x = position.x - radius
         let y = position.y - radius
@@ -54,13 +65,13 @@ class EntityRenderer {
         if (!viewPort.isIntersection2(x, y, width, height)) {
             return false
         }
-        let cos = Math.cos(this.rotation)
-        let sin = Math.sin(this.rotation)
+        let radianCos = cos(this.rotation)
+        let radisSin = sin(this.rotation)
         ctx.setTransform(
-            cos,
-            sin,
-            -sin,
-            cos,
+            radianCos * this.scale,
+            radisSin * this.scale,
+            -radisSin * this.scale,
+            radianCos * this.scale,
             position.x - viewPort.x,
             position.y - viewPort.y
         )
@@ -78,6 +89,7 @@ export class CircleEntityRenderer extends EntityRenderer {
         this.startTime = util.time()
         this.color = new Color4B(randomInt(256), randomInt(256), randomInt(256))
         this.colorStr = null
+        this.name = this.logic.getName()
     }
 
     draw(ctx) {
@@ -88,7 +100,7 @@ export class CircleEntityRenderer extends EntityRenderer {
         let now = util.time()
         let timeDiff = (now - this.startTime) % eatAniTime
         let eatAniCurRadians = abs(eatAniRatio * (timeDiff - eatAniHalfTime))
-        let radius = this.logic.getRadius()
+        let radius = this.logic.radius
         ctx.arc(0, 0, radius, eatAniCurRadians, -eatAniCurRadians - 0.15, false)
         ctx.lineTo(radius / -3, 0)
         let initedTime = now - this.startTime
@@ -106,6 +118,10 @@ export class CircleEntityRenderer extends EntityRenderer {
         }
         ctx.fillStyle = colorStr
         ctx.fill()
+
+        ctx.fillStyle = '#ffffff'
+        ctx.fillText(this.name, 0, 0)
+
         return true
     }
 
@@ -118,7 +134,7 @@ export class PolygonEntityRenderer extends EntityRenderer {
         let randomInt = util.randomInt
         this.rotation = randomInt(twoPI * 100) / 100
         this.sideCount = this.logic.getRes().ext.sideCount
-        this.radius = this.logic.getRadius()
+        this.radius = this.radius
         this.color = new Color4B(randomInt(256), randomInt(256), randomInt(256))
         this.colorStr = this.color.toString()
     }

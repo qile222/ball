@@ -1,3 +1,4 @@
+import commonRes from './res_common'
 module.exports = {
     '10000': {
         id: 10000,
@@ -7,6 +8,8 @@ module.exports = {
         radius: 15,
         probability: 0,
         isFood: true,
+        static: false,
+        initState: commonRes.lifeCycle.init,
         ext: {
 
         }
@@ -19,6 +22,8 @@ module.exports = {
         radius: 7,
         probability: 20,
         isFood: true,
+        static: true,
+        initState: commonRes.lifeCycle.live,
         ext: {
             sideCount: 3
         }
@@ -31,6 +36,8 @@ module.exports = {
         radius: 8,
         probability: 30,
         isFood: true,
+        static: true,
+        initState: commonRes.lifeCycle.live,
         ext: {
             sideCount: 4
         }
@@ -43,6 +50,8 @@ module.exports = {
         radius: 9,
         probability: 20,
         isFood: true,
+        static: true,
+        initState: commonRes.lifeCycle.live,
         ext: {
             sideCount: 5
         }
@@ -55,6 +64,8 @@ module.exports = {
         radius: 10,
         probability: 20,
         isFood: true,
+        static: true,
+        initState: commonRes.lifeCycle.live,
         ext: {
             sideCount: 6
         }
@@ -67,6 +78,8 @@ module.exports = {
         radius: 30,
         probability: 10,
         isFood: false,
+        static: false,
+        initState: commonRes.lifeCycle.live,
         ext: {
             sideCount: 6,
             sideWidth: 3,
