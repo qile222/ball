@@ -3,6 +3,7 @@ import mainStyle from './style_main'
 import MapRenderer from './renderer_map'
 import GameUIRenderer from './renderer_game_ui'
 import React from 'react'
+import {gameManager} from './global'
 
 export default class GameRenderer extends Renderer {
 
@@ -22,6 +23,10 @@ export default class GameRenderer extends Renderer {
 
     componentDidMount() {
         super.componentDidMount()
+    }
+
+    onClickExitGame() {
+        gameManager.backToHall()
     }
 
 }

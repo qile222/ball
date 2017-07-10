@@ -31,6 +31,10 @@ module.exports = {
     weightRank: 'Weight Rank',
     playerName: 'Player Name',
     rank: 'Rank',
+    serverDisconnect: '%s Server Disconnected',
+    game: 'Game',
+    world: 'World',
+    backToLogin: 'Back To Login',
 
     //error
     unknownError: 'Unknown Error',
@@ -44,6 +48,6 @@ module.exports = {
     agentError: 'Agent Error',
     invaidGameToken: 'Invalid Game Token',
     expiredGameToken: 'Expired Game Token',
-    invalidPlayerName: ' player name cannot inlude any special characters',
-    emptyPlayerName: 'player name cannot be empty'
+    invalidPlayerName: ' Player Name Cannot Inlude Any Special Characters',
+    emptyPlayerName: 'Player Name Cannot Be Empty'
 }

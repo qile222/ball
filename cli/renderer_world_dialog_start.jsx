@@ -14,6 +14,12 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
             title: lanRes.enterGame,
             btns: [
                 {
+                    title: lanRes.backToLogin,
+                    onClick: this.onClickExit.bind(this),
+                    disable: false,
+                    name: 'BackToLogin'
+                },
+                {
                     title: lanRes.enter,
                     onClick: this.onClickEnter.bind(this),
                     disable: false,
@@ -23,15 +29,16 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        super.componentDidUpdate()
-    }
-
     renderContent() {
+
     }
 
     onClickEnter() {
         worldManager.startGame()
+    }
+
+    onClickExit() {
+        worldManager.backToLogin()
     }
 
 }

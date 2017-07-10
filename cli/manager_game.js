@@ -201,15 +201,17 @@ export default class GameManager extends Manager {
     }
 
     onServerDisconnect(netManager, name) {
-        if (name == 'game') {
-            this.endGame()
+        if (name == 'world') {
+            if (this.gameState != gameState.ended) {
+                eventDispatcher.emit(this, 'gameManager_disconnect')
+            } else {
+                this.backToHall()
+            }
         }
     }
 
     onServerError(netManager, name) {
-        if (name == 'game') {
-            this.endGame()
-        }
+
     }
 
     onCreateMap(message) {
@@ -240,7 +242,7 @@ export default class GameManager extends Manager {
             }
         }
         this.joinPlayer()
-
+        memCache.set('isGaming', true)
         display.replaceRenderer(<GameRenderer manager={this} />)
     }
 
@@ -338,6 +340,7 @@ export default class GameManager extends Manager {
             scheduler.unschedule(this.gameTimer)
             delete this.gameTimer
         }
+        memCache.set('isGaming', false)
     }
 
     onGameEnd(message) {
@@ -383,8 +386,9 @@ export default class GameManager extends Manager {
     }
 
     backToHall() {
-        this.endGame()
-        worldManager.showWorld()
+        if (!netManager.disconnect('game')) {
+            worldManager.showWorld()
+        }
     }
 
     onAbnormal(message) {

@@ -33,7 +33,7 @@ export default class Renderer extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log('did uncomponent', this.constructor.name)
+        console.log('did unmout component', this.constructor.name)
         eventDispatcher.removeListener(this)
     }
 

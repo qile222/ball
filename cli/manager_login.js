@@ -2,7 +2,7 @@ import React from 'react'
 import Manager from './manager'
 import commonRes from './res_common'
 import {util, cache, display, worldManager,
-    eventDispatcher, scheduler, netManager} from './global'
+    eventDispatcher, scheduler} from './global'
 import LoginRenderer from './renderer_login'
 
 export default class LoginManager extends Manager {
@@ -47,6 +47,7 @@ export default class LoginManager extends Manager {
         cache.set('player_name', playerName)
         let server = this.serverList[serverIdx * 1]
         worldManager.enter(server.addr, server.port, playerName)
+        this.serverList = []
     }
 
 }

@@ -6,7 +6,8 @@ import GameTimerRenderer from './renderer_game_timer'
 import GameDialogSettlementRenderer from './renderer_game_dialog_settlement'
 import GameDialogEndRenderer from './renderer_game_dialog_end'
 import DialogNoticeRenderer from './renderer_dialog_notice'
-import {eventDispatcher, gameManager} from './global'
+import NoticeDialogRenderer from './renderer_dialog_notice'
+import {util, eventDispatcher, gameManager} from './global'
 
 export default class GameUIRenderer extends Renderer {
 
@@ -34,6 +35,12 @@ export default class GameUIRenderer extends Renderer {
             'GameManager_notice',
             this,
             this.onGameNotice
+        )
+        eventDispatcher.addListener(
+            gameManager,
+            'GameManager_disconnected',
+            this,
+            this.onGameDisonnect
         )
         this.state = {}
     }
@@ -74,6 +81,10 @@ export default class GameUIRenderer extends Renderer {
                 </DialogNoticeRenderer>
             )
         }
+
+            // {this.state.exitHint && <NoticeDialogRenderer
+            //     onConfirmClick={this.onClickExitGame.bind(this)}
+            //     hint={this.state.exitHint}/>}
         return <div className={mainStyle.gameUI}>{components}</div>
     }
 

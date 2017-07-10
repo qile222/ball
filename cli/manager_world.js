@@ -1,7 +1,7 @@
 import Manager from './manager'
 import protocolRes from './res_protocol'
 import {netManager, gameManager, eventDispatcher,
-    memCache, scheduler, display} from './global'
+    memCache, scheduler, display, loginManager} from './global'
 import WorldRenderer from './renderer_world'
 import React from 'react'
 
@@ -56,7 +56,13 @@ export default class WorldManager extends Manager {
     }
 
     onServerDisconnect(netManager, name) {
-
+        if (name == 'world') {
+            if (memCache.get('player_info')) {
+                eventDispatcher.emit(this, 'WorldManager_disconnect')
+            } else {
+                loginManager.enter()
+            }
+        }
     }
 
     onServerError(netManager, name, message) {
@@ -71,10 +77,6 @@ export default class WorldManager extends Manager {
         })
         memCache.set('time', data.serverTime)
         scheduler.schedule(1000, this.update.bind(this))
-        this.showWorld()
-    }
-
-    showWorld() {
         display.replaceRenderer(<WorldRenderer manager={this} />)
     }
 
@@ -90,6 +92,13 @@ export default class WorldManager extends Manager {
         let token = message.data.token
         let resID = 10000
         gameManager.enter(addr, port, token, resID)
+    }
+
+    backToLogin() {
+        memCache.clear()
+        if (!netManager.disconnect('world')) {
+            loginManager.enter()
+        }
     }
 
 }

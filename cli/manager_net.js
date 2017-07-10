@@ -25,14 +25,16 @@ export default class NetManager extends Manager {
 
     send(name, message) {
         let connection = this.connections[name]
-        for (let key in protocolRes) {
-            if (protocolRes[key] == message.head) {
-                console.log('send ', name, key, message)
-                connection.socket.send(message)
-                return
+        if (connection) {
+            for (let key in protocolRes) {
+                if (protocolRes[key] == message.head) {
+                    console.log('send ', name, key, message)
+                    connection.socket.send(message)
+                    return
+                }
             }
+            console.error('unknown protocol head ', name, message)
         }
-        console.error('unknown protocol head ', name, message)
     }
 
     getConnectionsLag() {
@@ -57,7 +59,9 @@ export default class NetManager extends Manager {
         if (this.connections[name]) {
             this.connections[name].socket.disconnect()
             delete this.connections[name]
+            return true
         }
+        return false
     }
 
     connect(name, addr, handshake) {

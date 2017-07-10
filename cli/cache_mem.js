@@ -1,7 +1,7 @@
 export default class MemCache {
 
     constructor() {
-        this.cache = {}
+        this.clear()
     }
 
     get(k) {
@@ -10,6 +10,10 @@ export default class MemCache {
 
     set(k, v) {
         this.cache[k] = v
+    }
+
+    clear() {
+        this.cache = {}
     }
 
     // setPlayerInfo(playerInfo) {

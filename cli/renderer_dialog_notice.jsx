@@ -7,6 +7,8 @@ export default class SelectDialogRenderer extends DialogRenderer {
     constructor(props) {
         super(props)
         this.state = {
+            hideClose: true,
+            title: lanRes.notice,
             btns: [
                 {
                     title: lanRes.confirm,

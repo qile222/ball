@@ -3,7 +3,7 @@ import React from 'react'
 import LoginEnterDialogRenderer from './renderer_login_dialog_enter'
 import mainStyle from './style_main'
 
-export default class WolrdRenderer extends Renderer {
+export default class LoginRenderer extends Renderer {
 
     constructor(props) {
         super(props)
