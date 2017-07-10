@@ -12,8 +12,7 @@ export default class GameRenderer extends Renderer {
 
     render() {
         let props = {
-            manager: this.props.manager,
-            mapLogic: this.props.manager.getMapLogic()
+
         }
         return <div className={mainStyle.scene}>
             <MapRenderer ref='map' {...props}/>

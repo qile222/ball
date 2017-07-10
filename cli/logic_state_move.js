@@ -1,7 +1,7 @@
 import StateLogic from './logic_state'
 import actionRes from './res_action'
 import commonRes from './res_common'
-import {util, eventDispatcher} from './global'
+import {util, eventDispatcher, gameManager} from './global'
 
 const epsilon = commonRes.epsilon
 const abs = Math.abs
@@ -9,8 +9,8 @@ const lifeCycle = commonRes.lifeCycle
 
 export default class MoveStateLogic extends StateLogic {
 
-    constructor(manager, mapLogic, entity) {
-        super(manager, mapLogic, entity)
+    constructor(mapLogic, entity) {
+        super(mapLogic, entity)
         this.action = actionRes.stand
         this.direction = null
         this.speed = this.entity.getRes().speed
@@ -34,7 +34,7 @@ export default class MoveStateLogic extends StateLogic {
     }
 
     handleAction(action, data, time) {
-        let runningTime = this.manager.getRunningTime()
+        let runningTime = gameManager.getRunningTime()
         let dt = runningTime - time
         this.update(-dt)
         if (action == actionRes.moveDown) {
@@ -93,7 +93,7 @@ export default class MoveStateLogic extends StateLogic {
             return
         }
 
-        let runningTime = this.manager.getRunningTime()
+        let runningTime = gameManager.getRunningTime()
         let leftDt = runningTime % dt
         let extraDt = runningTime - leftDt - this.startTime
         let fixedPosition = util.shadowCopy(this.startPosition)

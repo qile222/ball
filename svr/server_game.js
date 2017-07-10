@@ -9,6 +9,7 @@ const RoomLogic = require('./logic_room')
 const logger = require('./logger')
 const Util = require('./util')
 const actionRes = require('./res_action')
+const errorCodeRes = require('./res_error_code')
 
 const playerState = commonRes.playerState
 const gameState = commonRes.gameState
@@ -63,13 +64,13 @@ class GameServer extends Server {
     authorization(cliSocket, next) {
         let query = cliSocket.handshake.query
         let token = cache.get('tokens')[query.token]
-        if (!token) {
-            next(new Error(`unexist token ${JSON.stringify(query)}`))
-        } else if (token.getEx().gameServerID != this.id) {
-            next(new Error(`invalid server token ${JSON.stringify(query)}`))
+        if (!token || token.getEx().gameServerID != this.id) {
+            next({data: new Message(protocolRes.error, errorCodeRes.invaidGameToken)})
         } else {
-            next(null, true)
+            next(null)
+            return
         }
+        process.nextTick(()=>cliSocket.disconnect(true))
     }
 
     addPlayer(cliSocket) {

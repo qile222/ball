@@ -8,8 +8,8 @@ const sqrt = Math.sqrt
 
 export default class MoveStateLogic extends StateLogic {
 
-    constructor(manager, mapLogic, entity) {
-        super(manager, mapLogic, entity)
+    constructor(mapLogic, entity) {
+        super(mapLogic, entity)
     }
 
     fixedUpdate(dt) {

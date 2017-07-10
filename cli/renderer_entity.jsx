@@ -1,5 +1,5 @@
 import commonRes from './res_common'
-import {util, eventDispatcher, Color4B} from './global'
+import {util, eventDispatcher, Color4B, gameManager} from './global'
 
 const pi = Math.PI
 const twoPI = 2 * pi
@@ -14,9 +14,8 @@ const eatAniRatio = eatAniRadians / eatAniTime / 2
 
 class EntityRenderer {
 
-    constructor(logic, manager, mapRenderer) {
+    constructor(logic, mapRenderer) {
         this.logic = logic
-        this.manager = manager
         this.mapRenderer = mapRenderer
         this.scale = 1
         this.rotation = 0
@@ -119,6 +118,15 @@ export class CircleEntityRenderer extends EntityRenderer {
         ctx.fillStyle = colorStr
         ctx.fill()
 
+        let radianCos = cos(twoPI - this.rotation)
+        let radisSin = sin(twoPI - this.rotation)
+        ctx.transform(
+            radianCos * this.scale,
+            radisSin * this.scale,
+            -radisSin * this.scale,
+            radianCos * this.scale,
+            0,
+            0)
         ctx.fillStyle = '#ffffff'
         ctx.fillText(this.name, 0, 0)
 

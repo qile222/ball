@@ -2,7 +2,7 @@ import React from 'react'
 import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
-import {util, scheduler, eventDispatcher} from './global'
+import {util, scheduler, eventDispatcher, gameManager} from './global'
 
 export default class GameDialogSettlementRenderer extends DialogRenderer {
 
@@ -67,19 +67,19 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
             <div>
                 <span>{lanRes.leftTime}</span>
                 <span>
-                    {util.timeFormatMMSS(this.props.manager.getLeftTime())}
+                    {util.timeFormatMMSS(gameManager.getLeftTime())}
                 </span>
             </div>
         </div>
     }
 
     onClickContinue() {
-        this.props.manager.joinPlayer()
+        gameManager.joinPlayer()
         eventDispatcher.emit(this, 'GameDialogSettlementRenderer_continue_game')
     }
 
     onClickBackToHall() {
-        this.props.manager.backToHall()
+        gameManager.backToHall()
     }
 
 }

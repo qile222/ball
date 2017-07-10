@@ -1,6 +1,6 @@
 import StateLogic from './logic_state'
 import commonRes from './res_common'
-import {util} from './global'
+import {util, gameManager} from './global'
 
 const epsilon = commonRes.epsilon
 const abs = Math.abs
@@ -9,8 +9,8 @@ const lifeCycle = commonRes.lifeCycle
 
 export default class EatStateLogic extends StateLogic {
 
-    constructor(manager, mapLogic, entity) {
-        super(manager, mapLogic, entity)
+    constructor(mapLogic, entity) {
+        super(mapLogic, entity)
     }
 
     fixedUpdate(dt) {

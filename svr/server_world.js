@@ -7,7 +7,7 @@ const Message = require('./message')
 const logger = require('./logger')
 const deployRes = require('./res_deploy')
 const Util = require('./util')
-const codeRes = require('./res_code')
+const errorCodeRes = require('./res_error_code')
 const shortid = require('shortid')
 
 class WorldServer extends Server {
@@ -24,7 +24,7 @@ class WorldServer extends Server {
     handleRequest(cliSocket, message) {
         let player = cache.get('players')[cliSocket.id]
         if (!player) {
-            this.handleErrorLogic(cliSocket, message, codeRes.invalidPlayer)
+            this.handleErrorLogic(cliSocket, message, errorCodeRes.invalidPlayer)
             return
         }
         cliSocket.player = player
@@ -58,17 +58,19 @@ class WorldServer extends Server {
 
     authorization(cliSocket, next) {
         let query = cliSocket.handshake.query
-        if (!query.playerName) {
-            next(new Error(`unexist token ${JSON.stringify(query)}`))
-        } else {
-            query.playerName = Util.escape(query.playerName)
-            next(null, true)
+        if (query.playerName) {
+            if (/^[a-zA-Z0-9]{1,8}$/.test(query.playerName)) {
+                next(null)
+                return
+            }
         }
+        next({data: new Message(protocolRes.error, errorCodeRes.invalidPlayerName)})
+        process.nextTick(()=> { cliSocket.disconnect(true) })
     }
 
     handleGetGameServer(cliSocket, message) {
         if (cliSocket.player.getState() != commonRes.playerState.online) {
-            this.handleErrorLogic(cliSocket, message, codeRes.invalidState)
+            this.handleErrorLogic(cliSocket, message, errorCodeRes.invalidState)
             return
         }
         let reqData = {
@@ -77,11 +79,11 @@ class WorldServer extends Server {
         Util.postServer(deployRes.gameAgent, '/getServer', reqData, (error, gameData) => {
             if (error) {
                 logger.error(`req game agent error ${JSON.stringify(error)}`)
-                this.handleErrorLogic(cliSocket, message, codeRes.agentError)
+                this.handleErrorLogic(cliSocket, message, errorCodeRes.agentError)
             } else {
                 if (gameData.code != null) {
                     logger.error(`game server error ${JSON.stringify(gameData)}`)
-                    this.handleErrorLogic(cliSocket, message, codeRes.agentError)
+                    this.handleErrorLogic(cliSocket, message, errorCodeRes.agentError)
                 } else {
                     cliSocket.send(new Message(protocolRes.getGameServerWC, null, gameData.data))
                 }

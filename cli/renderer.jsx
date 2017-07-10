@@ -25,7 +25,7 @@ export default class Renderer extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        // console.log('will update component', this.constructor.name)
+        console.log('will update component', this.constructor.name)
     }
 
     componentDidUpdate(prevProps, prevState) {

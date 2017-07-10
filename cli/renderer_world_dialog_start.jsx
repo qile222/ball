@@ -3,6 +3,7 @@ import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
 import commonRes from './res_common'
+import {worldManager} from './global'
 
 export default class WorldStartDialogRenderer extends DialogRenderer {
 
@@ -30,7 +31,7 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
     }
 
     onClickEnter() {
-        this.props.manager.startGame()
+        worldManager.startGame()
     }
 
 }

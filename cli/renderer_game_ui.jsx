@@ -6,7 +6,7 @@ import GameTimerRenderer from './renderer_game_timer'
 import GameDialogSettlementRenderer from './renderer_game_dialog_settlement'
 import GameDialogEndRenderer from './renderer_game_dialog_end'
 import DialogNoticeRenderer from './renderer_dialog_notice'
-import {eventDispatcher} from './global'
+import {eventDispatcher, gameManager} from './global'
 
 export default class GameUIRenderer extends Renderer {
 
@@ -18,19 +18,19 @@ export default class GameUIRenderer extends Renderer {
             this,
             this.onGameSettlementDialogContinueGame)
         eventDispatcher.addListener(
-            props.manager,
+            gameManager,
             'GameManager_settlement',
             this,
             this.onGameSettlement
         )
         eventDispatcher.addListener(
-            props.manager,
+            gameManager,
             'GameManager_end',
             this,
             this.onGameEnd
         )
         eventDispatcher.addListener(
-            props.manager,
+            gameManager,
             'GameManager_notice',
             this,
             this.onGameNotice

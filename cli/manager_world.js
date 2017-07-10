@@ -11,15 +11,21 @@ export default class WorldManager extends Manager {
         super()
         eventDispatcher.addListener(
             netManager,
-            'net_message',
+            'netManager_message',
             this,
             this.onServerMessage
         )
         eventDispatcher.addListener(
             netManager,
-            'net_error',
+            'netManager_error',
             this,
             this.onServerError
+        )
+        eventDispatcher.addListener(
+            netManager,
+            'netManager_disconnect',
+            this,
+            this.onServerDisconnect
         )
     }
 
@@ -49,7 +55,11 @@ export default class WorldManager extends Manager {
         }
     }
 
-    onServerError(netManager, name) {
+    onServerDisconnect(netManager, name) {
+
+    }
+
+    onServerError(netManager, name, message) {
 
     }
 

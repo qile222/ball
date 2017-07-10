@@ -1,7 +1,7 @@
 import Renderer from './renderer'
 import React from 'react'
 import mainStyle from './style_main'
-import {util, scheduler} from './global'
+import {util, scheduler, gameManager} from './global'
 
 export default class GameTimerRenderer extends Renderer {
 
@@ -29,7 +29,7 @@ export default class GameTimerRenderer extends Renderer {
 
     render() {
         return <div className={mainStyle.gameTimer}>
-            {util.timeFormatMMSS(this.props.manager.getLeftTime())}
+            {util.timeFormatMMSS(gameManager.getLeftTime())}
         </div>
     }
 

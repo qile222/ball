@@ -1,12 +1,12 @@
 import actionRes from './res_action'
 import Logic from './logic'
+import {gameManager} from './global'
 
 export default class ControllLogic extends Logic {
 
-    constructor(manager) {
+    constructor() {
         super()
 
-        this.manager = manager
         this.actions = []
     }
 
@@ -47,7 +47,7 @@ export default class ControllLogic extends Logic {
         } else {
             return false
         }
-        this.manager.handleUserAction(action, data)
+        gameManager.handleUserAction(action, data)
         return false
     }
 

@@ -2,7 +2,7 @@ import EntityLogic from './logic_entity'
 import entityRes from './res_entities'
 import commonRes from './res_common'
 import Logic from './logic'
-import {util, Vec2, eventDispatcher} from './global'
+import {util, Vec2, eventDispatcher, gameManager} from './global'
 
 const lifeCycle = commonRes.lifeCycle
 const sortedEntityRes = []
@@ -17,9 +17,8 @@ for (let i in entityRes) {
 
 export default class MapLogic extends Logic {
 
-    constructor(manager, size, initEntityCount) {
+    constructor(size, initEntityCount) {
         super()
-        this.manager = manager
         this.size = size
         this.entities = []
         this.activityEntities = []
@@ -64,7 +63,6 @@ export default class MapLogic extends Logic {
         }
         let res = entityRes[resID]
         let entity = new EntityLogic(
-            this.manager,
             this,
             ++this.idCursor,
             res,
@@ -84,7 +82,7 @@ export default class MapLogic extends Logic {
     }
 
     updatePlayerRank() {
-        let players = this.manager.getPlayerLogics()
+        let players = gameManager.getPlayerLogics()
         util.mergeSort(players, (p1, p2) => {
             let e1 = p1.getEntityLogic()
             let e2 = p2.getEntityLogic()
@@ -105,7 +103,7 @@ export default class MapLogic extends Logic {
     onEntityDie(entity, attacker) {
         let player = entity.getPlayerLogic()
         if (player) {
-            this.manager.onRemovePlayerCmd(player.getID())
+            gameManager.onRemovePlayerCmd(player.getID())
             player.setEntityLogic(null)
         }
         entity.destructor()
@@ -144,7 +142,7 @@ export default class MapLogic extends Logic {
 
     handleCmd(cmd) {
         let cmdPlayerID = cmd.playerID
-        let players = this.manager.getPlayerLogics()
+        let players = gameManager.getPlayerLogics()
         for (let player of players) {
             if (player.getID() == cmdPlayerID) {
                 let entity = player.getEntityLogic()

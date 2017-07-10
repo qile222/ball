@@ -2,9 +2,8 @@ import Logic from './logic'
 
 export default class PlayerLogic extends Logic {
 
-    constructor(manager, id, name, enterTime) {
+    constructor(id, name, enterTime) {
         super()
-        this.manager = manager
         this.id = id
         this.name = name
         this.entity = null

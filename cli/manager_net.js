@@ -1,7 +1,8 @@
 import Manager from './manager'
 import io from 'socket.io-client'
 import protocolRes from './res_protocol'
-import {console, eventDispatcher, util, scheduler} from './global'
+import errorCodeRes from './res_error_code'
+import { console, eventDispatcher, util, scheduler } from './global'
 
 export default class NetManager extends Manager {
 
@@ -16,9 +17,9 @@ export default class NetManager extends Manager {
     heartBeatTest() {
         for (let i in this.connections) {
             this.connections[i].lastHeartBeatTime = util.time()
-            this.connections[i].socket.send({
-                head: protocolRes.heartbeatCS
-            })
+            this.connections[i].socket.send(
+                { head: protocolRes.heartbeatCS }
+            )
         }
     }
 
@@ -93,10 +94,10 @@ export default class NetManager extends Manager {
             if (headStr && !message.error) {
                 this.handleMessageData(name, headStr, message)
             } else {
-                this.handleMessageError(name, headStr, message)
+                this.handleMessageError(name, message.error)
             }
         } else {
-            console.error('error message', message)
+            this.handleMessageError(name, errorCodeRes.unknownError)
         }
     }
 
@@ -106,23 +107,25 @@ export default class NetManager extends Manager {
         console.log('net on connect', name)
     }
 
-    onConnectTimeout(name, data) {
+    onConnectTimeout(name, message) {
         delete this.connections[name]
-        console.log('net connect timeout', name, data)
+        this.handleMessageError(name, errorCodeRes.timeout)
     }
 
-    onConnectError(name, data) {
+    onConnectError(name, message) {
         delete this.connections[name]
-        console.log('net connect error', name, data)
+        this.handleMessageError(name, errorCodeRes.connectError)
     }
 
-    onError(name, data) {
-        console.log('net error', name, data)
+    onError(name, message) {
+        delete this.connections[name]
+        this.handleMessageError(name, message.error)
     }
 
-    onDisconnect(name, data) {
+    onDisconnect(name) {
+        delete this.connections[name]
         console.log('net on disconnect', name)
-        eventDispatcher.emit(this, 'net_disconnect', name)
+        eventDispatcher.emit(this, 'netManager_disconnect', name)
     }
 
     handleMessageData(name, headStr, message) {
@@ -134,12 +137,20 @@ export default class NetManager extends Manager {
         if (message.head != protocolRes.frameDataGC) {
             console.log('message', headStr, message)
         }
-        eventDispatcher.emit(this, 'net_message', name, message)
+        eventDispatcher.emit(this, 'netManager_message', name, message)
     }
 
-    handleMessageError(name, headStr, message) {
-        console.error('error message ', name, headStr, message)
-        eventDispatcher.emit(this, 'net_error', name)
+    handleMessageError(name, code) {
+        let codeStr = errorCodeRes.unknownError
+        for (let i in errorCodeRes) {
+            if (errorCodeRes[i] == code) {
+                codeStr = i
+                break
+            }
+        }
+        console.error('error message ', name, codeStr)
+        eventDispatcher.emit(
+            this, 'netManager_error', name, { head:code, data:codeStr })
     }
 
     getHeadStr(head) {

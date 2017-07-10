@@ -62,11 +62,6 @@ class Util {
         })
     }
 
-    static escape(str) {
-        return str.replace(/[&<>]/g, (tag) => {
-            return expTags[tag] ? '' : tag
-        })
-    }
 }
 
 module.exports = Util

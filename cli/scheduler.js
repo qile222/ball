@@ -116,11 +116,10 @@ export default class Scheduler {
     }
 
     scheduleOnce(interval, cb) {
-        let id
-        id = this.schedule(interval, (() => {
+        let id = this.schedule(interval, () => {
             cb()
             this.unschedule(id)
-        }).bind(this))
+        })
     }
 
 }

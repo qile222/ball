@@ -1,3 +1,3 @@
-import codeRes from './res_svr_code'
+import codeRes from './res_svr_error_code'
 
 module.exports = Object.assign({}, codeRes)

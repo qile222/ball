@@ -3,7 +3,8 @@ import mainStyle from './style_main'
 import commonRes from './res_common'
 import React from 'react'
 import * as EntityRenderers from './renderer_entity'
-import {display, eventDispatcher, Rect, scheduler} from './global'
+import {display, gameManager, eventDispatcher,
+    Rect, scheduler} from './global'
 
 const floor = Math.floor
 
@@ -11,7 +12,7 @@ export default class MapRenderer extends Renderer {
 
     constructor(props) {
         super(props)
-        let keyEventHandler = props.manager.onKeyEvent.bind(props.manager)
+        let keyEventHandler = gameManager.onKeyEvent.bind(gameManager)
         document.addEventListener('keydown', keyEventHandler, false)
         document.addEventListener('keyup', keyEventHandler, false)
         eventDispatcher.addListener(
@@ -35,10 +36,10 @@ export default class MapRenderer extends Renderer {
         this.textureCache = {}
         this.watchingEntityLogic = null
         this.entities = []
-        let entities = props.mapLogic.getEntities()
+        let entities = gameManager.getMapLogic().getEntities()
         for (let entityLogic of entities) {
             this.entities.push(
-                this.createEntityRenderer(entityLogic, props.manager, this)
+                this.createEntityRenderer(entityLogic)
             )
         }
         this.timerID = scheduler.schedule(0, this.update.bind(this))
@@ -51,14 +52,14 @@ export default class MapRenderer extends Renderer {
     createEntityRenderer(entityLogic) {
         let res = entityLogic.getRes()
         let constructor = EntityRenderers[res.name + 'EntityRenderer']
-        return new constructor(entityLogic, this.props.manager, this)
+        return new constructor(entityLogic, this)
     }
 
     update(dt) {
         let map = this.refs.map
         let viewPort = this.viewPort
         if (this.watchingEntityLogic) {
-            let mapSize = this.props.mapLogic.getSize()
+            let mapSize = gameManager.getMapLogic().getSize()
             let watchPosition = this.watchingEntityLogic.getPosition()
             viewPort.x = watchPosition.x - viewPort.width / 2
             if (viewPort.x < 0) {
@@ -102,6 +103,7 @@ export default class MapRenderer extends Renderer {
     }
 
     componentDidMount() {
+        super.componentDidMount()
         this.ctx = this.refs.map.getContext('2d')
         this.ctx.setTransform(1, 0, 0, 1, 0, 0)
         this.ctx.font = '15px Verdana'
@@ -110,14 +112,18 @@ export default class MapRenderer extends Renderer {
     }
 
     componentWillUnmount() {
-        super.componentDidMount()
+        super.componentWillUnmount()
         scheduler.unschedule(this.timerID)
         this.timerID = null
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return false
+    }
+
     render() {
         //cache static image objects
-        let mapSize = this.props.manager.getMapLogic().getSize()
+        let mapSize = gameManager.getMapLogic().getSize()
         let canvas = document.createElement('canvas')
         var ctx = canvas.getContext('2d')
         canvas.width = mapSize.width
@@ -157,18 +163,16 @@ export default class MapRenderer extends Renderer {
 
     onEntityAdd(mapLogic, entity) {
         let player = entity.getPlayerLogic()
-        if (player == this.props.manager.getLocalPlayerLogic()) {
+        if (player == gameManager.getLocalPlayerLogic()) {
             this.watchingEntityLogic = entity
         }
 
-        this.entities.push(
-            this.createEntityRenderer(entity, this.props.manager, this)
-        )
+        this.entities.push(this.createEntityRenderer(entity))
     }
 
     onEntityDie(mapLogic, entity, attacker) {
         let player = entity.getPlayerLogic()
-        if (player == this.props.manager.getLocalPlayerLogic()) {
+        if (player == gameManager.getLocalPlayerLogic()) {
             this.watchingEntityLogic = null
         }
         let entities = this.entities

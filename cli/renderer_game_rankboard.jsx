@@ -1,7 +1,7 @@
 import Renderer from './renderer'
 import React from 'react'
 import mainStyle from './style_main'
-import {util, eventDispatcher} from './global'
+import {util, eventDispatcher, gameManager} from './global'
 import iconFontRes from './res_icon_font'
 import GameDialogSettingRenderer from './renderer_game_dialog_setting'
 import SelectDialogRenderer from './renderer_dialog_select'
@@ -44,7 +44,7 @@ export default class GameRankBoardRenderer extends Renderer {
         let rankList
         let toggleIconStyle
         if (this.state.toggle) {
-            let playerLogics = this.props.manager.getPlayerLogics()
+            let playerLogics = gameManager.getPlayerLogics()
             let list = []
             let localPlayerRankList = []
             let toFixed = util.toFixed
@@ -53,7 +53,7 @@ export default class GameRankBoardRenderer extends Renderer {
             if (rankCount > rankMaxCount) {
                 rankCount = rankMaxCount
             }
-            let localPlayerLogic = this.props.manager.getLocalPlayerLogic()
+            let localPlayerLogic = gameManager.getLocalPlayerLogic()
             let i = 0
             while (i < playerCount) {
                 let playerLogic = playerLogics[i]

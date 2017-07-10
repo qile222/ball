@@ -3,7 +3,8 @@ import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
 import commonRes from './res_common'
-import {eventDispatcher} from './global'
+import HintRenderer from './renderer_hint'
+import {eventDispatcher, netManager, loginManager} from './global'
 
 export default class LoginEnterDialogRenderer extends DialogRenderer {
 
@@ -23,28 +24,42 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
             selectServerIdx: '0'
         }
         eventDispatcher.addListener(
-            this.props.manager,
+            loginManager,
             'LoginManager_getWorldServerList',
             this,
             this.onGetWorldServerList)
+        eventDispatcher.addListener(
+            netManager,
+            'netManager_error',
+            this,
+            this.onServerError)
     }
 
     isValid() {
-        return this.nameInput && this.nameInput.value != '' &&
-            this.props.manager.getWorldServerList().length > 0
+        if (loginManager.getWorldServerList().length < 1) {
+            return false
+        }
+        if (/^[a-zA-Z0-9]{1,8}$/.test(this.nameInput.value)) {
+            return true
+        }
+        return false
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        this.state.btns[0].disable = !this.isValid()
-        super.componentDidUpdate()
+    componentWillUpdate(nextProps, nextState) {
+        nextState.btns[0].disable = !this.isValid()
+    }
+
+    componentDidMount() {
+        super.componentDidMount()
+        this.nameInput.focus()
     }
 
     onGetWorldServerList() {
-        this.forceUpdate()
+        this.setState({})
     }
 
     renderContent() {
-        let worldServers = this.props.manager.getWorldServerList()
+        let worldServers = loginManager.getWorldServerList()
         let serverList = []
         for (let i in worldServers) {
             serverList.push(
@@ -57,35 +72,47 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
             className={mainStyle.enterDialog}
             onSubmit={this.onSubmitForm.bind(this)}>
             <label htmlFor='name'>{lanRes.enterName}</label>
-            <input
-                defaultValue={this.props.playerName}
-                onChange={this.onInputName.bind(this)}
-                ref={(ref) => this.nameInput = ref}
-                id='name'
-                type='text'
-                placeholder={lanRes.nameInputHint}
-                maxLength={commonRes.nameMaxLength} />
+            <div>
+                <input
+                    defaultValue={this.props.playerName}
+                    onChange={this.onInputName.bind(this)}
+                    ref={(ref) => this.nameInput = ref}
+                    id='name'
+                    type='text'
+                    placeholder={lanRes.nameInputHint}
+                    maxLength={commonRes.nameMaxLength} />
+                {this.state.hint &&
+                    <HintRenderer
+                        hint={this.state.hint}
+                        willRemoveHint={this.willRemoveHint.bind(this)}/>}
+            </div>
             <label htmlFor='server'>{lanRes.serverList}</label>
-            <select
-                id='server'
-                value={this.state.selectServerIdx}
-                ref={(ref) => this.serverSelect = ref}
-                onChange={this.onSelectServer.bind(this)}>
-                {serverList}
-            </select>
+            <div>
+                <select
+                    id='server'
+                    value={this.state.selectServerIdx}
+                    ref={(ref) => this.serverSelect = ref}
+                    onChange={this.onSelectServer.bind(this)}>
+                    {serverList}
+                </select>
+            </div>
         </form>
     }
 
     onInputName(e) {
-        this.componentDidUpdate(this.props, this.props)
+        this.setState({})
     }
 
     onSelectServer(e) {
         this.setState({ selectServerIdx: e.target.value })
     }
 
+    onServerError(netManager, name, message) {
+        this.setState({ hint: lanRes[message.data] })
+    }
+
     onClickEnter() {
-        this.props.manager.enterWorld(
+        loginManager.enterWorld(
             this.nameInput.value,
             this.serverSelect.value
         )
@@ -93,9 +120,13 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
 
     onSubmitForm(e) {
         e.preventDefault()
-        if (this.isValid) {
+        if (this.isValid()) {
             this.onClickEnter()
         }
+    }
+
+    willRemoveHint() {
+        this.setState({ hint: null })
     }
 
 }

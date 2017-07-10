@@ -13,9 +13,9 @@ let svrFiles = fs.readdirSync(svrDir)
 svrFiles.forEach(function (fileName) {
     let filePath = svrDir + '/' + fileName
     let state = fs.lstatSync(filePath)
-    if (!state.isDirectory() && /^res_[0-9a-z]+\.js$/.test(fileName)) {
+    if (!state.isDirectory() && /^res[_0-9a-z]+\.js$/.test(fileName)) {
         let data = fs.readFileSync(filePath)
-        fs.writeFileSync(fileName.replace(/res_([0-9a-z]+)\.js/, __dirname + '/res_svr_$1.js'), data)
+        fs.writeFileSync(fileName.replace(/res_([_0-9a-z]+)\.js/, __dirname + '/res_svr_$1.js'), data)
     }
 })
 

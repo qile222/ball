@@ -1,4 +1,5 @@
 module.exports = {
+    //texts
     gameSetting: 'Game Setting',
     userRank: 'User Rank',
     mg: 'mg',
@@ -19,7 +20,7 @@ module.exports = {
     leftTime: 'Left Time',
     enterName: 'Enter You Name:',
     enterGame: 'Enter Game',
-    nameInputHint: 'less than 8 characters',
+    nameInputHint: 'less than 8 letters',
     serverList: 'Server List:',
     noServer: 'No valid servers',
     enter: 'Enter',
@@ -29,5 +30,20 @@ module.exports = {
     eatenRank: 'Eaten Rank',
     weightRank: 'Weight Rank',
     playerName: 'Player Name',
-    rank: 'Rank'
+    rank: 'Rank',
+
+    //error
+    unknownError: 'Unknown Error',
+    timeout: 'Timeout',
+    connectError: 'Connect Error',
+    invalidData: 'Invalid Data',
+    uselessData: 'Useless Data',
+    uselessRequest: 'Useless Request',
+    invalidPlayer: 'Invalid Player',
+    invalidState: 'Invalid State',
+    agentError: 'Agent Error',
+    invaidGameToken: 'Invalid Game Token',
+    expiredGameToken: 'Expired Game Token',
+    invalidPlayerName: ' player name cannot inlude any special characters',
+    emptyPlayerName: 'player name cannot be empty'
 }

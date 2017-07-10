@@ -21,19 +21,19 @@ export default class GameManager extends Manager {
         super()
         eventDispatcher.addListener(
             netManager,
-            'net_message',
+            'netManager_message',
             this,
             this.onServerMessage
         )
         eventDispatcher.addListener(
             netManager,
-            'net_error',
+            'netManager_error',
             this,
             this.onServerError
         )
         eventDispatcher.addListener(
             netManager,
-            'net_disconnect',
+            'netManager_disconnect',
             this,
             this.onServerDisconnect
         )
@@ -174,31 +174,29 @@ export default class GameManager extends Manager {
     }
 
     onServerMessage(netManager, name, message) {
-        if (name == 'game') {
-            switch (message.head) {
-            case protocolRes.createMapGC:
-                this.onCreateMap(message)
-                break
+        switch (message.head) {
+        case protocolRes.createMapGC:
+            this.onCreateMap(message)
+            break
 
-            case protocolRes.frameDataGC:
-                this.onGetFrameData(message)
-                break
+        case protocolRes.frameDataGC:
+            this.onGetFrameData(message)
+            break
 
-            // case protocolRes.sendGameDataGC:
-            //     this.onSendGameData(message)
-            //     break
+        // case protocolRes.sendGameDataGC:
+        //     this.onSendGameData(message)
+        //     break
 
-            case protocolRes.abnormalGC:
-                this.onAbnormal(message)
-                break
+        case protocolRes.abnormalGC:
+            this.onAbnormal(message)
+            break
 
-            case protocolRes.gameEndGC:
-                this.onGameEnd(message)
-                break
+        case protocolRes.gameEndGC:
+            this.onGameEnd(message)
+            break
 
-            default:
-                break
-            }
+        default:
+            break
         }
     }
 
@@ -217,13 +215,12 @@ export default class GameManager extends Manager {
     onCreateMap(message) {
         let data = message.data
         util.setSeed(data.seed)
-        this.controllLogic = new ControllLogic(this)
+        this.controllLogic = new ControllLogic()
         this.gameEndTime = data.gameEndTime
         this.keyFrameInterval = data.keyFrameInterval
         this.startTime = data.startTime
-        this.cmdLogic = new CmdLogic(this, data.frames, data.keyFrameInterval)
+        this.cmdLogic = new CmdLogic(data.frames, data.keyFrameInterval)
         this.mapLogic = new MapLogic(
-            this,
             data.mapInitSize,
             data.mapInitEntityCount
         )
@@ -262,7 +259,7 @@ export default class GameManager extends Manager {
         let name = data.name
         let resID = data.resID
         let playerID = data.playerID
-        let playerLogic = new PlayerLogic(this, playerID, name, cmd.time)
+        let playerLogic = new PlayerLogic(playerID, name, cmd.time)
         if (playerID == memCache.get('player_info').id) {
             this.localPlayerLogic = playerLogic
         }

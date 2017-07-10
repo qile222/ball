@@ -2,7 +2,7 @@ import React from 'react'
 import Manager from './manager'
 import commonRes from './res_common'
 import {util, cache, display, worldManager,
-    eventDispatcher, scheduler} from './global'
+    eventDispatcher, scheduler, netManager} from './global'
 import LoginRenderer from './renderer_login'
 
 export default class LoginManager extends Manager {
@@ -26,7 +26,6 @@ export default class LoginManager extends Manager {
         this.requestWorldAddr()
         display.replaceRenderer(
             <LoginRenderer
-                manager={this}
                 playerName={cache.get('player_name')}/>
         )
     }

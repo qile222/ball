@@ -1,5 +1,32 @@
 @import './style_static.less';
 
+@borderRaidus: 5px;
+@fontColor: #cdcdcd;
+@dialogTitleColor: #00aa00;
+@dialogOpenDuration: 0.25s;
+@keyframes ScaleToMax {
+    0% { transform: scale(0) translate(-50%, -50%); opacity: 0; }
+    75% { transform: scale(1.2) translate(-50%, -50%); }
+    100% { transform: scale(1.1) translate(-50%, -50%); opacity: 100%; }
+}
+
+@keyframes ScaleToMin {
+    0% { transform: scale(1.1) translate(-50%, -50%); opacity: 100%; }
+    75% { transform: scale(0.25) translate(-50%, -50%); }
+    100% { transform: scale(0) translate(-50%, -50%); opacity: 0; }
+}
+
+@keyframes FadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 100%; }
+}
+
+@keyframes FadeOut {
+    0% { opacity: 100%; }
+    100% { opacity: 0%; }
+}
+
+
 html, body {
     padding: 0;
     margin: 0;
@@ -7,9 +34,14 @@ html, body {
     height: 100%;
     font-size: 14px;
 }
-@borderRaidus: 5px;
-@fontColor: #cdcdcd;
-@dialogTitleColor: #00aa00;
+
+.centerAlign (@position: fixed) {
+    display: block;
+    position: @position;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
 button {
     margin: 0;
@@ -25,6 +57,40 @@ button {
     }
 }
 
+::-webkit-input-placeholder {
+    font-size: 14px;
+}
+
+.hint {
+    @triangleBorderWidth: 15px;
+    .centerAlign(absolute);
+    background-color: #ffffff;
+    padding: 5px;
+    border-radius: @borderRaidus;
+    border:solid 1px @fontColor;
+    box-sizing: border-box;
+    transform-origin: 0 0;
+    animation-name: ScaleToMax;
+    animation-duration: @dialogOpenDuration;
+    font-size: 14px;
+    top: auto;
+    bottom: 100%;
+    white-space: nowrap;
+    width: auto;
+    max-width: 100%;
+    &::before {
+        content: "";
+        .centerAlign(absolute);
+        top: calc(~"100% + @{triangleBorderWidth}");
+        border: solid @triangleBorderWidth @fontColor;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        z-index: 1;
+    }
+    // top: 100%;
+}
+
 .static_bg {
     max-width: 100%;
     max-height: 100%;
@@ -35,54 +101,6 @@ button {
     vertical-align: -0.15em;
     fill: @fontColor;
     overflow: hidden;
-}
-@dialogOpenDuration: 0.25s;
-@keyframes ScaleToMax {
-    0% {
-        transform: scale(0) translate(-50%, -50%);
-        opacity: 0;
-    }
-    75% {
-        transform: scale(1.2) translate(-50%, -50%);
-    }
-
-    100% {
-        transform: scale(1.1) translate(-50%, -50%);
-        opacity: 100%;
-    }
-}
-
-@keyframes ScaleToMin {
-    0% {
-        transform: scale(1.1) translate(-50%, -50%);
-        opacity: 100%;
-    }
-    75% {
-        transform: scale(0.25) translate(-50%, -50%);
-    }
-
-    100% {
-        transform: scale(0) translate(-50%, -50%);
-        opacity: 0;
-    }
-}
-
-@keyframes FadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 100%;
-    }
-}
-
-@keyframes FadeOut {
-    0% {
-        opacity: 100%;
-    }
-    100% {
-        opacity: 0%;
-    }
 }
 
 #container {
@@ -241,10 +259,7 @@ button {
     border-radius: @borderRaidus;
     animation-duration: @dialogOpenDuration;
     animation-name: ScaleToMax;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    .centerAlign;
     transform-origin: 0 0;
     color: @dialogTitleColor;
     width: 400px;
@@ -370,11 +385,14 @@ button {
 
 .enterDialog {
     font-size: 18px;
+    > div {
+        position: relative;
+    }
     > label {
         display: block;
         margin: 10px 0;
     }
-    > input, > select {
+    input, select {
         display: block;
         font-size: 18px;
         box-sizing: border-box;

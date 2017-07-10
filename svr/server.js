@@ -6,7 +6,7 @@ const EventEmitter = require('events').EventEmitter
 const Message = require('./message')
 const protocolRes = require('./res_protocol')
 const commonRes = require('./res_common')
-const codeRes = require('./res_code')
+const errorCodeRes = require('./res_error_code')
 const logger = require('./logger')
 const shortid = require('shortid')
 
@@ -24,7 +24,6 @@ class Server extends EventEmitter {
 
     start(port) {
         this.app = express()
-        this.app.get('*', this.onGet.bind(this))
         this.server = http.createServer(this.app)
         this.socket = io(this.server)
         this.socket.on('connection', this.onConnection.bind(this))
@@ -33,10 +32,9 @@ class Server extends EventEmitter {
             logger.info(`${this.constructor.name} listening on port ${port}`)
             this.emit('initFinished')
         })
-    }
-
-    onGet(req, res) {
-        res.send('hello ' + this.constructor.name)
+        this.app.use((req, res, next) => {
+            res.send('hello ' + this.constructor.name)
+        })
     }
 
     disconnect() {
@@ -72,10 +70,10 @@ class Server extends EventEmitter {
             if (typeof message.head == 'number') {
                 this.handleRequest(cliSocket, message)
             } else {
-                this.handleErrorRequest(cliSocket, message, codeRes.uselessData)
+                this.handleErrorRequest(cliSocket, message, errorCodeRes.uselessData)
             }
         } else {
-            this.handleErrorRequest(cliSocket, message, codeRes.invalidData)
+            this.handleErrorRequest(cliSocket, message, errorCodeRes.invalidData)
         }
     }
 
@@ -87,17 +85,17 @@ class Server extends EventEmitter {
                 break
 
             default:
-                this.handleErrorRequest(cliSocket, message, codeRes.uselessRequest)
+                this.handleErrorRequest(cliSocket, message, errorCodeRes.uselessRequest)
         }
     }
 
     handleErrorRequest(cliSocket, message, errorCode) {
-        logger.error(errorCode, codeRes[errorCode], message)
+        logger.error(errorCode, errorCode, message)
         cliSocket.send(new Message(protocolRes.error, errorCode, message))
     }
 
     handleErrorLogic(cliSocket, message, errorCode) {
-        logger.error(errorCode, codeRes[errorCode], message)
+        logger.error(errorCode, errorCode, message)
         cliSocket.send(new Message(message.head, errorCode, message))
     }
 }

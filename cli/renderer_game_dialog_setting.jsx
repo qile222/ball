@@ -1,7 +1,7 @@
 import React from 'react'
 import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
-import {eventDispatcher} from './global'
+import {eventDispatcher, gameManager} from './global'
 
 export default class GameDialogSettingRenderer extends DialogRenderer {
 
@@ -39,7 +39,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
     }
 
     onClickBackToHall() {
-        this.props.manager.backToHall()
+        gameManager.backToHall()
     }
 
 }

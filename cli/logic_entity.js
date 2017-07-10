@@ -1,6 +1,6 @@
 import Logic from './logic'
 import commonRes from './res_common'
-import {util, Vec2, eventDispatcher} from './global'
+import {util, Vec2, eventDispatcher, gameManager} from './global'
 
 const lifeCycle = commonRes.lifeCycle
 const entityInitTime = commonRes.entityInitTime
@@ -8,16 +8,15 @@ const eatAddRadiusRatio = commonRes.eatAddRadiusRatio
 
 export default class EntityLogic extends Logic {
 
-    constructor(manager, mapLogic, id, res, position, addTime) {
+    constructor(mapLogic, id, res, position, addTime) {
         super()
-        this.manager = manager
         this.mapLogic = mapLogic
         this.position = position
         this.fixedPosition = util.shadowCopy(position)
         this.id = id
         this.res = res
         this.lifeCycle = res.initState
-        this.liveTime = addTime ? manager.getFixedUpdateLastTime() - addTime : 0
+        this.liveTime = addTime ? gameManager.getFixedUpdateLastTime() - addTime : 0
         this.attacker = null
         this.rotation = 0
         this.eatenCount = 0
@@ -25,7 +24,7 @@ export default class EntityLogic extends Logic {
         this.states = []
         for (let name of this.res.states) {
             let stateConstructor = require('./logic_state_' + name).default
-            this.states.push(new (stateConstructor)(manager, mapLogic, this))
+            this.states.push(new (stateConstructor)(mapLogic, this))
         }
     }
 

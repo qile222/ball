@@ -17,8 +17,8 @@ export default class DialogRenderer extends Renderer {
     }
 
     componentDidMount() {
-        super.componentWillMount()
-        this.componentDidUpdate()
+        super.componentDidMount()
+        this.openDialog()
     }
 
     componentWillUnmount() {

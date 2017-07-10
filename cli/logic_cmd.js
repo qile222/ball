@@ -1,11 +1,10 @@
 import Logic from './logic'
-import {console} from './global'
+import {console, gameManager} from './global'
 
 export default class CmdLogic extends Logic {
 
-    constructor(manager, keyFrameDataQueue, keyFrameInterval) {
+    constructor(keyFrameDataQueue, keyFrameInterval) {
         super()
-        this.manager = manager
         this.frameDataQueue = keyFrameDataQueue
         this.keyFrameIndex = 0
         this.keyFrameCmdIndex = 0
@@ -43,7 +42,7 @@ export default class CmdLogic extends Logic {
     update(dt) {
         let frameDataQueueLength = this.frameDataQueue.length
         console.assert(this.keyFrameIndex < frameDataQueueLength)
-        let runningTime = this.manager.getRunningTime()
+        let runningTime = gameManager.getRunningTime()
         let keyFrameData = this.frameDataQueue[this.keyFrameIndex]
         let cmds = keyFrameData.cmds
         let cmdLength = cmds.length
@@ -51,7 +50,7 @@ export default class CmdLogic extends Logic {
             let cmd = cmds[this.keyFrameCmdIndex]
             if (runningTime >= cmd.time) {
                 ++this.keyFrameCmdIndex
-                this.manager.handleCmd(cmd)
+                gameManager.handleCmd(cmd)
             } else {
                 return
             }

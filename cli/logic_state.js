@@ -2,9 +2,8 @@ import Logic from './logic'
 
 export default class StateLogic extends Logic {
 
-    constructor(manager, mapLogic, entity) {
+    constructor(mapLogic, entity) {
         super()
-        this.manager = manager
         this.mapLogic = mapLogic
         this.entity = entity
     }
