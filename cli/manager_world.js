@@ -77,6 +77,10 @@ export default class WorldManager extends Manager {
         })
         memCache.set('time', data.serverTime)
         scheduler.schedule(1000, this.update.bind(this))
+        this.showWorld()
+    }
+
+    showWorld() {
         display.replaceRenderer(<WorldRenderer manager={this} />)
     }
 

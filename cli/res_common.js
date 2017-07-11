@@ -15,11 +15,6 @@ module.exports = Object.assign({
         live: 2,
         die: 3,
     },
-    gameState: {
-        pendding: 0,
-        playing: 1,
-        ended: 2
-    },
     fastForwardTimeScale: 4,
     eatAniTime: 500,
     eatAniRadians: Math.PI,

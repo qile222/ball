@@ -16,7 +16,8 @@ export default class EntityLogic extends Logic {
         this.id = id
         this.res = res
         this.lifeCycle = res.initState
-        this.liveTime = addTime ? gameManager.getFixedUpdateLastTime() - addTime : 0
+        this.liveTime =
+            addTime ? gameManager.getFixedUpdateLastTime() - addTime : 0
         this.attacker = null
         this.rotation = 0
         this.eatenCount = 0

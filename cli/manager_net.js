@@ -154,7 +154,8 @@ export default class NetManager extends Manager {
         }
         console.error('error message ', name, codeStr)
         eventDispatcher.emit(
-            this, 'netManager_error', name, { head:code, data:codeStr })
+            this, 'netManager_error', name, { head:code, data:codeStr }
+        )
     }
 
     getHeadStr(head) {

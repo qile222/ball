@@ -35,6 +35,7 @@ module.exports = {
     game: 'Game',
     world: 'World',
     backToLogin: 'Back To Login',
+    gameAbnormal: 'Unknown Exception,Game Will Exit',
 
     //error
     unknownError: 'Unknown Error',

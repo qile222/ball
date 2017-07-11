@@ -21,7 +21,7 @@ export default class MapLogic extends Logic {
         super()
         this.size = size
         this.entities = []
-        this.activityEntities = []
+        this.activeEntities = []
         this.idCursor = 0
         this.updateRank = false
         this.createRandomEntities(initEntityCount)
@@ -29,6 +29,10 @@ export default class MapLogic extends Logic {
 
     getEntities() {
         return this.entities
+    }
+
+    getActiveEntities() {
+        return this.activeEntities
     }
 
     getSize() {
@@ -71,7 +75,7 @@ export default class MapLogic extends Logic {
         )
         this.entities.push(entity)
         if (!res.static) {
-            this.activityEntities.push(entity)
+            this.activeEntities.push(entity)
         }
         if (player) {
             entity.setPlayerLogic(player)
@@ -118,17 +122,17 @@ export default class MapLogic extends Logic {
     }
     
     update(dt) {
-        for (let entity of this.activityEntities) {
+        for (let entity of this.activeEntities) {
             entity.update(dt)
         }
     }
 
     fixedUpdate(dt) {
-        let length = this.activityEntities.length
+        let length = this.activeEntities.length
         for (let i = 0; i < length; ++i) {
-            let entity = this.activityEntities[i]
+            let entity = this.activeEntities[i]
             if (entity.getLifeCycle() == lifeCycle.die) {
-                this.activityEntities.splice(i, 1)
+                this.activeEntities.splice(i, 1)
                 --i
                 --length
             } else {

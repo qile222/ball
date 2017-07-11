@@ -5,9 +5,9 @@ import GameRankboardRenderer from './renderer_game_rankboard'
 import GameTimerRenderer from './renderer_game_timer'
 import GameDialogSettlementRenderer from './renderer_game_dialog_settlement'
 import GameDialogEndRenderer from './renderer_game_dialog_end'
-import DialogNoticeRenderer from './renderer_dialog_notice'
 import NoticeDialogRenderer from './renderer_dialog_notice'
-import {util, eventDispatcher, gameManager} from './global'
+import lanRes from './res_lan'
+import { util, eventDispatcher, gameManager } from './global'
 
 export default class GameUIRenderer extends Renderer {
 
@@ -32,15 +32,15 @@ export default class GameUIRenderer extends Renderer {
         )
         eventDispatcher.addListener(
             gameManager,
-            'GameManager_notice',
+            'GameManager_disconnect',
             this,
-            this.onGameNotice
+            this.onGameDisonnected
         )
         eventDispatcher.addListener(
             gameManager,
-            'GameManager_disconnected',
+            'GameManager_abnormal',
             this,
-            this.onGameDisonnect
+            this.onGameAbnormal
         )
         this.state = {}
     }
@@ -64,27 +64,35 @@ export default class GameUIRenderer extends Renderer {
                 <GameDialogEndRenderer {...this.props}
                     endData={this.state.endData} />
             ]
+        } else if (this.state.settlementData) {
+            components = [
+                <GameDialogSettlementRenderer
+                    {...this.props}
+                    settlementData={this.state.settlementData} />
+            ]
         } else {
             components = [
                 <GameTimerRenderer {...this.props} />,
                 <GameRankboardRenderer {...this.props} />,
-                this.state.settlementData && <GameDialogSettlementRenderer
-                    {...this.props}
-                    settlementData={this.state.settlementData} />
             ]
         }
-        if (this.state.noticeStr) {
+        if (this.state.exitHint) {
             components.push(
-                <DialogNoticeRenderer
-                    onClickClose={this.clickClose.bind(this)}>
-                    {this.state.noticeStr}
-                </DialogNoticeRenderer>
+                <NoticeDialogRenderer
+                    onClickClose={this.clickExitGame.bind(this)}>
+                    {this.state.exitHint}
+                </NoticeDialogRenderer>
+            )
+        }
+        if (this.state.abnormalHint) {
+            components.push(
+                <NoticeDialogRenderer
+                    onClickClose={this.clickExitGame.bind(this)}>
+                    {this.state.abnormalHint}
+                </NoticeDialogRenderer>
             )
         }
 
-            // {this.state.exitHint && <NoticeDialogRenderer
-            //     onConfirmClick={this.onClickExitGame.bind(this)}
-            //     hint={this.state.exitHint}/>}
         return <div className={mainStyle.gameUI}>{components}</div>
     }
 
@@ -101,7 +109,21 @@ export default class GameUIRenderer extends Renderer {
     }
 
     onGameNotice(gameManager, str) {
-        this.setState( {noticeStr: str} )
+        this.setState({ noticeStr: str })
+    }
+
+    onGameDisonnected() {
+        this.setState({
+            exitHint: util.format(lanRes.serverDisconnect, lanRes.game)
+        })
+    }
+
+    onGameAbnormal() {
+        this.setState({ abnormalHint: util.format(lanRes.gameAbnormal) })
+    }
+
+    clickExitGame() {
+        gameManager.backToHall()
     }
 
 }

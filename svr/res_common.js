@@ -5,19 +5,20 @@ module.exports = {
     },
     keyFrameInterval: 100,
     gameState: {
-        playing: 0,
-        ending: 1,
-        ended: 2
+        pendding: 0,
+        playing: 1,
+        ended: 2,
+        initing: 3,
     },
     roomEntityLimit: 20,
     roomCreateExpireTime: 5000,
     mapDefaultSize: {
-        width: 2400,
-        height: 2400
+        width: 200,
+        height: 200
     },
-    mapRandomEntityLimit: 200,
-    gameOverTime: 1500000,
-    gameEndTime: 1000000,
+    mapRandomEntityLimit: 10,
+    gameOverTime: 155000,
+    gameEndTime: 150000,
     epsilon: 0.000001,
     eatAddRadiusRatio: 0.1,
     entityInitTime: 3000,

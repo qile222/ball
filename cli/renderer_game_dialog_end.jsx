@@ -3,7 +3,7 @@ import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import SwitchWidgetRenderer from './renderer_widget_switch'
 import mainStyle from './style_main'
-import {util, worldManager} from './global'
+import {util, gameManager} from './global'
 
 export default class GameEndDialogRenderer extends DialogRenderer {
 
@@ -50,7 +50,7 @@ export default class GameEndDialogRenderer extends DialogRenderer {
                 <div>
                     <span>{i * 1 + 1}</span>
                     <span>{rankList[i].playerName}</span>
-                    <span>{rankList[i].weight}</span>
+                    <span>{util.toFixed(rankList[i].weight, 1)}</span>
                     <span>{rankList[i].eatenCount}</span>
                 </div>
             )
@@ -67,7 +67,7 @@ export default class GameEndDialogRenderer extends DialogRenderer {
     }
 
     onClickBackToHall() {
-        worldManager.backToHall()
+        gameManager.backToHall()
     }
 
 }

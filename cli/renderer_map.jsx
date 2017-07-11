@@ -4,17 +4,14 @@ import commonRes from './res_common'
 import React from 'react'
 import * as EntityRenderers from './renderer_entity'
 import {display, gameManager, eventDispatcher,
-    Rect, scheduler} from './global'
-
+    Rect, scheduler, util} from './global'
+const lifeCycle = commonRes.lifeCycle
 const floor = Math.floor
 
 export default class MapRenderer extends Renderer {
 
     constructor(props) {
         super(props)
-        let keyEventHandler = gameManager.onKeyEvent.bind(gameManager)
-        document.addEventListener('keydown', keyEventHandler, false)
-        document.addEventListener('keyup', keyEventHandler, false)
         eventDispatcher.addListener(
             props.mapLogic,
             'map_entity_add',
@@ -38,9 +35,11 @@ export default class MapRenderer extends Renderer {
         this.entities = []
         let entities = gameManager.getMapLogic().getEntities()
         for (let entityLogic of entities) {
-            this.entities.push(
-                this.createEntityRenderer(entityLogic)
-            )
+            if (entityLogic.getLifeCycle() != lifeCycle.die) {
+                this.entities.push(
+                    this.createEntityRenderer(entityLogic)
+                )
+            }
         }
         this.timerID = scheduler.schedule(0, this.update.bind(this))
     }
@@ -58,6 +57,7 @@ export default class MapRenderer extends Renderer {
     update(dt) {
         let map = this.refs.map
         let viewPort = this.viewPort
+        let fillText = ''
         if (this.watchingEntityLogic) {
             let mapSize = gameManager.getMapLogic().getSize()
             let watchPosition = this.watchingEntityLogic.getPosition()
@@ -79,6 +79,9 @@ export default class MapRenderer extends Renderer {
                     viewPort.y = maxY
                 }
             }
+            fillText += 'coor:'+util.toFixed(watchPosition.x, 2) +
+                ',' +
+                util.toFixed(watchPosition.y, 2)
         }
         this.ctx.clearRect(0, 0, map.width, map.height)
         this.ctx.drawImage(
@@ -93,12 +96,13 @@ export default class MapRenderer extends Renderer {
             }
         }
         if (DEBUG) {
+            fillText += ' draw:' + drawCount + '/' + entities.length
+        }
+        if (fillText != '') {
             this.ctx.setTransform(1, 0, 0, 1, 0, 0)
-            // this.ctx.font = '20px Verdana'
+            this.ctx.textAlign = 'left'
             this.ctx.fillStyle = '#ffffff'
-            this.ctx.fillText(
-                'draw ' + drawCount + '/' + entities.length, 60, map.height - 40
-            )
+            this.ctx.fillText(fillText, 0, map.height - 30)
         }
     }
 
@@ -107,7 +111,6 @@ export default class MapRenderer extends Renderer {
         this.ctx = this.refs.map.getContext('2d')
         this.ctx.setTransform(1, 0, 0, 1, 0, 0)
         this.ctx.font = '15px Verdana'
-        this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'middle'
     }
 
@@ -153,7 +156,11 @@ export default class MapRenderer extends Renderer {
         let stageSize = display.getStageSize()
         this.viewPort = new Rect(0, 0, stageSize.width, stageSize.height)
 
+        let keyEventHandler = gameManager.onKeyEvent.bind(gameManager)
         return <canvas
+            tabIndex='0'
+            onKeyDown={keyEventHandler}
+            onKeyUp={keyEventHandler}
             ref='map'
             className={mainStyle.gameMap}
             width={stageSize.width}

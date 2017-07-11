@@ -47,6 +47,9 @@ export default class ControllLogic extends Logic {
         } else {
             return false
         }
+        if (this.actions.length < 1 && action) {
+            console.log(this.actions, action)
+        }
         gameManager.handleUserAction(action, data)
         return false
     }

@@ -64,28 +64,12 @@ export default class MoveStateLogic extends StateLogic {
     }
 
     update(dt) {
-        let direction = this.direction
         if (!this.direction || !this.speed) {
             return
         }
 
         let position = this.entity.getPosition()
         position[this.direction] += this.speed * dt
-
-        let maxValue = this.entity.getMaxPosition()[direction]
-        let diff = position[direction] - maxValue
-        if (diff > epsilon) {
-            position[direction] = maxValue
-        } else {
-            let minValue = this.entity.getMinPosition()[direction]
-            diff = position[direction] - minValue
-            if (diff < epsilon) {
-                position[direction] = minValue
-            } else {
-                return
-            }
-        }
-        this.direction = null
     }
 
     fixedUpdate(dt) {
@@ -93,6 +77,7 @@ export default class MoveStateLogic extends StateLogic {
             return
         }
 
+        let direction = this.direction
         let runningTime = gameManager.getRunningTime()
         let leftDt = runningTime % dt
         let extraDt = runningTime - leftDt - this.startTime
@@ -100,6 +85,22 @@ export default class MoveStateLogic extends StateLogic {
         if (this.direction) {
             fixedPosition[this.direction] += this.speed * extraDt
         }
+
+        // let maxValue = this.entity.getMaxPosition()[direction]
+        // let diff = fixedPosition[direction] - maxValue
+        // if (diff > epsilon) {
+        //     fixedPosition[direction] = maxValue
+        // } else {
+        //     let minValue = this.entity.getMinPosition()[direction]
+        //     diff = fixedPosition[direction] - minValue
+        //     if (diff < epsilon) {
+        //         fixedPosition[direction] = minValue
+        //     } else {
+        //         return
+        //     }
+        // }
+        // // this.direction = null
+        // this.entity.setPosition(util.shadowCopy(fixedPosition))
         this.entity.setFixedPosition(fixedPosition)
     }
 

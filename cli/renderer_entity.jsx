@@ -1,5 +1,5 @@
 import commonRes from './res_common'
-import {util, eventDispatcher, Color4B, gameManager} from './global'
+import {util, eventDispatcher, Color4B} from './global'
 
 const pi = Math.PI
 const twoPI = 2 * pi
@@ -127,6 +127,7 @@ export class CircleEntityRenderer extends EntityRenderer {
             radianCos * this.scale,
             0,
             0)
+        ctx.textAlign = 'center'
         ctx.fillStyle = '#ffffff'
         ctx.fillText(this.name, 0, 0)
 

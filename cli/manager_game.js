@@ -10,7 +10,6 @@ import React from 'react'
 import GameRenderer from './renderer_game'
 import {util, memCache, netManager, console,
     scheduler, display, eventDispatcher, worldManager} from './global'
-
 const fastForwardTimeScale = commonRes.fastForwardTimeScale
 const gameState = commonRes.gameState
 const min = Math.min
@@ -46,23 +45,6 @@ export default class GameManager extends Manager {
         netManager.connect('game', addr + ':' + port, 'token=' + token)
     }
 
-    startInOfflineMode() {
-        this.offlineMode = true
-        this.state = gameState.playing
-        this.onCreateMap({
-            mapInitInfo: {
-                size: {
-                    width: 100,
-                    height: 100
-                },
-                entities: []
-            },
-            frames: [],
-            seed: util.time(),
-            startTime: util.time()
-        })
-    }
-
     update(dt) {
         if (this.leftTime < 1) {
             return
@@ -70,30 +52,32 @@ export default class GameManager extends Manager {
         while (dt > 0) {
             let frameDelta = this.cmdLogic.getKeyFrameDelta()
             if (frameDelta < 1) {
-                if (this.state == gameState.pendding) {
-                    console.log(
-                        'end pendding',
-                        util.time() - this.scaleStartTime,
-                        'ms'
-                    )
-                    this.state = gameState.playing
-                    scheduler.setTimeScale(1)
+
+                if (this.state == gameState.initing) {
+                    this.joinPlayer()
+                } else if (this.state != gameState.pendding) {
+                    return
                 }
+                let peddingTime = util.time() - this.scaleStartTime
+                console.log('end pendding', peddingTime, 'ms')
+                this.state = gameState.playing
+                scheduler.setTimeScale(1)
                 return
             } else if (frameDelta > 10000) {
                 console.log('delta too much, will exit', frameDelta)
-                this.endGame()
+                this.onAbnormal()
                 return
             } else if (frameDelta > 2) {
-                if (this.state == gameState.playing) {
-                    this.state = gameState.pendding
+                do {
+                    if (this.state == gameState.playing) {
+                        this.state = gameState.pendding
+                    } else if (this.state != gameState.initing) {
+                        break
+                    }
                     scheduler.setTimeScale(fastForwardTimeScale)
-                    console.log(
-                        'start fast forwarding, delta count',
-                        frameDelta
-                    )
+                    console.log('start fast forwarding,delta count', frameDelta)
                     this.scaleStartTime = util.time()
-                }
+                } while (!this) // for eslint no-constant-condition
             }
             let fixedInterval = this.keyFrameInterval
             let minDt = min(dt, fixedInterval)
@@ -110,7 +94,6 @@ export default class GameManager extends Manager {
                 this.mapLogic.fixedUpdate(fixedInterval)
             }
             if (this.leftTime < 1) {
-                console.log(minDt, this.runningTime)
                 this.onSendGameData()
             }
             this.mapLogic.update(minDt)
@@ -131,16 +114,8 @@ export default class GameManager extends Manager {
         return this.mapLogic
     }
 
-    getCmdLogic() {
-        return this.cmdLogic
-    }
-
-    getControllLogic() {
-        return this.controllLogic
-    }
-
     onKeyEvent(event) {
-        if (this.state != gameState.playing) {
+        if (this.state != gameState.playing || this.leftTime < 1) {
             console.log('game pendding,drop user action')
             return
         }
@@ -183,10 +158,6 @@ export default class GameManager extends Manager {
             this.onGetFrameData(message)
             break
 
-        // case protocolRes.sendGameDataGC:
-        //     this.onSendGameData(message)
-        //     break
-
         case protocolRes.abnormalGC:
             this.onAbnormal(message)
             break
@@ -201,11 +172,10 @@ export default class GameManager extends Manager {
     }
 
     onServerDisconnect(netManager, name) {
-        if (name == 'world') {
-            if (this.gameState != gameState.ended) {
-                eventDispatcher.emit(this, 'gameManager_disconnect')
-            } else {
-                this.backToHall()
+        if (name == 'game') {
+            if (this.state != gameState.ended) {
+                this.state = gameState.ended
+                eventDispatcher.emit(this, 'GameManager_disconnect')
             }
         }
     }
@@ -233,16 +203,16 @@ export default class GameManager extends Manager {
         this.keyFrameInterval = data.keyFrameInterval
         this.fixedUpdateLastTime = 0
         this.gameTimer = scheduler.schedule(0, this.update.bind(this))
+        this.state = gameState.initing
+        // this.joinPlayer()
 
-        let updateCount = data.frames.length
-        for (let i = 0; i < updateCount; ++i) {
-            this.update(data.keyFrameInterval)
-            if (this.state == gameState.ended) {
-                return
-            }
-        }
-        this.joinPlayer()
-        memCache.set('isGaming', true)
+        // let updateCount = data.frames.length
+        // for (let i = 0; i < updateCount; ++i) {
+        //     this.update(data.keyFrameInterval)
+        //     if (this.state == gameState.ended) {
+        //         return
+        //     }
+        // }
         display.replaceRenderer(<GameRenderer manager={this} />)
     }
 
@@ -273,7 +243,8 @@ export default class GameManager extends Manager {
         for (let i in this.playerLogics) {
             let playerLogic = this.playerLogics[i]
             if (playerLogic.getID() == playerID) {
-                if (playerLogic == this.localPlayerLogic) {
+                if (playerLogic == this.localPlayerLogic &&
+                    this.state == gameState.playing) {
                     this.settlementGame()
                 }
                 let entityLogic = playerLogic.getEntityLogic()
@@ -320,9 +291,6 @@ export default class GameManager extends Manager {
     }
 
     endGame() {
-        if (this.state == gameState.ended) {
-            return
-        }
         console.log('game exit')
         this.state = gameState.ended
         netManager.disconnect('game')
@@ -340,11 +308,10 @@ export default class GameManager extends Manager {
             scheduler.unschedule(this.gameTimer)
             delete this.gameTimer
         }
-        memCache.set('isGaming', false)
     }
 
     onGameEnd(message) {
-        this.endGame()
+        this.state = gameState.ended
         eventDispatcher.emit(this, 'GameManager_end', message.data)
     }
 
@@ -377,22 +344,17 @@ export default class GameManager extends Manager {
             eatenCount: entityLogic.getEatenCount(),
             attackerName: entityLogic.getAttacker().getName()
         }
-        eventDispatcher.emit(
-            this,
-            'GameManager_settlement',
-            settlementData
-        )
+        eventDispatcher.emit(this, 'GameManager_settlement', settlementData)
         this.localPlayerLogic = null
     }
 
     backToHall() {
-        if (!netManager.disconnect('game')) {
-            worldManager.showWorld()
-        }
+        this.endGame()
+        worldManager.showWorld()
     }
 
     onAbnormal(message) {
-        this.endGame()
+        eventDispatcher.emit(this, 'GameManager_abnormal')
     }
 
 }
