@@ -11,6 +11,7 @@ import GameRenderer from './renderer_game'
 import {util, memCache, netManager, console,
     scheduler, display, eventDispatcher, worldManager} from './global'
 const fastForwardTimeScale = commonRes.fastForwardTimeScale
+const initFastForwardTimeScale = commonRes.initFastForwardTimeScale
 const gameState = commonRes.gameState
 const min = Math.min
 
@@ -52,29 +53,38 @@ export default class GameManager extends Manager {
         while (dt > 0) {
             let frameDelta = this.cmdLogic.getKeyFrameDelta()
             if (frameDelta < 1) {
-
                 if (this.state == gameState.initing) {
                     this.joinPlayer()
                 } else if (this.state != gameState.pendding) {
                     return
                 }
-                let peddingTime = util.time() - this.scaleStartTime
-                console.log('end pendding', peddingTime, 'ms')
+                if (this.scaleStartTime) {
+                    let peddingTime = util.time() - this.scaleStartTime
+                    console.log('end pendding', peddingTime, 'ms')
+                    scheduler.setTimeScale(1)
+                    this.scaleStartTime = null
+                }
                 this.state = gameState.playing
-                scheduler.setTimeScale(1)
                 return
-            } else if (frameDelta > 10000) {
-                console.log('delta too much, will exit', frameDelta)
-                this.onAbnormal()
-                return
+            // } else if (frameDelta > 10000) {
+            //     console.log('delta too much, will exit', frameDelta)
+            //     this.onAbnormal()
+            //     return
             } else if (frameDelta > 2) {
                 do {
-                    if (this.state == gameState.playing) {
-                        this.state = gameState.pendding
-                    } else if (this.state != gameState.initing) {
+                    if (this.scaleStartTime) {
                         break
                     }
-                    scheduler.setTimeScale(fastForwardTimeScale)
+                    let timeScale
+                    if (this.state == gameState.playing) {
+                        this.state = gameState.pendding
+                        timeScale = fastForwardTimeScale
+                    } else if (this.state == gameState.initing) {
+                        timeScale = initFastForwardTimeScale
+                    } else {
+                        break
+                    }
+                    scheduler.setTimeScale(timeScale)
                     console.log('start fast forwarding,delta count', frameDelta)
                     this.scaleStartTime = util.time()
                 } while (!this) // for eslint no-constant-condition
@@ -199,7 +209,7 @@ export default class GameManager extends Manager {
         this.playerLogics = []
         this.runningTime = 0
         this.leftTime = this.gameEndTime
-        this.scaleStartTime = util.time()
+        this.scaleStartTime = null
         this.keyFrameInterval = data.keyFrameInterval
         this.fixedUpdateLastTime = 0
         this.gameTimer = scheduler.schedule(0, this.update.bind(this))
