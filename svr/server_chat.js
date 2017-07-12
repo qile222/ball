@@ -32,7 +32,17 @@ class ChatServer extends Server {
     }
 
     handleNewMessage(cliSocket, message) {
-        this.socket.broadcast.send(message)
+        this.socket.send(
+            new Message(
+                protocolRes.newMessageLC,
+                null,
+                {
+                    content: message.content,
+                    playerName: message.playerName,
+                    playerID: message.playerID
+                }
+            )
+        )
     }
 
 }

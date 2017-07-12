@@ -50,6 +50,10 @@ export default class WorldManager extends Manager {
             this.onGetGameServer(message)
             break
 
+        case protocolRes.newMessageLC:
+            this.onGetNewMessage(message)
+            break
+
         default:
             break
         }
@@ -105,6 +109,20 @@ export default class WorldManager extends Manager {
             netManager.disconnect('chat')
             loginManager.enter()
         }
+    }
+
+    sendMessage(content) {
+        let playerInfo = memCache.get('player_info')
+        netManager.send('chat', {
+            head: protocolRes.newMessageCL,
+            content: content,
+            playerName: playerInfo.name,
+            playerID: playerInfo.id
+        })
+    }
+
+    onGetNewMessage(message) {
+        eventDispatcher.emit(this, 'WorldManager_newMessage', message.data)
     }
 
 }

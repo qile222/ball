@@ -33,7 +33,7 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
         }
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps == this.props)
+        
     }
 
 

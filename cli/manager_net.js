@@ -72,7 +72,7 @@ export default class NetManager extends Manager {
         console.log('trying to connect ' + addr + ' ' + handshake)
         let socket = io(addr, {
             reconnection: false,
-            query: handshake,
+            query: handshake || '',
             forceNew: true
         })
         socket.on('message', this.onMessage.bind(this, name))
