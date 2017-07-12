@@ -75,7 +75,7 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
             <div>
                 <input
                     defaultValue={this.props.playerName}
-                    onChange={this.onInputName.bind(this)}
+                    onInput={this.onInputName.bind(this)}
                     ref={(ref) => this.nameInput = ref}
                     id='name'
                     type='text'

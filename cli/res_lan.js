@@ -38,6 +38,7 @@ module.exports = {
     gameAbnormal: 'Unknown Exception,Game Will Exit',
     enterChat: 'Enter Chat',
     send: 'Send',
+    chat: 'Chat',
 
     //error
     unknownError: 'Unknown Error',

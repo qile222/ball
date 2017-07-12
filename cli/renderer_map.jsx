@@ -156,11 +156,7 @@ export default class MapRenderer extends Renderer {
         let stageSize = display.getStageSize()
         this.viewPort = new Rect(0, 0, stageSize.width, stageSize.height)
 
-        let keyEventHandler = gameManager.onKeyEvent.bind(gameManager)
         return <canvas
-            tabIndex={0}
-            onKeyDown={keyEventHandler}
-            onKeyUp={keyEventHandler}
             ref='map'
             className={mainStyle.gameMap}
             width={stageSize.width}

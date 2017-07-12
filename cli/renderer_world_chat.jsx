@@ -2,8 +2,6 @@ import React from 'react'
 import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
-import commonRes from './res_common'
-import {worldManager} from './global'
 
 export default class WorldChatDialogRenderer extends DialogRenderer {
 
@@ -11,7 +9,7 @@ export default class WorldChatDialogRenderer extends DialogRenderer {
         super(props)
         this.state = {
             hideClose: false,
-            title: lanRes.enterGame,
+            title: lanRes.chat,
             btns: [
                 {
                     title: lanRes.send,
@@ -23,8 +21,28 @@ export default class WorldChatDialogRenderer extends DialogRenderer {
         }
     }
 
-    renderContent() {
+    onClickSend() {
 
+    }
+
+    renderContent() {
+        return <div>
+            <div className={mainStyle.messageBox}></div>
+            <div className={mainStyle.emotionPanel}></div>
+            <div
+                ref={(ref) => this.inputBox = ref}
+                onInput={this.onInputText.bind(this)}
+                contentEditable="true"
+                className={mainStyle.inputBox}></div>
+        </div>
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        nextState.btns[0].disable = this.inputBox.innerText.length < 1
+    }
+
+    onInputText() {
+        this.setState({})
     }
 
 }

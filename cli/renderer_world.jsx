@@ -3,7 +3,8 @@ import React from 'react'
 import WorldStartDialogRenderer from './renderer_world_dialog_start'
 import NoticeDialogRenderer from './renderer_dialog_notice'
 import mainStyle from './style_main'
-import {worldManager, util, eventDispatcher} from './global'
+import { worldManager, util, eventDispatcher } from './global'
+import WorldChatDialogRenderer from './renderer_world_chat'
 import lanRes from './res_lan'
 
 export default class WolrdRenderer extends Renderer {
@@ -16,14 +17,16 @@ export default class WolrdRenderer extends Renderer {
             this,
             this.onWorldDisconnected
         )
-        this.state ={}
+        this.state = {}
     }
 
     render() {
         return <div className={mainStyle.scene}>
-            <WorldStartDialogRenderer {...this.props}/>
-            {this.state.exitHint &&
-            <NoticeDialogRenderer
+            <WorldStartDialogRenderer
+                onClickEnterChat={this.onClickEnterChat.bind(this)}/>
+            {this.state.showChat && <WorldChatDialogRenderer
+                onClickClose={this.onClickChatClose.bind(this)} />}
+            {this.state.exitHint && <NoticeDialogRenderer
                 onClickClose={this.onExitWorld.bind(this)}>
                 {this.state.exitHint}
             </NoticeDialogRenderer>}
@@ -38,6 +41,14 @@ export default class WolrdRenderer extends Renderer {
 
     onExitWorld() {
         worldManager.backToLogin()
+    }
+
+    onClickEnterChat() {
+        this.setState({ showChat: true })
+    }
+
+    onClickChatClose() {
+        this.setState({ showChat: false })
     }
 
 }

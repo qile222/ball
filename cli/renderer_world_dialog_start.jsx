@@ -1,9 +1,7 @@
 import React from 'react'
 import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
-import mainStyle from './style_main'
-import commonRes from './res_common'
-import {worldManager} from './global'
+import { worldManager } from './global'
 
 export default class WorldStartDialogRenderer extends DialogRenderer {
 
@@ -11,7 +9,7 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
         super(props)
         this.state = {
             hideClose: true,
-            title: lanRes.enterGame,
+            title: lanRes.enterChat,
             btns: [
                 {
                     title: lanRes.backToLogin,
@@ -21,7 +19,7 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
                 },
                 {
                     title: lanRes.enterChat,
-                    onClick: this.onClickEnterChat.bind(this),
+                    onClick: props.onClickEnterChat,
                     disable: false,
                     name: 'EnterChat'
                 },
@@ -34,6 +32,10 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
             ],
         }
     }
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps == this.props)
+    }
+
 
     renderContent() {
 
@@ -45,18 +47,6 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
 
     onClickExit() {
         worldManager.backToLogin()
-    }
-
-    onClickEnterChat() {
-        this.setState({
-            showChat: true
-        })
-    }
-
-    onClickExitChat() {
-        this.setState({
-            showChat: false
-        })
     }
 
 }
