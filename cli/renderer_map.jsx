@@ -134,7 +134,7 @@ export default class MapRenderer extends Renderer {
         let gridPixel = commonRes.gridPixel
         let xCount = floor(mapSize.width / gridPixel)
         let yCount = floor(mapSize.height / gridPixel)
-        ctx.fillStyle = commonRes.gameGridBackgroundColor
+        ctx.fillStyle = '#252525'
         ctx.fillRect(0, 0, mapSize.width, mapSize.height)
         ctx.beginPath()
         for (let i = 0; i <= xCount; ++i) {
@@ -148,7 +148,7 @@ export default class MapRenderer extends Renderer {
             ctx.lineTo(mapSize.width, y)
         }
         ctx.lineWidth = 1
-        ctx.strokeStyle = commonRes.gameGridBorderColor
+        ctx.strokeStyle = '#2a2a2a'
         ctx.stroke()
         this.textureCache.grid = new Image()
         this.textureCache.grid.src = ctx.canvas.toDataURL('img/png')
@@ -158,7 +158,7 @@ export default class MapRenderer extends Renderer {
 
         let keyEventHandler = gameManager.onKeyEvent.bind(gameManager)
         return <canvas
-            tabIndex='0'
+            tabIndex={0}
             onKeyDown={keyEventHandler}
             onKeyUp={keyEventHandler}
             ref='map'
@@ -172,6 +172,7 @@ export default class MapRenderer extends Renderer {
         let player = entity.getPlayerLogic()
         if (player == gameManager.getLocalPlayerLogic()) {
             this.watchingEntityLogic = entity
+            this.refs.map.focus()
         }
 
         this.entities.push(this.createEntityRenderer(entity))

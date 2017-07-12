@@ -76,7 +76,7 @@ module.exports = {
         speed: 0,
         states: ['split'],
         radius: 30,
-        probability: 0,
+        probability: 10,
         isFood: false,
         static: false,
         initState: commonRes.lifeCycle.live,

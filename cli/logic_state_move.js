@@ -6,12 +6,12 @@ import {util, eventDispatcher, gameManager} from './global'
 const epsilon = commonRes.epsilon
 const abs = Math.abs
 const lifeCycle = commonRes.lifeCycle
+const shadowCopy = util.shadowCopy
 
 export default class MoveStateLogic extends StateLogic {
 
     constructor(mapLogic, entity) {
         super(mapLogic, entity)
-        this.action = actionRes.stand
         this.direction = null
         this.speed = this.entity.getRes().speed
         this.startPosition = this.entity.getPosition()
@@ -27,10 +27,6 @@ export default class MoveStateLogic extends StateLogic {
 
     getSpeed() {
         return this.speed
-    }
-
-    getAction() {
-        return this.action
     }
 
     handleAction(action, data, time) {
@@ -54,10 +50,10 @@ export default class MoveStateLogic extends StateLogic {
         } else {
             return false
         }
-        this.startPosition = util.shadowCopy(this.entity.getPosition())
-        this.update(dt)
-        this.moveAction = action
+        let position = this.entity.getPosition()
+        this.startPosition = shadowCopy(position)
         this.startTime = time
+        this.update(dt)
         eventDispatcher.emit(this.entity, 'entity_changeDirection', this)
 
         return true
@@ -71,34 +67,40 @@ export default class MoveStateLogic extends StateLogic {
         let direction = this.direction
         let position = this.entity.getPosition()
         position[direction] += this.speed * dt
-        // let maxValue = this.entity.getMaxPosition()[direction]
-        // let minValue = this.entity.getMinPosition()[direction]
-        // let diff = position[direction] - maxValue
-        // if (diff > epsilon) {
-        //     position[direction] = minValue
-        // } else {
-        //     diff = position[direction] - minValue
-        //     if (diff < epsilon) {
-        //         position[direction] = maxValue
-        //     } else {
-        //         return
-        //     }
-        // }
     }
 
     fixedUpdate(dt) {
-        if (this.entity.getLifeCycle() != lifeCycle.live) {
+        let life = this.entity.getLifeCycle()
+        if (life != lifeCycle.live && life != lifeCycle.init) {
             return
         }
 
+        let direction = this.direction
         let runningTime = gameManager.getRunningTime()
         let leftDt = runningTime % dt
         let extraDt = runningTime - leftDt - this.startTime
-        let fixedPosition = util.shadowCopy(this.startPosition)
+        let position = shadowCopy(this.startPosition)
         if (this.direction) {
-            fixedPosition[this.direction] += this.speed * extraDt
+            position[direction] += this.speed * extraDt
         }
-        this.entity.setFixedPosition(fixedPosition)
+        this.entity.setFixedPosition(position)
+
+        //TODO fix
+        let maxValue = this.entity.getMaxPosition()[direction]
+        let minValue = this.entity.getMinPosition()[direction]
+        let diff = position[direction] - maxValue
+        if (diff > epsilon) {
+            position[direction] = maxValue
+            this.direction = null
+            this.entity.setPosition(shadowCopy(position))
+        } else {
+            diff = position[direction] - minValue
+            if (diff < epsilon) {
+                position[direction] = minValue
+                this.direction = null
+                this.entity.setPosition(shadowCopy(position))
+            }
+        }
     }
 
 }

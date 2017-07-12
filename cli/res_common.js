@@ -17,9 +17,5 @@ module.exports = Object.assign({
     },
     fastForwardTimeScale: 10,
     initFastForwardTimeScale: 100000000,
-    eatAniTime: 500,
-    eatAniRadians: Math.PI,
-    gameGridBorderColor:'#2a2a2a',
-    gameGridBackgroundColor: '#252525',
     agent: 'http://127.0.0.1:12310/getServer',
 }, commonRes)

@@ -60,7 +60,7 @@ export default class WorldManager extends Manager {
             if (memCache.get('player_info')) {
                 eventDispatcher.emit(this, 'WorldManager_disconnect')
             } else {
-                loginManager.enter()
+                this.backToLogin()
             }
         }
     }
@@ -77,6 +77,9 @@ export default class WorldManager extends Manager {
         })
         memCache.set('time', data.serverTime)
         scheduler.schedule(1000, this.update.bind(this))
+        netManager.connect(
+            'chat', data.chatServer.addr + ':' + data.chatServer.port
+        )
         this.showWorld()
     }
 
@@ -85,9 +88,7 @@ export default class WorldManager extends Manager {
     }
 
     startGame() {
-        netManager.send('world', {
-            head: protocolRes.getGameServerCW
-        })
+        netManager.send('world', {head: protocolRes.getGameServerCW})
     }
 
     onGetGameServer(message) {
@@ -101,6 +102,7 @@ export default class WorldManager extends Manager {
     backToLogin() {
         memCache.clear()
         if (!netManager.disconnect('world')) {
+            netManager.disconnect('chat')
             loginManager.enter()
         }
     }

@@ -22,12 +22,6 @@ class WorldServer extends Server {
     }
 
     handleRequest(cliSocket, message) {
-        let player = cache.get('players')[cliSocket.id]
-        if (!player) {
-            this.handleErrorLogic(cliSocket, message, errorCodeRes.invalidPlayer)
-            return
-        }
-        cliSocket.player = player
         switch (message.head) {
             case protocolRes.getGameServerCW:
                 this.handleGetGameServer(cliSocket, message)
@@ -40,20 +34,25 @@ class WorldServer extends Server {
 
     onConnection(cliSocket) {
         super.onConnection(cliSocket)
+        let chatServer = cache.get('chatServer')
         let playerName = cliSocket.handshake.query.playerName
         let playerLogic = new PlayerLogic(cliSocket.id, playerName)
         cache.get('players')[cliSocket.id] = playerLogic
         let data = {
             playerID: cliSocket.id,
             playerName: playerLogic.getName(),
-            serverTime: Util.time()
+            serverTime: Util.time(),
+            chatServer: {
+                addr: chatServer.addr,
+                port: chatServer.port,
+            }
         }
         cliSocket.send(new Message(protocolRes.playerInfoWC, null, data))
     }
 
     onDisconnecting(cliSocket) {
         super.onDisconnecting(cliSocket)
-        delete cache.get('players')[cliSocket.id]
+        // delete cache.get('players')[cliSocket.id]
     }
 
     authorization(cliSocket, next) {
@@ -69,7 +68,8 @@ class WorldServer extends Server {
     }
 
     handleGetGameServer(cliSocket, message) {
-        if (cliSocket.player.getState() != commonRes.playerState.online) {
+        let player = cache.get('players')[cliSocket.id]
+        if (player.getState() != commonRes.playerState.online) {
             this.handleErrorLogic(cliSocket, message, errorCodeRes.invalidState)
             return
         }

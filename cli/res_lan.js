@@ -36,6 +36,8 @@ module.exports = {
     world: 'World',
     backToLogin: 'Back To Login',
     gameAbnormal: 'Unknown Exception,Game Will Exit',
+    enterChat: 'Enter Chat',
+    send: 'Send',
 
     //error
     unknownError: 'Unknown Error',

@@ -14,11 +14,6 @@ export default class GameUIRenderer extends Renderer {
     constructor(props) {
         super(props)
         eventDispatcher.addListener(
-            null,
-            'GameDialogSettlementRenderer_continue_game',
-            this,
-            this.onGameSettlementDialogContinueGame)
-        eventDispatcher.addListener(
             gameManager,
             'GameManager_settlement',
             this,
@@ -67,6 +62,7 @@ export default class GameUIRenderer extends Renderer {
         } else if (this.state.settlementData) {
             components = [
                 <GameDialogSettlementRenderer
+                    onClickContinue={this.onClickGameContinue.bind(this)}
                     {...this.props}
                     settlementData={this.state.settlementData} />
             ]
@@ -96,8 +92,9 @@ export default class GameUIRenderer extends Renderer {
         return <div className={mainStyle.gameUI}>{components}</div>
     }
 
-    onGameSettlementDialogContinueGame() {
+    onClickGameContinue() {
         this.setState({ settlementData: undefined })
+        gameManager.joinPlayer()
     }
 
     onGameSettlement(gameManager, settlementData) {

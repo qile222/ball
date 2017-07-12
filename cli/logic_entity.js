@@ -78,8 +78,8 @@ export default class EntityLogic extends Logic {
         let mapSize = this.mapLogic.getSize()
         this.minPosition = new Vec2(radius, radius)
         this.maxPosition = new Vec2(
-            mapSize.width, // - radius,
-            mapSize.height // - radius
+            mapSize.width - radius,
+            mapSize.height - radius
         )
         this.radius = radius
     }

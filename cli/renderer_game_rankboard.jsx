@@ -22,16 +22,6 @@ export default class GameRankBoardRenderer extends Renderer {
             'map_rank_update',
             this,
             this.onEatEntity)
-        eventDispatcher.addListener(
-            null,
-            'GameDialogSettingRenderer_close',
-            this,
-            this.onGameDialogSettingClose)
-        eventDispatcher.addListener(
-            null,
-            'GameDialogSettingRenderer_save',
-            this,
-            this.onGameDialogSettingSave)
     }
 
     onEatEntity(entity) {
@@ -61,8 +51,10 @@ export default class GameRankBoardRenderer extends Renderer {
                 if (i < rankCount) {
                     list.push(<li>
                         <span>{i + 1}</span>
-                        {playerLogic.getName()}
-                        {toFixed(entityLogic.getRadius(), 1)}{lanRes.mg}
+                        <span>
+                            {toFixed(entityLogic.getRadius(), 1)}{lanRes.mg}
+                        </span>
+                        <span>{playerLogic.getName()}</span>
                     </li>)
                 } else if (!localPlayerLogic || localPlayerRankList) {
                     break
@@ -106,12 +98,15 @@ export default class GameRankBoardRenderer extends Renderer {
             </h4>
             {rankList}
             {this.state.isShowSetting &&
-            <GameDialogSettingRenderer {...this.props} />}
+            <GameDialogSettingRenderer
+                onClickClose={this.onClickSettingClose.bind(this)}
+                onClickSave={this.onClickSettingSave.bind(this)}
+                {...this.props} />}
             {this.state.isShowExitDialog &&
             <SelectDialogRenderer
                 {...this.props}
-                confirmCb={this.onClickExitDialogConfirm.bind(this)}
-                cancelCb={this.onClickExitDialogCancel.bind(this)} >
+                onClickConfirm={this.onClickExitDialogConfirm.bind(this)}
+                onClickCancel={this.onClickExitDialogCancel.bind(this)} >
                 {lanRes.exitConfirm}
             </SelectDialogRenderer>
             }
@@ -130,11 +125,11 @@ export default class GameRankBoardRenderer extends Renderer {
         this.setState({ isShowSetting: true })
     }
 
-    onGameDialogSettingClose(gameSettingDialog) {
+    onClickSettingClose(gameSettingDialog) {
         this.setState({ isShowSetting: false })
     }
 
-    onGameDialogSettingSave(gameSettingDialog, options) {
+    onClickSettingSave(gameSettingDialog, options) {
         //TODO save
         this.setState({ isShowSetting: false })
     }

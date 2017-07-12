@@ -21,6 +21,12 @@ const protocol = {
     sendGameDataGC: 20016,
     abnormalCG: 20018,
     abnormalGC: 20018,
+
+    /***************chat server*****************/
+    newMessageCL: 30001,
+    newMessageLC: 30002,
+    newSysMessageCL: 30003,
+    newSysMessageLC: 30004,
 }
 
 module.exports = protocol

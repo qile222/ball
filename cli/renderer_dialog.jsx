@@ -94,7 +94,7 @@ export default class DialogRenderer extends Renderer {
     }
 
     onClickClose() {
-        eventDispatcher.emit(this, this.constructor.name + '_close')
+        this.props.onClickClose(this)
     }
 
     render() {

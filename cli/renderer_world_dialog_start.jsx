@@ -20,6 +20,12 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
                     name: 'BackToLogin'
                 },
                 {
+                    title: lanRes.enterChat,
+                    onClick: this.onClickEnterChat.bind(this),
+                    disable: false,
+                    name: 'EnterChat'
+                },
+                {
                     title: lanRes.enter,
                     onClick: this.onClickEnter.bind(this),
                     disable: false,
@@ -39,6 +45,18 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
 
     onClickExit() {
         worldManager.backToLogin()
+    }
+
+    onClickEnterChat() {
+        this.setState({
+            showChat: true
+        })
+    }
+
+    onClickExitChat() {
+        this.setState({
+            showChat: false
+        })
     }
 
 }

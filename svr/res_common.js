@@ -13,10 +13,10 @@ module.exports = {
     roomEntityLimit: 20,
     roomCreateExpireTime: 5000,
     mapDefaultSize: {
-        width: 200,
-        height: 200
+        width: 4000,
+        height: 4000
     },
-    mapRandomEntityLimit: 10,
+    mapRandomEntityLimit: 300,
     gameOverTime: 155000,
     gameEndTime: 150000,
     epsilon: 0.000001,

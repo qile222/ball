@@ -7,8 +7,8 @@ const cos = Math.cos
 const sin = Math.sin
 const abs = Math.abs
 const entityInitTime = commonRes.entityInitTime
-const eatAniRadians = commonRes.eatAniRadians
-const eatAniTime = commonRes.eatAniTime
+const eatAniRadians = Math.PI
+const eatAniTime = 500
 const eatAniHalfTime = eatAniTime / 2
 const eatAniRatio = eatAniRadians / eatAniTime / 2
 

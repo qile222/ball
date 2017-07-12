@@ -26,6 +26,10 @@ const deploy = {
         static: {
             addr: '127.0.0.1',
             port: 12311
+        },
+        chat: {
+            addr: '127.0.0.7',
+            port: 12312
         }
     },
     production: {
@@ -55,6 +59,10 @@ const deploy = {
         static: {
             addr: '127.0.0.1',
             port: 12311
+        },
+        chat: {
+            addr: '127.0.0.7',
+            port: 12312
         }
     }
 }

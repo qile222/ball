@@ -11,12 +11,12 @@ export default class SelectDialogRenderer extends DialogRenderer {
             btns: [
                 {
                     title: lanRes.cancel,
-                    onClick: this.onClickCancel.bind(this),
+                    onClick: props.onClickCancel,
                     name: 'Cancel',
                 },
                 {
                     title: lanRes.confirm,
-                    onClick: this.onClickConfirm.bind(this),
+                    onClick: props.onClickConfirm,
                     name: 'Confirm',
                 },
             ]
@@ -25,18 +25,6 @@ export default class SelectDialogRenderer extends DialogRenderer {
 
     renderContent() {
         return this.props.children
-    }
-
-    onClickConfirm() {
-        this.props.confirmCb(this)
-    }
-
-    onClickCancel() {
-        this.props.cancelCb(this)
-    }
-
-    onClickClose() {
-        this.onClickCancel()
     }
 
 }

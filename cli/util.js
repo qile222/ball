@@ -1,5 +1,4 @@
 import seedrandom from 'seedrandom'
-import commonRes from './res_common'
 
 export default class Util {
 

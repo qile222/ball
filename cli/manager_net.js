@@ -30,11 +30,12 @@ export default class NetManager extends Manager {
                 if (protocolRes[key] == message.head) {
                     console.log('send ', name, key, message)
                     connection.socket.send(message)
-                    return
+                    return true
                 }
             }
             console.error('unknown protocol head ', name, message)
         }
+        return false
     }
 
     getConnectionsLag() {

@@ -1,7 +1,7 @@
 import React from 'react'
 import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
-import {eventDispatcher, gameManager} from './global'
+import {gameManager} from './global'
 
 export default class GameDialogSettingRenderer extends DialogRenderer {
 
@@ -17,7 +17,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
                 },
                 {
                     title: lanRes.close,
-                    onClick: this.onClickClose.bind(this),
+                    onClick: props.onClickClose,
                     name: 'Close'
                 },
                 {
@@ -35,7 +35,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
     }
 
     onClickSave() {
-        eventDispatcher.emit(this, 'GameDialogSettingRenderer_save')
+        this.props.onClickClose()
     }
 
     onClickBackToHall() {

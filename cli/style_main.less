@@ -193,11 +193,20 @@ button {
             padding-left: @rankTitleWidth;
             > span {
                 display: block;
+                text-align: center;
+            }
+
+            > span:first-of-type {
+                float: left;
                 z-index: 1;
                 position: absolute;
                 width: @rankTitleWidth;
-                text-align: center;
                 left: 0;
+            }
+
+            >span:nth-of-type(2) {
+                float: right;
+                width: 70px;
             }
 
             .first-three-li(@rankTitleCount);
@@ -228,7 +237,6 @@ button {
                 &> span {
                     color: @dialogTitleColor;
                 }
-                position: absolute;
                 &::before {
                     border: none;
                 }

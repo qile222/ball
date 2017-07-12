@@ -19,8 +19,4 @@ export default class Manager {
         eventDispatcher.removeListener(this)
     }
 
-    enter() {
-
-    }
-
 }

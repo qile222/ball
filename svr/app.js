@@ -8,6 +8,7 @@ const logger = require('./logger')
 const GameAgent = require('./agent_game')
 const GameServer = require('./server_game')
 const WorldAgent = require('./agent_world')
+const ChatServer = require('./server_chat')
 
 if (process.env.mode == 'production') {
     process.on('uncaughtException', error => {
@@ -63,6 +64,17 @@ for (let i in deployRes.game) {
 }
 cache.put('gameServers', gameServers)
 
+let chatServer = new ChatServer(shortid.generate())
+chatServer.start(deployRes.chat.port)
+chatServer.on('initFinished', initListener)
+cache.put('chatServer', {
+    id: chatServer.getID(),
+    addr: deployRes.chat.addr,
+    port: deployRes.chat.port,
+    name: deployRes.chat.name
+})
+++initCount
+
 let gameAgent = new GameAgent(deployRes.gameAgent.port)
 gameAgent.on('initFinished', initListener)
 ++initCount
@@ -70,4 +82,3 @@ gameAgent.on('initFinished', initListener)
 let worldAgent = new WorldAgent(deployRes.worldAgent.port)
 worldAgent.on('initFinished', initListener)
 ++initCount
-

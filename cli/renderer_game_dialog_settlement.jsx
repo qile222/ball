@@ -74,8 +74,7 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
     }
 
     onClickContinue() {
-        gameManager.joinPlayer()
-        eventDispatcher.emit(this, 'GameDialogSettlementRenderer_continue_game')
+        this.props.onClickContinue()
     }
 
     onClickBackToHall() {
