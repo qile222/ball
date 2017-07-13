@@ -1,7 +1,7 @@
 import Manager from './manager'
 import protocolRes from './res_protocol'
 import {netManager, gameManager, eventDispatcher,
-    memCache, scheduler, display, loginManager} from './global'
+    memCache, scheduler, display, loginManager, cache} from './global'
 import WorldRenderer from './renderer_world'
 import React from 'react'
 
@@ -81,6 +81,9 @@ export default class WorldManager extends Manager {
         })
         memCache.set('time', data.serverTime)
         scheduler.schedule(1000, this.update.bind(this))
+        let cachedMessages = cache.get('chat_messages')
+        this.chatMessages =
+            cachedMessages instanceof Array ? cachedMessages : []
         netManager.connect(
             'chat', data.chatServer.addr + ':' + data.chatServer.port
         )
@@ -122,6 +125,8 @@ export default class WorldManager extends Manager {
     }
 
     onGetNewMessage(message) {
+        this.chatMessages.push(message.data)
+        cache.set('chat_messages', this.chatMessages)
         eventDispatcher.emit(this, 'WorldManager_newMessage', message.data)
     }
 

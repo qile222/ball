@@ -511,7 +511,39 @@ button {
     padding: 5px;
 }
 
-.messageBox {
+.messageBoxContainer {
+    display: table;
     border: solid 1px @fontColor;
+    width: 100%;
+}
+
+.messageBox {
+    display: table-cell;
+    vertical-align: bottom;
     height: 300px;
+    > .messages {
+        max-height: 300px;
+        overflow-y: auto;
+        .message {
+            padding: 5px;
+            > div:first-of-type {
+                > span {
+                    display: inline-block;
+                    margin-right: 10px;
+                }
+            }
+
+            > div:nth-of-type(2) {
+                color: #008800;
+            }
+        }
+        .playerMessage {
+            .message;
+        }
+
+        .localPlayerMessage {
+            .message;
+        }
+    }
+
 }

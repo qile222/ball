@@ -33,11 +33,27 @@ export default class Util {
         return array[Util.randomInt(array.length)]
     }
 
+    static timeFormat(timestamp) {
+        let date = new Date(timestamp)
+        let year = date.getFullYear()
+        let month = date.getMonth() + 1
+        let day = date.getDate()
+        let hours = date.getHours()
+        let minutes = date.getMinutes()
+        let seconds = date.getSeconds()
+        return year +
+            (month > 9 ? '-' + month : '-0' + month) +
+            (day > 9 ? '-' + day : '-0' + day) +
+            (hours > 9 ? ' ' + hours : ' 0' + hours) +
+            (minutes > 9 ? ':' + minutes : ':0' + minutes) +
+            (seconds > 9 ? ':' + seconds : ':0' + seconds)
+    }
+
     static timeFormatMMSS(timestamp) {
         let ss = Math.floor(timestamp / 1000)
         let s = ss % 60
         let m = (ss - s) / 60
-        return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s)
+        return (m > 9 ? m : '0' + m) + (s > 9 ? ':' + s : ':0' + s)
     }
 
     static timeFormatHHMM(timestamp) {
@@ -54,7 +70,7 @@ export default class Util {
         xhr.responseType = 'json'
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4 &&
-                (xhr.status == 200 || xhr.status== 304)) {
+                (xhr.status == 200 || xhr.status == 304)) {
                 if (params.cb) {
                     params.cb(true, xhr.response)
                 }

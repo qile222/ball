@@ -121,10 +121,12 @@ export default class DialogRenderer extends Renderer {
         this.translateY = parseInt(transform[5])
         document.addEventListener('mousemove', this.mouseMoveHandler, false)
         document.addEventListener('mouseup', this.mouseUpHandler, false)
+        e.stopPropagation()
     }
 
     onMouseUpTitle(e) {
         this.removeEventListeners()
+        e.stopPropagation()
     }
 
     onMouseMoveTitle(e) {
@@ -136,6 +138,7 @@ export default class DialogRenderer extends Renderer {
             }
         })
         e.preventDefault()
+        e.stopPropagation()
     }
 
     removeEventListeners() {

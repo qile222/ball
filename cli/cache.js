@@ -19,11 +19,16 @@ class Cache {
 class LocalStorageImpl extends Cache {
 
     set(k, v) {
-        window.localStorage.setItem(k, v)
+        window.localStorage.setItem(k, JSON.stringify(v))
     }
 
     get(k) {
-        return window.localStorage.getItem(k)
+        let v = window.localStorage.getItem(k)
+        try {
+            return JSON.parse(v)
+        } catch (e) {
+            return v
+        }
     }
 
 }

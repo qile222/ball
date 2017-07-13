@@ -39,7 +39,8 @@ class ChatServer extends Server {
                 {
                     content: message.content,
                     playerName: message.playerName,
-                    playerID: message.playerID
+                    playerID: message.playerID,
+                    time: Util.time()
                 }
             )
         )
