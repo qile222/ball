@@ -37,11 +37,12 @@ export default class WorldChatDialogRenderer extends DialogRenderer {
         return <div>
             <div className={mainStyle.messageBox}></div>
             <div className={mainStyle.emotionPanel}></div>
-            <div
+            <textarea
+                className={mainStyle.inputBox}
                 ref={(ref) => this.inputBox = ref}
-                onInput={this.onInputText.bind(this)}
-                contentEditable="true"
-                className={mainStyle.inputBox}></div>
+                onInput={this.onInputText.bind(this)}>
+
+            </textarea>
         </div>
     }
 

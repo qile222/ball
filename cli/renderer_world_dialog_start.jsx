@@ -9,7 +9,7 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
         super(props)
         this.state = {
             hideClose: true,
-            title: lanRes.enterChat,
+            title: lanRes.world,
             btns: [
                 {
                     title: lanRes.backToLogin,

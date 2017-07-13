@@ -62,11 +62,7 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
         let worldServers = loginManager.getWorldServerList()
         let serverList = []
         for (let i in worldServers) {
-            serverList.push(
-                <option value={i}>
-                    {worldServers[i].name}{worldServers[i].delay}
-                </option>
-            )
+            serverList.push(<option value={i}>{worldServers[i].name}</option>)
         }
         return <form
             className={mainStyle.enterDialog}

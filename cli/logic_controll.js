@@ -1,6 +1,6 @@
 import actionRes from './res_action'
 import Logic from './logic'
-import {gameManager} from './global'
+import { gameManager } from './global'
 
 export default class ControllLogic extends Logic {
 
@@ -41,14 +41,11 @@ export default class ControllLogic extends Logic {
                     break
                 }
             }
-            
+
         } else if (this.actions[this.actions.length - 1] != action) {
             this.actions.push(action)
         } else {
             return false
-        }
-        if (this.actions.length < 1 && action) {
-            console.log(this.actions, action)
         }
         gameManager.handleUserAction(action, data)
         return false

@@ -9,23 +9,35 @@
     75% { transform: scale(1.2) translate(-50%, -50%); }
     100% { transform: scale(1.1) translate(-50%, -50%); opacity: 100%; }
 }
-
 @keyframes ScaleToMin {
     0% { transform: scale(1.1) translate(-50%, -50%); opacity: 100%; }
     75% { transform: scale(0.25) translate(-50%, -50%); }
     100% { transform: scale(0) translate(-50%, -50%); opacity: 0; }
 }
-
 @keyframes FadeIn {
     0% { opacity: 0; }
     100% { opacity: 100%; }
 }
-
 @keyframes FadeOut {
     0% { opacity: 100%; }
     100% { opacity: 0%; }
 }
-
+.aniScaleToMax {
+    animation-duration: @dialogOpenDuration;
+    animation-name: ScaleToMax;
+}
+.aniScaleToMin {
+    animation-duration: @dialogOpenDuration;
+    animation-name: ScaleToMin;
+}
+.aniFadeIn {
+    animation-name: FadeIn;
+    animation-duration: @dialogOpenDuration;
+}
+.aniFadeOut {
+    animation-name: FadeOut;
+    animation-duration: @dialogOpenDuration;
+}
 
 html, body {
     padding: 0;
@@ -35,7 +47,7 @@ html, body {
     font-size: 14px;
 }
 
-.centerAlign (@position: fixed) {
+.centerAlign (@position: absolute) {
     display: block;
     position: @position;
     left: 50%;
@@ -57,21 +69,16 @@ button {
     }
 }
 
-::-webkit-input-placeholder {
-    font-size: 14px;
-}
-
 .hint {
     @triangleBorderWidth: 15px;
-    .centerAlign(absolute);
+    .centerAlign;
     background-color: #ffffff;
     padding: 5px;
     border-radius: @borderRaidus;
     border:solid 1px @fontColor;
     box-sizing: border-box;
     transform-origin: 0 0;
-    animation-name: ScaleToMax;
-    animation-duration: @dialogOpenDuration;
+    .aniScaleToMax;
     font-size: 14px;
     top: auto;
     bottom: 100%;
@@ -80,7 +87,7 @@ button {
     max-width: 100%;
     &::before {
         content: "";
-        .centerAlign(absolute);
+        .centerAlign;
         top: calc(~"100% + @{triangleBorderWidth}");
         border: solid @triangleBorderWidth @fontColor;
         border-left-color: transparent;
@@ -258,21 +265,18 @@ button {
     height: 100%;
     left: 0;
     top: 0;
-    animation-name: FadeIn;
-    animation-duration: @dialogOpenDuration;
+    .aniFadeIn;
     z-index: 1024;
 }
 
 @dialogCellPadding: 10px;
-.gameSettingDialog {
+.dialogContainer {
     border-radius: @borderRaidus;
-    animation-duration: @dialogOpenDuration;
-    animation-name: ScaleToMax;
+    .aniScaleToMax;
     .centerAlign;
     transform-origin: 0 0;
     color: @dialogTitleColor;
     width: 400px;
-    // height: 300px;
     background-color: rgba(247, 254, 223, 1);
     display: table;
     border: solid 1px @fontColor;
@@ -282,6 +286,9 @@ button {
     }
 
     > .dialogTitle {
+        &:hover {
+            cursor: move;
+        }
         > h4 {
             margin: 0;
             font-size: 20px;
@@ -296,8 +303,9 @@ button {
                 fill: @dialogTitleColor;
                 display: block;
                 float: right;
-                :hover {
+                &:hover {
                     fill: #008800;
+                    cursor: default;
                 }
             }
             display: table-cell;
@@ -494,7 +502,9 @@ button {
     background-color: #ffffff;
     padding: 5px;
     overflow: auto;
-    resize: both;
+    width: 100%;
+    resize: none;
+    box-sizing: border-box;
 }
 
 .emotionPanel {

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <style>
+        #grandParent {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+
+        #parent {
+            width: 60px;
+            height: 60px;
+            background-color: yellow;
+        }
+
+        #child {
+            position: absolute;
+            top: 200px;
+            width: 30px;
+            height: 30px;
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        document.body.addEventListener('load', () => {
+            alert(1)
+            let grandParent = document.getElementById("grandParent")
+            let parent = document.getElementById("parent")
+            let child = document.getElementById("child")
+            grandParent.addEventListener('click', () => {
+                alert('grandParent')
+            }, false)
+            parent.addEventListener('click', () => {
+                alert('parent')
+            }, false)
+            child.addEventListener('click', (e) => {
+                alert('child')
+            }, false)
+        })
+    </script>
+    <div id="grandParent">
+        <div id="parent">
+            <div id="child"></div>
+        </div>
+    </div>
+</body>
+
+</html>

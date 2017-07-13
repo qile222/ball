@@ -39,14 +39,14 @@ export default class GameUIRenderer extends Renderer {
         )
         this.state = {}
         this.keyEventHandler = gameManager.onKeyEvent.bind(gameManager)
-        window.addEventListener('keydown', this.keyEventHandler)
-        window.addEventListener('keyup', this.keyEventHandler)
+        document.addEventListener('keydown', this.keyEventHandler)
+        document.addEventListener('keyup', this.keyEventHandler)
     }
 
     componentWillUnmount() {
         super.componentWillUnmount()
-        window.removeEventListener('keydown', this.keyEventHandler)
-        window.removeEventListener('keyup', this.keyEventHandler)
+        document.removeEventListener('keydown', this.keyEventHandler)
+        document.removeEventListener('keyup', this.keyEventHandler)
     }
 
     render() {

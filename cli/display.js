@@ -18,7 +18,7 @@ export default class Display {
             this.stage.clientWidth,
             this.stage.clientHeight
         )
-        document.body.onresize = this.onStageSizeChanged.bind(this)
+        document.addEventListener('resize', this.onStageSizeChanged.bind(this))
     }
 
     showStat(isShow) {

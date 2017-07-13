@@ -2,13 +2,15 @@ import Renderer from './renderer'
 import ReactDOM from 'react-dom'
 import React from 'react'
 import mainStyle from './style_main'
-import {eventDispatcher} from './global'
 
 export default class DialogRenderer extends Renderer {
 
     constructor(props) {
         super(props)
         this.node = null
+        this.mouseMoveHandler = this.onMouseMoveTitle.bind(this)
+        this.mouseDownHandler = this.onMouseDownTitle.bind(this)
+        this.mouseUpHandler = this.onMouseUpTitle.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -18,30 +20,40 @@ export default class DialogRenderer extends Renderer {
 
     componentDidMount() {
         super.componentDidMount()
+        this.node = document.createElement('div')
+        this.node.className = mainStyle.dialog
+        document.body.appendChild(this.node)
         this.openDialog()
+        this.titleContainer.addEventListener(
+            'mousedown',
+            this.mouseDownHandler,
+            false
+        )
     }
 
     componentWillUnmount() {
         super.componentWillUnmount()
+        this.titleContainer.removeEventListener(
+            'mousedown',
+            this.mouseDownHandler
+        )
+        this.removeEventListeners()
         this.closeDialog()
     }
 
     openDialog() {
-        if (!this.node) {
-            this.node = document.createElement('div')
-            this.node.className = mainStyle.dialog
-            document.body.appendChild(this.node)
-        }
         let components = []
         if (this.state.title) {
             components.push(
-                <div className={mainStyle.dialogTitle}>
+                <div
+                    ref={(ref)=>this.titleContainer=ref}
+                    className={mainStyle.dialogTitle}>
                     <h4>
                         {this.state.title}
                         {
                             !this.state.hideClose &&
                             <svg
-                                onClick={this.onClickClose.bind(this)}
+                                onClick={this.props.onClickClose}
                                 aria-hidden="true">
                                 <use xlinkHref="#icon-close"></use>
                             </svg>
@@ -76,7 +88,10 @@ export default class DialogRenderer extends Renderer {
         }
         ReactDOM.unstable_renderSubtreeIntoContainer(
             this,
-            <div className={mainStyle.gameSettingDialog}>{components}</div>,
+            <div
+                style={this.state.style}
+                ref={(ref) => this.dialogContainer = ref}
+                className={mainStyle.dialogContainer}>{components}</div>,
             this.node
         )
     }
@@ -93,12 +108,39 @@ export default class DialogRenderer extends Renderer {
         return null
     }
 
-    onClickClose() {
-        this.props.onClickClose(this)
-    }
-
     render() {
         return null
+    }
+
+    onMouseDownTitle(e) {
+        this.diffX = e.screenX
+        this.diffY = e.screenY
+        let style = window.getComputedStyle(this.dialogContainer)
+        let transform = style.getPropertyValue('transform').split(',', 6)
+        this.translateX = parseInt(transform[4])
+        this.translateY = parseInt(transform[5])
+        document.addEventListener('mousemove', this.mouseMoveHandler, false)
+        document.addEventListener('mouseup', this.mouseUpHandler, false)
+    }
+
+    onMouseUpTitle(e) {
+        this.removeEventListeners()
+    }
+
+    onMouseMoveTitle(e) {
+        let x = e.screenX - this.diffX + this.translateX
+        let y = e.screenY - this.diffY + this.translateY
+        this.setState({
+            style: {
+                transform: 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
+            }
+        })
+        e.preventDefault()
+    }
+
+    removeEventListeners() {
+        document.removeEventListener('mousemove', this.mouseMoveHandler)
+        document.removeEventListener('mouseup', this.mouseUpHandler)
     }
 
 }
