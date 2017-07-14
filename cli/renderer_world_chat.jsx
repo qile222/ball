@@ -2,11 +2,12 @@ import React from 'react'
 import lanRes from './res_lan.js'
 import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
-import {worldManager, eventDispatcher, cache, memCache, util} from './global'
+import { worldManager, eventDispatcher, cache,
+    memCache, util, scheduler } from './global'
 
 const messageClass = {
-    [true]: mainStyle.playerMessage,
-    [false]: mainStyle.localPlayerMessage
+    [false]: mainStyle.playerMessage,
+    [true]: mainStyle.localPlayerMessage
 }
 
 export default class WorldChatDialogRenderer extends DialogRenderer {
@@ -17,6 +18,12 @@ export default class WorldChatDialogRenderer extends DialogRenderer {
             hideClose: false,
             title: lanRes.chat,
             btns: [
+                {
+                    title: lanRes.clearMessages,
+                    onClick: this.onClickClearMessages.bind(this),
+                    disable: false,
+                    name: 'ClearMessage'
+                },
                 {
                     title: lanRes.send,
                     onClick: this.onClickSend.bind(this),
@@ -34,55 +41,59 @@ export default class WorldChatDialogRenderer extends DialogRenderer {
 
     }
 
-    onClickSend() {
-        worldManager.sendMessage(this.inputBox.innerText)
-    }
-
     renderContent() {
         let playerInfo = memCache.get('player_info')
         let localPlayerID = playerInfo ? playerInfo.id : ''
-        let messages = cache.get('chat_messages')
+        let messages = cache.get('chat_messages') || []
         let messageComponents = []
         for (let message of messages) {
             let playerID = message.playerID
             messageComponents.push(
                 <div className={messageClass[playerID == localPlayerID]}>
-                    <div>
-                        <span>{message.playerName}</span>
-                        <span>{util.timeFormat(message.time)}</span>
-                    </div>
+                    <span>{message.playerName}</span>
+                    <span>{util.timeFormat(message.time)}</span>
                     <div>{message.content}</div>
                 </div>
             )
         }
-        
         return <div>
             {/* TODO using message async load to improve performance */}
             <div className={mainStyle.messageBoxContainer}>
                 <div className={mainStyle.messageBox}>
-                    <div className={mainStyle.messages}>
+                    <div
+                        ref={(ref) => { this.messagesContainer = ref }}
+                        className={mainStyle.messages}>
                         {messageComponents}
                     </div>
                 </div>
             </div>
-            <div className={mainStyle.emotionPanel}></div>
-            <div
-                contentEditable={true}
+            <textarea
+                maxLength={500}
                 className={mainStyle.inputBox}
                 ref={(ref) => this.inputBox = ref}
                 onKeyPress={this.onKeyPress.bind(this)}
                 onInput={this.onInputText.bind(this)}>
-            </div>
+            </textarea>
         </div>
     }
 
     componentDidMount() {
         super.componentDidMount()
         this.inputBox.focus()
+        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
     }
 
     componentWillUpdate(nextProps, nextState) {
-        nextState.btns[0].disable = !this.isValid()
+        super.componentWillUpdate()
+        nextState.btns[1].disable = !this.isValid()
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate()
+        scheduler.scheduleOnce(0, ()=>{
+            this.messagesContainer.scrollTop =
+                this.messagesContainer.scrollHeight
+        })
     }
 
     onInputText() {
@@ -91,19 +102,31 @@ export default class WorldChatDialogRenderer extends DialogRenderer {
 
     onKeyPress(e) {
         if (e.key == 'Enter') {
-            if (this.isValid()) {
-                worldManager.sendMessage(this.inputBox.innerText)
-                e.preventDefault()
-            }
+            this.onClickSend()
+            e.preventDefault()
         }
     }
 
     isValid() {
-        return this.inputBox.innerText.length > 0
+        return this.inputBox.value.length > 0
     }
 
     onGetNewMessage(worldManager, message) {
         this.setState({})
     }
+
+    onClickSend() {
+        if (this.isValid()) {
+            worldManager.sendMessage(this.inputBox.value)
+            this.inputBox.value = ''
+            this.inputBox.focus()
+        }
+    }
+
+    onClickClearMessages() {
+        worldManager.clearMessagesCache()
+        this.setState({})
+    }
+
 
 }

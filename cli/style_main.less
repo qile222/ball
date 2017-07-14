@@ -22,21 +22,17 @@
     0% { opacity: 100%; }
     100% { opacity: 0%; }
 }
-.aniScaleToMax {
-    animation-duration: @dialogOpenDuration;
-    animation-name: ScaleToMax;
-}
-.aniScaleToMin {
-    animation-duration: @dialogOpenDuration;
-    animation-name: ScaleToMin;
-}
 .aniFadeIn {
-    animation-name: FadeIn;
-    animation-duration: @dialogOpenDuration;
+    animation: FadeIn @dialogOpenDuration;
 }
 .aniFadeOut {
-    animation-name: FadeOut;
-    animation-duration: @dialogOpenDuration;
+    animation-name: FadeOut @dialogOpenDuration;
+}
+.aniScaleToMax {
+    animation: ScaleToMax @dialogOpenDuration, FadeIn @dialogOpenDuration;
+}
+.aniScaleToMin {
+    animation: ScaleToMin @dialogOpenDuration, FadeOut @dialogOpenDuration;
 }
 
 html, body {
@@ -211,7 +207,7 @@ button {
                 left: 0;
             }
 
-            >span:nth-of-type(2) {
+            > span:nth-of-type(2) {
                 float: right;
                 width: 70px;
             }
@@ -265,7 +261,6 @@ button {
     height: 100%;
     left: 0;
     top: 0;
-    .aniFadeIn;
     z-index: 1024;
 }
 
@@ -497,7 +492,9 @@ button {
 }
 
 .inputBox {
+    margin-top: 10px;
     border: solid 1px @fontColor;
+    border-radius: @borderRaidus;
     height: 60px;
     background-color: #ffffff;
     padding: 5px;
@@ -507,42 +504,96 @@ button {
     box-sizing: border-box;
 }
 
-.emotionPanel {
-    padding: 5px;
-}
-
 .messageBoxContainer {
     display: table;
     border: solid 1px @fontColor;
+    border-radius: @borderRaidus;
     width: 100%;
+    table-layout: fixed;
 }
 
 .messageBox {
     display: table-cell;
     vertical-align: bottom;
     height: 300px;
+    overflow-x: auto;
+    background: #ffffff;
     > .messages {
         max-height: 300px;
         overflow-y: auto;
         .message {
             padding: 5px;
-            > div:first-of-type {
-                > span {
-                    display: inline-block;
-                    margin-right: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            > span {
+                float: left;
+                display: block;
+                margin-right: 10px;
+            }
+
+            > div {
+                box-sizing: border-box;
+                padding: 5px;
+                margin-top: 15px;
+                min-width: 1em;
+                min-height: 1em;
+                clear: both;
+                float: left;
+                word-wrap: break-word;
+                border-radius: @borderRaidus;
+                max-width: 100%;
+                position: relative;
+                min-width: 2em;
+                min-height: 2em;
+                &:before {
+                    position: absolute;
+                    display: block;
+                    border-left: solid 8px transparent;
+                    border-right: solid 8px transparent;
+                    border-bottom: solid 16px;
+                    bottom: calc(~"100% - 1px");
+                    left: 0;
+                    content: "";
                 }
             }
-
-            > div:nth-of-type(2) {
-                color: #008800;
+            &:after {
+                clear: both;
+                display: block;
+                height: 0;
+                content: "";
             }
         }
-        .playerMessage {
+        > .playerMessage {
             .message;
+            > div {
+                border-top-left-radius: 0;
+                background-color: #eeeeee;
+                &:before {
+                    left: 0;
+                    border-bottom-color: #eeeeee;
+                }
+            }
         }
 
-        .localPlayerMessage {
+        > .localPlayerMessage {
             .message;
+            > span {
+                float: right;
+                margin-left: 10px;
+                margin-right: 0;
+            }
+            > div {
+                border-top-right-radius: 0;
+                background-color: @dialogTitleColor;
+                color: #ffffff;
+                &:before {
+                    border-bottom-color: @dialogTitleColor;
+                    left: auto;
+                    right: 0;
+                }
+                float: right;
+            }
+            float: right;
         }
     }
 

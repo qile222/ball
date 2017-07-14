@@ -53,7 +53,7 @@ export default class DialogRenderer extends Renderer {
                         {
                             !this.state.hideClose &&
                             <svg
-                                onClick={this.props.onClickClose}
+                                onClick={this.onClickClose.bind(this)}
                                 aria-hidden="true">
                                 <use xlinkHref="#icon-close"></use>
                             </svg>
@@ -144,6 +144,10 @@ export default class DialogRenderer extends Renderer {
     removeEventListeners() {
         document.removeEventListener('mousemove', this.mouseMoveHandler)
         document.removeEventListener('mouseup', this.mouseUpHandler)
+    }
+
+    onClickClose() {
+        this.props.onClickClose()
     }
 
 }

@@ -17,7 +17,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
                 },
                 {
                     title: lanRes.close,
-                    onClick: props.onClickClose,
+                    onClick: this.onClickClose.bind(this),
                     name: 'Close'
                 },
                 {
@@ -35,7 +35,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
     }
 
     onClickSave() {
-        this.props.onClickClose()
+        this.onClickClose()
     }
 
     onClickBackToHall() {

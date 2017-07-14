@@ -39,6 +39,7 @@ module.exports = {
     enterChat: 'Enter Chat',
     send: 'Send',
     chat: 'Chat',
+    clearMessages: 'Clear All Messages',
 
     //error
     unknownError: 'Unknown Error',

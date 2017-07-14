@@ -130,4 +130,9 @@ export default class WorldManager extends Manager {
         eventDispatcher.emit(this, 'WorldManager_newMessage', message.data)
     }
 
+    clearMessagesCache() {
+        this.chatMessages = []
+        cache.set('chat_messages', this.chatMessages)
+    }
+
 }

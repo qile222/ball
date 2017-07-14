@@ -12,7 +12,7 @@ export default class SelectDialogRenderer extends DialogRenderer {
             btns: [
                 {
                     title: lanRes.confirm,
-                    onClick: this.props.onClickClose,
+                    onClick: this.onClickClose.bind(this),
                     name: 'Confirm'
                 },
             ],
