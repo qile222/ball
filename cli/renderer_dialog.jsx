@@ -12,6 +12,17 @@ export default class DialogRenderer extends Renderer {
         this.mouseDownHandler = this.onMouseDownTitle.bind(this)
         this.mouseUpHandler = this.onMouseUpTitle.bind(this)
     }
+    
+    componentWillMount() {
+        super.componentWillMount()
+        if (!this.state) {
+            this.state = {}
+        }
+        this.state.dialogContainerClassName = [
+            mainStyle.dialogContainer,
+            mainStyle.aniScaleToMax
+        ]
+    }
 
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate()
@@ -24,19 +35,23 @@ export default class DialogRenderer extends Renderer {
         this.node.className = mainStyle.dialog
         document.body.appendChild(this.node)
         this.openDialog()
-        this.titleContainer.addEventListener(
-            'mousedown',
-            this.mouseDownHandler,
-            false
-        )
+        if (this.titleContainer) {
+            this.titleContainer.addEventListener(
+                'mousedown',
+                this.mouseDownHandler,
+                false
+            )
+        }
     }
 
     componentWillUnmount() {
         super.componentWillUnmount()
-        this.titleContainer.removeEventListener(
-            'mousedown',
-            this.mouseDownHandler
-        )
+        if (this.titleContainer) {
+            this.titleContainer.removeEventListener(
+                'mousedown',
+                this.mouseDownHandler
+            )
+        }
         this.removeEventListeners()
         this.closeDialog()
     }
@@ -91,7 +106,9 @@ export default class DialogRenderer extends Renderer {
             <div
                 style={this.state.style}
                 ref={(ref) => this.dialogContainer = ref}
-                className={mainStyle.dialogContainer}>{components}</div>,
+                className={this.state.dialogContainerClassName.join(' ')}>
+                {components}
+            </div>,
             this.node
         )
     }
@@ -102,6 +119,16 @@ export default class DialogRenderer extends Renderer {
             document.body.removeChild(this.node)
             this.node = null
         }
+    }
+
+    prepareForClose(onPrepared) {
+        this.setState({
+            dialogContainerClassName: [
+                mainStyle.dialogContainer,
+                mainStyle.aniScaleToMin,
+            ]
+        })
+        this.dialogContainer.addEventListener('animationend', onPrepared, false)
     }
 
     renderContent() {
@@ -142,12 +169,14 @@ export default class DialogRenderer extends Renderer {
     }
 
     removeEventListeners() {
-        document.removeEventListener('mousemove', this.mouseMoveHandler)
-        document.removeEventListener('mouseup', this.mouseUpHandler)
+        if (this.titleContainer) {
+            document.removeEventListener('mousemove', this.mouseMoveHandler)
+            document.removeEventListener('mouseup', this.mouseUpHandler)
+        }
     }
 
     onClickClose() {
-        this.props.onClickClose()
+        this.prepareForClose(this.props.onClickClose.bind(this))
     }
 
 }

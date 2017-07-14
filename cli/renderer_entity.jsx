@@ -156,8 +156,8 @@ export class PolygonEntityRenderer extends EntityRenderer {
         ctx.beginPath()
         let radius = this.logic.getRadius()
         let step = twoPI / this.sideCount
-        for (var i = 0; i <= this.sideCount; i++) {
-            var curStep = i * step
+        for (let i = 0; i <= this.sideCount; i++) {
+            let curStep = i * step
             ctx.lineTo(radius * cos(curStep), radius * sin(curStep))
         }
         ctx.fillStyle = this.colorStr

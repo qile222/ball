@@ -7,12 +7,12 @@
 @keyframes ScaleToMax {
     0% { transform: scale(0) translate(-50%, -50%); opacity: 0; }
     75% { transform: scale(1.2) translate(-50%, -50%); }
-    100% { transform: scale(1.1) translate(-50%, -50%); opacity: 100%; }
+    100% { transform: scale(1) translate(-50%, -50%); opacity: 100%; }
 }
 @keyframes ScaleToMin {
-    0% { transform: scale(1.1) translate(-50%, -50%); opacity: 100%; }
-    75% { transform: scale(0.25) translate(-50%, -50%); }
-    100% { transform: scale(0) translate(-50%, -50%); opacity: 0; }
+    0% { transform: scale(1) translate(-50%, -50%); opacity: 100%; }
+    25% { transform: scale(1.2) translate(-50%, -50%); }
+    100% { transform: scale(0) translate(-50%, -50%); opacity: 0;}
 }
 @keyframes FadeIn {
     0% { opacity: 0; }
@@ -20,7 +20,7 @@
 }
 @keyframes FadeOut {
     0% { opacity: 100%; }
-    100% { opacity: 0%; }
+    100% { opacity: 0%; visibility: hidden;}
 }
 .aniFadeIn {
     animation: FadeIn @dialogOpenDuration;
@@ -29,10 +29,14 @@
     animation-name: FadeOut @dialogOpenDuration;
 }
 .aniScaleToMax {
-    animation: ScaleToMax @dialogOpenDuration, FadeIn @dialogOpenDuration;
+    animation: ScaleToMax @dialogOpenDuration forwards;
 }
 .aniScaleToMin {
-    animation: ScaleToMin @dialogOpenDuration, FadeOut @dialogOpenDuration;
+    animation: ScaleToMin @dialogOpenDuration forwards;
+}
+
+.hidden {
+    display: none;
 }
 
 html, body {
@@ -267,11 +271,10 @@ button {
 @dialogCellPadding: 10px;
 .dialogContainer {
     border-radius: @borderRaidus;
-    .aniScaleToMax;
     .centerAlign;
     transform-origin: 0 0;
     color: @dialogTitleColor;
-    width: 400px;
+    width: 500px;
     background-color: rgba(247, 254, 223, 1);
     display: table;
     border: solid 1px @fontColor;

@@ -4,7 +4,7 @@ import DialogRenderer from './renderer_dialog'
 import mainStyle from './style_main'
 import commonRes from './res_common'
 import HintRenderer from './renderer_hint'
-import {eventDispatcher, netManager, loginManager} from './global'
+import { eventDispatcher, netManager, loginManager } from './global'
 
 export default class LoginEnterDialogRenderer extends DialogRenderer {
 
@@ -80,7 +80,7 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
                 {this.state.hint &&
                     <HintRenderer
                         hint={this.state.hint}
-                        willRemoveHint={this.willRemoveHint.bind(this)}/>}
+                        willRemoveHint={this.willRemoveHint.bind(this)} />}
             </div>
             <label htmlFor='server'>{lanRes.serverList}</label>
             <div>
@@ -108,10 +108,12 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
     }
 
     onClickEnter() {
-        loginManager.enterWorld(
-            this.nameInput.value,
-            this.serverSelect.value
-        )
+        this.prepareForClose(() => {
+            loginManager.enterWorld(
+                this.nameInput.value,
+                this.serverSelect.value
+            )
+        })
     }
 
     onSubmitForm(e) {

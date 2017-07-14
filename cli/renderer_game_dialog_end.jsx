@@ -67,7 +67,9 @@ export default class GameEndDialogRenderer extends DialogRenderer {
     }
 
     onClickBackToHall() {
-        gameManager.backToHall()
+        this.prepareForClose(() => {
+            gameManager.backToHall()
+        })
     }
 
 }

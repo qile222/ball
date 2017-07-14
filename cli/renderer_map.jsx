@@ -128,7 +128,7 @@ export default class MapRenderer extends Renderer {
         //cache static image objects
         let mapSize = gameManager.getMapLogic().getSize()
         let canvas = document.createElement('canvas')
-        var ctx = canvas.getContext('2d')
+        let ctx = canvas.getContext('2d')
         canvas.width = mapSize.width
         canvas.height = mapSize.height
         let gridPixel = commonRes.gridPixel

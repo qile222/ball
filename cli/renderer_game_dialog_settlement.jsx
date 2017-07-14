@@ -74,11 +74,15 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
     }
 
     onClickContinue() {
-        this.props.onClickContinue()
+        this.prepareForClose(() => {
+            this.props.onClickContinue()
+        })
     }
 
     onClickBackToHall() {
-        gameManager.backToHall()
+        this.prepareForClose(() => {
+            gameManager.backToHall()
+        })
     }
 
 }

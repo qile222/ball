@@ -19,13 +19,13 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
                 },
                 {
                     title: lanRes.enterChat,
-                    onClick: props.onClickEnterChat,
+                    onClick: this.onClickChat.bind(this),
                     disable: false,
                     name: 'EnterChat'
                 },
                 {
-                    title: lanRes.enter,
-                    onClick: this.onClickEnter.bind(this),
+                    title: lanRes.startGame,
+                    onClick: this.onClickStartGame.bind(this),
                     disable: false,
                     name: 'Enter'
                 },
@@ -41,12 +41,20 @@ export default class WorldStartDialogRenderer extends DialogRenderer {
 
     }
 
-    onClickEnter() {
-        worldManager.startGame()
+    onClickStartGame() {
+        this.prepareForClose(() => {
+            worldManager.startGame()
+        })
     }
 
     onClickExit() {
-        worldManager.backToLogin()
+        this.prepareForClose(() => {
+            worldManager.backToLogin()
+        })
+    }
+
+    onClickChat() {
+        this.props.onClickEnterChat()
     }
 
 }
