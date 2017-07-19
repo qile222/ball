@@ -18,7 +18,7 @@ module.exports = {
     eatenCount: 'Eaten Count',
     liveTime: 'Live Time',
     leftTime: 'Left Time',
-    enterName: 'Enter You Name:',
+    enterName: 'Your Name:',
     enterGame: 'Enter Game',
     nameInputHint: 'less than 8 letters',
     serverList: 'Server List:',

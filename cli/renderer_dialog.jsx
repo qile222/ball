@@ -159,11 +159,8 @@ export default class DialogRenderer extends Renderer {
     onMouseMoveTitle(e) {
         let x = e.screenX - this.diffX + this.translateX
         let y = e.screenY - this.diffY + this.translateY
-        this.setState({
-            style: {
-                transform: 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
-            }
-        })
+        this.dialogContainer.style.transform =
+            'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
         e.preventDefault()
         e.stopPropagation()
     }
