@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "webpack-dev-server --profile --devtool eval --progress --colors --content-base build --config ./webpack.cfg.dev.js",
-    "deploy": "webpack --progress --colors --profile --json > webpack.stats.json -p --config ./webpack.cfg.dist.js"
+    "deploy": "webpack --progress --progress --colors --profile --json > webpack.stats.json -p --config ./webpack.cfg.dist.js"
   },
   "author": "",
   "license": "ISC",
