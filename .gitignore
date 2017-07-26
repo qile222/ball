@@ -5,6 +5,5 @@ build/
 .vscode/
 cli/res_svr_*.js
 *.log
-dist/
 assets/
 webpack.stats.json
