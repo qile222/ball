@@ -140,8 +140,8 @@ export default class DialogRenderer extends Renderer {
     }
 
     onMouseDownTitle(e) {
-        this.diffX = e.screenX
-        this.diffY = e.screenY
+        this.startX = e.screenX
+        this.startY = e.screenY
         let style = window.getComputedStyle(this.dialogContainer)
         let transform = style.getPropertyValue('transform').split(',', 6)
         this.translateX = parseInt(transform[4])
@@ -149,6 +149,12 @@ export default class DialogRenderer extends Renderer {
         document.addEventListener('mousemove', this.mouseMoveHandler, false)
         document.addEventListener('mouseup', this.mouseUpHandler, false)
         e.stopPropagation()
+        let parent = this.dialogContainer.parentElement
+        let box = this.dialogContainer.getBoundingClientRect()
+        this.translateMinX = -parent.clientWidth / 2
+        this.translateMaxX = parent.clientWidth / 2 - box.width
+        this.translateMinY = -parent.clientHeight / 2
+        this.translateMaxY = parent.clientHeight / 2 - box.height
     }
 
     onMouseUpTitle(e) {
@@ -157,8 +163,18 @@ export default class DialogRenderer extends Renderer {
     }
 
     onMouseMoveTitle(e) {
-        let x = e.screenX - this.diffX + this.translateX
-        let y = e.screenY - this.diffY + this.translateY
+        let x = e.screenX - this.startX + this.translateX
+        let y = e.screenY - this.startY + this.translateY
+        if (x < this.translateMinX) {
+            x = this.translateMinX
+        } else if (x > this.translateMaxX) {
+            x = this.translateMaxX
+        }
+        if (y < this.translateMinY) {
+            y = this.translateMinY
+        } else if (y > this.translateMaxY) {
+            y = this.translateMaxY
+        }
         this.dialogContainer.style.transform =
             'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
         e.preventDefault()

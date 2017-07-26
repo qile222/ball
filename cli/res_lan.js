@@ -40,6 +40,7 @@ module.exports = {
     send: 'Send',
     chat: 'Chat',
     clearMessages: 'Clear All Messages',
+    guideContent: 'using %s to controll your entity',
 
     //error
     unknownError: 'Unknown Error',

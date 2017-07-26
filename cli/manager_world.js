@@ -95,7 +95,12 @@ export default class WorldManager extends Manager {
     }
 
     startGame() {
-        netManager.send('world', {head: protocolRes.getGameServerCW})
+        if (cache.get('isFinishGuide')) {
+            netManager.send('world', {head: protocolRes.getGameServerCW})
+        } else {
+            cache.set('isFinishGuide', true)
+            eventDispatcher.emit(this, 'WorldManager_showGuide')
+        }
     }
 
     onGetGameServer(message) {

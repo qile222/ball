@@ -51,7 +51,6 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
 
     componentDidMount() {
         super.componentDidMount()
-        this.nameInput.focus()
     }
 
     onGetWorldServerList() {
@@ -62,7 +61,8 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
         let worldServers = loginManager.getWorldServerList()
         let serverList = []
         for (let i in worldServers) {
-            serverList.push(<option value={i}>{worldServers[i].name}</option>)
+            let name = worldServers[i].name
+            serverList.push(<option key={name} value={i}>{name}</option>)
         }
         return <form
             className={mainStyle.enterDialog}
@@ -70,6 +70,8 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
             <label htmlFor='name'>{lanRes.enterName}</label>
             <div>
                 <input
+                    autoComplete='off'
+                    autoFocus={true}
                     defaultValue={this.props.playerName}
                     onInput={this.onInputName.bind(this)}
                     ref={(ref) => this.nameInput = ref}

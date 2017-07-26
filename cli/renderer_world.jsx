@@ -17,18 +17,62 @@ export default class WolrdRenderer extends Renderer {
             this,
             this.onWorldDisconnected
         )
+        eventDispatcher.addListener(
+            worldManager,
+            'WorldManager_showGuide',
+            this,
+            this.onWorldShowGuide
+        )
         this.state = {}
     }
 
     render() {
         return <div className={mainStyle.scene}>
             <WorldStartDialogRenderer
-                onClickEnterChat={this.onClickEnterChat.bind(this)}/>
-            {this.state.showChat && <WorldChatDialogRenderer
+                onClickEnterChat={this.onClickEnterChat.bind(this)} />
+            {this.state.isShowChat && <WorldChatDialogRenderer
                 onClickClose={this.onClickChatClose.bind(this)} />}
             {this.state.exitHint && <NoticeDialogRenderer
                 onClickClose={this.onExitWorld.bind(this)}>
                 {this.state.exitHint}
+            </NoticeDialogRenderer>}
+            {this.state.isShowGuide && <NoticeDialogRenderer
+                onClickClose={this.onGuideFinish.bind(this)}>
+                <div
+                    className={mainStyle.guide}
+                    dangerouslySetInnerHTML={{
+                        __html: util.format(
+                            lanRes.guideContent,
+                            `
+                            <kbd>
+                                <svg
+                                    aria-hidden="true">
+                                    <use xlink:href="#icon-return"></use>
+                                </svg>
+                            </kbd>
+                            <kbd>
+                                <svg
+                                    aria-hidden="true">
+                                    <use xlink:href="#icon-packup"></use>
+                                </svg>
+                            </kbd>
+                            <kbd>
+                                <svg
+                                    aria-hidden="true">
+                                    <use xlink:href="#icon-enter"></use>
+                                </svg>
+                            </kbd>
+                            <kbd>
+                                <svg
+                                    aria-hidden="true">
+                                    <use xlink:href="#icon-unfold"></use>
+                                </svg>
+                            </kbd>
+                            `
+                        )
+                    }}>
+                    
+                </div>
             </NoticeDialogRenderer>}
         </div>
     }
@@ -44,11 +88,19 @@ export default class WolrdRenderer extends Renderer {
     }
 
     onClickEnterChat() {
-        this.setState({ showChat: true })
+        this.setState({ isShowChat: true })
     }
 
     onClickChatClose() {
-        this.setState({ showChat: false })
+        this.setState({ isShowChat: false })
+    }
+
+    onWorldShowGuide() {
+        this.setState({ isShowGuide: true })
+    }
+
+    onGuideFinish() {
+        worldManager.startGame()
     }
 
 }

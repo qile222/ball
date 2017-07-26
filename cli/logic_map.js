@@ -97,7 +97,7 @@ export default class MapLogic extends Logic {
             } else if (e1 && e2) {
                 return e1.getRadius() > e2.getRadius()
             } else {
-                return p1.getID() < p2.getID()
+                return p1.getEnterTime() > p2.getEnterTime()
             }
         })
         this.updateRank = false
