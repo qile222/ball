@@ -79,9 +79,11 @@ export default class MapRenderer extends Renderer {
                     viewPort.y = maxY
                 }
             }
-            fillText += 'coor:'+util.toFixed(watchPosition.x, 2) +
-                ',' +
-                util.toFixed(watchPosition.y, 2)
+            if (DEBUG) {
+                fillText += 'coor:'+util.toFixed(watchPosition.x, 2) +
+                    ',' +
+                    util.toFixed(watchPosition.y, 2)
+            }
         }
         this.ctx.clearRect(0, 0, map.width, map.height)
         this.ctx.drawImage(

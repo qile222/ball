@@ -20,7 +20,7 @@ module.exports = {
     leftTime: 'Left Time',
     enterName: 'Your Name:',
     enterGame: 'Enter Game',
-    nameInputHint: 'less than 8 letters',
+    nameInputHint: 'Less than 8 letters',
     serverList: 'Server List:',
     noServer: 'No valid servers',
     enter: 'Enter',
@@ -35,12 +35,12 @@ module.exports = {
     game: 'Game',
     world: 'World',
     backToLogin: 'Back To Login',
-    gameAbnormal: 'Unknown Exception,Game Will Exit',
+    gameAbnormal: 'Unknown exception,game will exit.',
     enterChat: 'Enter Chat',
     send: 'Send',
     chat: 'Chat',
     clearMessages: 'Clear All Messages',
-    guideContent: 'using %s to controll your entity',
+    guideContent: 'Using %s to controll your entity.',
 
     //error
     unknownError: 'Unknown Error',

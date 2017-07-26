@@ -4,7 +4,6 @@ let end = false
 window.onerror = function (...params) {
     end = true
     eventDispatcher.emit(window, 'runtime_error')
-    alert('runtime error')
     return false
 }
 

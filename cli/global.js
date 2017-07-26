@@ -112,6 +112,7 @@ class ConsoleImpl {
 
 }
 
+window.DEBUG = true
 export const util = Util
 export const eventDispatcher = new EventDispatcher()
 export const cache = new Cache()
