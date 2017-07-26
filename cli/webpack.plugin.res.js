@@ -22,11 +22,11 @@ ResWebpackPlugin.prototype.apply = function (compiler) {
         })
     })
 
-    compiler.plugin('after-emit', () => {
-        if (this.svrDistDir) {
+    if (this.svrDistDir) {
+        compiler.plugin('after-emit', () => {
             ncp(this.buildDir, this.svrDistDir)
-        }
-    })
+        })
+    }
 }
 
 module.exports = ResWebpackPlugin
