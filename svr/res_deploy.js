@@ -23,14 +23,10 @@ const deploy = {
             addr: '127.0.0.1',
             port: 12310
         },
-        static: {
+        staticAgent: {
             addr: 'http://127.0.0.1',
             port: 12311
         },
-        chat: {
-            addr: 'http://127.0.0.1',
-            port: 12312
-        }
     },
     production: {
         world: {
@@ -56,14 +52,10 @@ const deploy = {
             addr: '127.0.0.1',
             port: 12310
         },
-        static: {
+        staticAgent: {
             addr: '127.0.0.1',
             port: 12311
         },
-        chat: {
-            addr: 'http://127.0.0.1',
-            port: 12312
-        }
     }
 }
-module.exports = process.env.mode == 'production' ? deploy.production : deploy.dev
+module.exports = process.env.NODE_ENV == 'production' ? deploy.production : deploy.dev

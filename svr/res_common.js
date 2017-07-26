@@ -10,7 +10,7 @@ module.exports = {
         ended: 2,
         initing: 3,
     },
-    roomEntityLimit: 20,
+    roomEntityLimit: 1024768,
     roomCreateExpireTime: 5000,
     mapDefaultSize: {
         width: 4000,

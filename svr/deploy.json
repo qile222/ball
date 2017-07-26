@@ -1,0 +1,14 @@
+{
+    "apps": [{
+        "name": "svr",
+        "script": "app.js",
+        "args": "['--toto=heya coco', '-d', '1']",
+        "log_date_format": "YYYY-MM-DD HH:mm Z",
+        "ignoreWatch": ["[\\/\\\\]\\./", "node_modules"],
+        "watch": true,
+        "node_args": "--harmony",
+        "env": {
+            "NODE_ENV": "production"
+        }
+    }]
+}
