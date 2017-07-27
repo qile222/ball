@@ -15,7 +15,7 @@ export default class LoginManager extends Manager {
     requestWorldAddr() {
         util.request(
             {
-                url: commonRes.agent,
+                url: window.loginAgent,
                 method: 'POST',
                 cb: this.onGetWorldServer.bind(this)
             }

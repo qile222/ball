@@ -13,7 +13,6 @@ module.exports = Object.assign({
         live: 2,
         die: 3,
     },
-    fastForwardTimeScale: 10,
+    fastForwardTimeScale: 6,
     initFastForwardTimeScale: 100000000,
-    agent: 'http://127.0.0.1:12310/getServer',
 }, commonRes)

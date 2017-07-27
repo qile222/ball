@@ -17,7 +17,7 @@ const config = {
     output: {
         path: buildDir,
         filename: '[name].bundle.js',
-        publicPath: 'http://127.0.0.1:8080/dist'
+        publicPath: 'http://127.0.0.1:8080/dev'
     },
     resolve: {
         alias: {
@@ -30,7 +30,7 @@ const config = {
     module: {
         rules: [
             {
-                test: /^(?!webpack\.).*\.jsx?$/,
+                test: /^(?!webpack\.|\.).*\.jsx?$/,
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -70,7 +70,8 @@ const config = {
             template: path.resolve(__dirname, 'template.html'),
             inject: 'body',
             showErrors: true,
-            chunks: ['vendors', 'main']
+            chunks: ['vendors', 'main'],
+            loginAgent: 'http://127.0.0.1:12310/getServer'
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors',

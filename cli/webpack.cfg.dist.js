@@ -27,7 +27,7 @@ const config = {
     },
     module: {
         rules: [{
-            test: /^(?!webpack\.).*\.jsx?$/,
+            test: /^(?!webpack\.|\.).*\.jsx?$/,
             use: {
                 loader: 'babel-loader',
                 options: {
@@ -66,7 +66,9 @@ const config = {
             template: path.resolve(__dirname, 'template.html'),
             inject: 'body',
             showErrors: true,
-            chunks: ['vendors', 'main']
+            chunks: ['vendors', 'main'],
+            baseURL: 'http://rawgit.com/lolBig/ball/master/cli/dist/',
+            loginAgent: 'http://47.91.137.222:12310/getServer',
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors',
@@ -78,9 +80,9 @@ const config = {
                 warnings: false
             }
         }),
-        // new webpack.DefinePlugin({
+        new webpack.DefinePlugin({
         //     'DEBUG': false
-        // })
+        })
         // new webpack.HotModuleReplacementPlugin()
     ]
 }
