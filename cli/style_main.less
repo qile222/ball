@@ -1,5 +1,6 @@
 @import './style_static.less';
 
+@fontSize: 20px;
 @borderRaidus: 5px;
 @fontColor: #cdcdcd;
 @dialogTitleColor: #00aa00;
@@ -63,7 +64,10 @@ html, body {
     margin: 0;
     width: 100%;
     height: 100%;
-    font-size: 14px;
+}
+
+body {
+    font-size: @fontSize;
 }
 
 .centerAlign (@position: absolute) {
@@ -76,28 +80,27 @@ html, body {
 
 button {
     margin: 0;
-    padding: 10px 15px;
+    padding: 0.7rem 0.6rem;
     background-color: @dialogTitleColor;
     color: #ffffff;
     border: solid 1px @fontColor;
     border-radius: @borderRaidus;
-    margin-left: 10px;
-    font-size: 16px;
+    margin-left: 0.7rem;
+    font-size: 1.1rem;
     &:disabled {
         background: #cccccc;
     }
 }
 
 .hint {
-    @triangleBorderWidth: 15px;
+    @triangleBorderWidth: 1rem;
     .centerAlign;
     background-color: #ffffff;
-    padding: 5px;
+    padding: 0.4rem;
     border-radius: @borderRaidus;
     border:solid 1px @fontColor;
     box-sizing: border-box;
     .aniScaleToMax;
-    font-size: 14px;
     top: auto;
     bottom: 100%;
     white-space: nowrap;
@@ -139,6 +142,9 @@ button {
     color: #ffffff;
     background-color: black;
     z-index: 1;
+    overflow: hidden;
+    max-width: 100%;
+    font-size: 12px;
 }
 
 .scene {
@@ -161,38 +167,37 @@ button {
 }
 
 .gameRankBoard {
-    @rankLiHeight: 25px;
+    @rankLiHeight: 1.6rem;
     @rankTitleCount: 3;
-    @rankTitleWidth: 50px;
-    @rankTitleBorderWidth: 10px;
+    @rankTitleWidth: 3.5rem;
+    @rankTitleBorderWidth: 0.7rem;
     @rankCount: 10;
 
-    width: 200px;
+    width: 300px;
     background-color: rgba(0, 0, 0, 0.6);
     position: absolute;
-    right: 10px;
-    top: 140%;
+    right: 1rem;
+    top: 3rem;
     border-radius: @borderRaidus;
     color: #adadad;
-    font-size: 16px;
+    font-size: 1.2rem;
     > h4 {
-        margin: 10px 0;
-        font-size: 16px;
+        margin: 0.7em 0;
         text-align: center;
         vertical-align: middle;
         > span {
             > svg {
-                width: 24px;
-                height: 24px;
+                width: 1.7em;
+                height: 1.7em;
                 vertical-align: -0.4em;
             }
         }
         > svg {
-            width: 24px;
-            height: 24px;
+            width: 1.7em;
+            height: 1.7em;
             display: block;
             position: absolute;
-            right: 10px;
+            right: 0.7em;
             top: 0.5em;
             &:hover {
                 fill: #999999;
@@ -206,7 +211,7 @@ button {
         padding: 0;
         margin: 0;
         > li {
-            font-size: 14px;
+            font-size: 1rem;
             text-align: left;
             height: @rankLiHeight;
             padding-left: @rankTitleWidth;
@@ -225,7 +230,7 @@ button {
 
             > span:nth-of-type(2) {
                 float: right;
-                width: 70px;
+                width: 5rem;
             }
 
             .first-three-li(@rankTitleCount);
@@ -249,7 +254,7 @@ button {
         }
         &:last-of-type {
             height: @rankLiHeight;
-            padding-top: 5px;
+            padding-top: 0.4rem;
             color: @dialogTitleColor;
             border-top: solid 2px #aaaaaa;
             > li {
@@ -261,6 +266,12 @@ button {
                 }
             }
         }
+    }
+}
+@media screen and (max-width: 700px) {
+    .gameRankBoard {
+        left: 50%;
+        transform: translate(-50%, 0);
     }
 }
 
@@ -280,12 +291,12 @@ button {
     z-index: 1024;
 }
 
-@dialogCellPadding: 10px;
+@dialogCellPadding: 0.7rem;
 .dialogContainer {
     border-radius: @borderRaidus;
     .centerAlign;
     color: @dialogTitleColor;
-    width: 500px;
+    width: 80vw;
     background-color: rgba(247, 254, 223, 1);
     display: table;
     border: solid 1px @fontColor;
@@ -300,7 +311,7 @@ button {
         }
         > h4 {
             margin: 0;
-            font-size: 20px;
+            font-size: 1.5rem;
             text-decoration: underline;
             vertical-align: middle;
             border-bottom: solid 1px @fontColor;
@@ -340,12 +351,12 @@ button {
 }
 
 .gameSettlementDialog {
-    width: 550px;
+    width: 90vh;
     > h1 {
         text-align: center;
         margin: 0;
         font-weight: normal;
-        font-size: 20px;
+        font-size: 1.5rem;
         > span {
             text-decoration: underline;
             color: pink;
@@ -411,22 +422,22 @@ button {
 }
 
 .enterDialog {
-    font-size: 18px;
+    font-size: 1.2rem;
     > div {
         position: relative;
     }
     > label {
         display: block;
-        margin: 10px 0;
+        margin: 0.7rem 0;
     }
     input, select {
         display: block;
-        font-size: 18px;
+        font-size: 1.2em;
         box-sizing: border-box;
         width: 100%;
         border-radius: @borderRaidus;
         border: solid 1px @fontColor;
-        padding: 10px 5px;
+        padding: 0.7rem 0.3rem;
     }
 }
 
@@ -438,11 +449,11 @@ button {
         border: solid 1px @fontColor;
         border-radius: @borderRaidus;
         > span {
-            font-size: 20px;
+            font-size: 1.5rem;
             text-align: center;
             display: table-cell;
             background-color: @dialogTitleColor;
-            padding: 10px 0;
+            padding: 0.7rem 0;
             color: #ffffff;
             &[data-selected] {
                 background-color: #ffffff;
@@ -467,15 +478,15 @@ button {
         display: table;
         border-collapse: separate;
         table-layout: fixed;
-        border-spacing: 0 5px;
+        border-spacing: 0 0.3rem;
         overflow: scroll;
-        font-size: 16px;
+        font-size: 1.2rem;
         text-align: center;
         &:first-child {
-            font-size: 12px;
+            font-size: 0.8em;
         }
         > span {
-            padding: 5px 0;
+            padding: 0.3em 0;
             border-bottom: solid 1px @dialogTitleColor;
             border-top: solid 1px @dialogTitleColor;
             display: table-cell;
@@ -506,12 +517,12 @@ button {
 }
 
 .inputBox {
-    margin-top: 10px;
+    margin-top: 0.7rem;
     border: solid 1px @fontColor;
     border-radius: @borderRaidus;
-    height: 60px;
+    height: 4rem;
     background-color: #ffffff;
-    padding: 5px;
+    padding: 0.3rem;
     overflow: auto;
     width: 100%;
     resize: none;
@@ -529,26 +540,26 @@ button {
 .messageBox {
     display: table-cell;
     vertical-align: bottom;
-    height: 300px;
+    height: 40vh;
     overflow-x: auto;
     background: #ffffff;
     > .messages {
-        max-height: 300px;
+        max-height: 50vh;
         overflow-y: auto;
         .message {
-            padding: 5px;
+            padding: 0.3rem;
             width: 100%;
             box-sizing: border-box;
             > span {
                 float: left;
                 display: block;
-                margin-right: 10px;
+                margin-right: 0.7rem;
             }
 
             > div {
                 box-sizing: border-box;
-                padding: 5px;
-                margin-top: 5px;
+                padding: 0.3rem;
+                margin-top: 0.3rem;
                 min-width: 1em;
                 min-height: 1em;
                 clear: both;
@@ -582,7 +593,7 @@ button {
             .message;
             > span {
                 float: right;
-                margin-left: 10px;
+                margin-left: 0.7rem;
                 margin-right: 0;
             }
             > div {
@@ -602,4 +613,5 @@ button {
 }
 
 .guide {
+
 }

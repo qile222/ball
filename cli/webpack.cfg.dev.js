@@ -17,7 +17,6 @@ const config = {
     output: {
         path: buildDir,
         filename: '[name].bundle.js',
-        publicPath: 'http://127.0.0.1:8080/dev'
     },
     resolve: {
         alias: {

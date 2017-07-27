@@ -21,7 +21,7 @@ export default class GameDialogSettingRenderer extends DialogRenderer {
                     name: 'Close'
                 },
                 {
-                    title: lanRes.backToHall,
+                    title: lanRes.exitGame,
                     onClick: this.onClickBackToHall.bind(this),
                     name: 'BackToHall'
                 }

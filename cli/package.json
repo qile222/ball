@@ -5,7 +5,7 @@
   "description": "a simple h5 game",
   "main": "main.js",
   "scripts": {
-    "dev": "webpack-dev-server --profile --devtool eval --progress --colors --content-base build --config ./webpack.cfg.dev.js",
+    "dev": "webpack-dev-server --profile --devtool eval --progress --colors --content-base build --host 192.168.3.28 --port 8080 --config ./webpack.cfg.dev.js",
     "deploy": "webpack --progress --progress --colors --profile --json > webpack.stats.json -p --config ./webpack.cfg.dist.js"
   },
   "author": "",
