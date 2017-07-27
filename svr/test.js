@@ -1,5 +1,5 @@
 const io = require('socket.io-client')
-const deployRes = require('./res_deploy')
+const deploy = require('./deploy')
 const protocolRes = require('./res_protocol')
 const logger = require('./logger')
 const readline = require('readline')
@@ -43,7 +43,7 @@ rl.on('close', () => {
 let playerData = null
 /*********************** init world client ****************************/
 function initWorldClient() {
-    worldio = io(deployRes.world.addr + ':' + deployRes.world.port)
+    worldio = io(deploy.world.addr + ':' + deploy.world.port)
     worldio.once('connect', () => {
         worldio.send({
             head: protocolRes.getGameServerWS

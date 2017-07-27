@@ -2,7 +2,7 @@ const fs = require('fs')
 const shortid = require('shortid')
 const cache = require('memory-cache')
 const commonRes = require('./res_common')
-const deployRes = require('./res_deploy')
+const deploy = require('./deploy')
 const WorldServer = require('./server_world')
 const logger = require('./logger')
 const GameAgent = require('./agent_game')
@@ -45,25 +45,25 @@ function initListener() {
 let tasks = [
     function () {
         let worldServer = new WorldServer(shortid.generate())
-        worldServer.start(deployRes.world.port)
+        worldServer.start(deploy.world.port)
         worldServer.on('initFinished', initListener)
         cache.put('worldServer', {
             id: worldServer.getID(),
-            addr: deployRes.world.addr,
-            port: deployRes.world.port,
-            name: deployRes.world.name
+            addr: deploy.world.addr,
+            port: deploy.world.port,
+            name: deploy.world.name
         })
     },
     function() {
         let gameServers = []
-        for (let i in deployRes.game) {
+        for (let i in deploy.game) {
             let gameServer = new GameServer(shortid.generate())
-            gameServer.start(deployRes.game[i].port)
+            gameServer.start(deploy.game[i].port)
             gameServers.push({
                 id: gameServer.getID(),
-                addr: deployRes.game[i].addr,
-                port: deployRes.game[i].port,
-                name: deployRes.game[i].name
+                addr: deploy.game[i].addr,
+                port: deploy.game[i].port,
+                name: deploy.game[i].name
             })
             gameServer.on('initFinished', initListener)
         }
@@ -71,25 +71,25 @@ let tasks = [
     },
     function() {
         let chatServer = new ChatServer(shortid.generate())
-        chatServer.start(deployRes.chat.port)
+        chatServer.start(deploy.chat.port)
         chatServer.on('initFinished', initListener)
         cache.put('chatServer', {
             id: chatServer.getID(),
-            addr: deployRes.chat.addr,
-            port: deployRes.chat.port,
-            name: deployRes.chat.name
+            addr: deploy.chat.addr,
+            port: deploy.chat.port,
+            name: deploy.chat.name
         })
     },
     function() {
-        let gameAgent = new GameAgent(deployRes.gameAgent.port)
+        let gameAgent = new GameAgent(deploy.gameAgent.port)
         gameAgent.on('initFinished', initListener)
     },
     function() {
-        let worldAgent = new WorldAgent(deployRes.worldAgent.port)
+        let worldAgent = new WorldAgent(deploy.worldAgent.port)
         worldAgent.on('initFinished', initListener)
     },
     // function() {
-    //     let worldAgent = new StaticAgent(deployRes.staticAgent.port)
+    //     let worldAgent = new StaticAgent(deploy.staticAgent.port)
     //     worldAgent.on('initFinished', initListener)
     // },
 ]

@@ -5,7 +5,7 @@ const commonRes = require('./res_common')
 const protocolRes = require('./res_protocol')
 const Message = require('./message')
 const logger = require('./logger')
-const deployRes = require('./res_deploy')
+const deploy = require('./deploy')
 const Util = require('./util')
 const errorCodeRes = require('./res_error_code')
 const shortid = require('shortid')
@@ -76,7 +76,7 @@ class WorldServer extends Server {
         let reqData = {
             playerID: cliSocket.id
         }
-        Util.postServer(deployRes.gameAgent, '/getServer', reqData, (error, gameData) => {
+        Util.postServer(deploy.gameAgent, '/getServer', reqData, (error, gameData) => {
             if (error) {
                 logger.error(`req game agent error ${JSON.stringify(error)}`)
                 this.handleErrorLogic(cliSocket, message, errorCodeRes.agentError)

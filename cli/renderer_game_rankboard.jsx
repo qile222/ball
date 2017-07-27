@@ -14,7 +14,7 @@ export default class GameRankBoardRenderer extends Renderer {
     constructor(props) {
         super(props)
         this.state = {
-            toggle: window.screen.width > 450,
+            toggle: document.body.clientWidth > 650,
             isShowSetting: false,
         }
         eventDispatcher.addListener(

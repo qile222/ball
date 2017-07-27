@@ -16,7 +16,7 @@ const config = {
     devtool: 'source-map',
     output: {
         path: buildDir,
-        filename: '[name].bundle.js',
+        filename: 'm.[chunkhash].js',
     },
     resolve: {
         alias: {
@@ -74,9 +74,9 @@ const config = {
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors',
-            filename: 'vendors.js'
+            filename: 'v.[chunkhash].js'
         }),
-        new ExtractTextPlugin('[name].css'),
+        new ExtractTextPlugin('c.[chunkhash].css'),
         // new webpack.HotModuleReplacementPlugin()
     ]
 }

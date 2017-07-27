@@ -24,7 +24,7 @@ module.exports = {
     serverList: 'Server List:',
     noServer: 'No valid servers',
     enter: 'Enter',
-    backToHall: 'Back To Hall',
+    backToHall: 'Back',
     startGame: 'Start',
     gameEnd: 'Game End',
     eatenRank: 'Eaten Rank',

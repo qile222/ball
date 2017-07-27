@@ -15,7 +15,7 @@ const config = {
     },
     output: {
         path: buildDir,
-        filename: '[name].js',
+        filename: 'm.[chunkhash].js',
     },
     resolve: {
         alias: {
@@ -72,9 +72,9 @@ const config = {
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors',
-            filename: 'vendors.js'
+            filename: 'v.[chunkhash].js'
         }),
-        new ExtractTextPlugin('[name].css'),
+        new ExtractTextPlugin('c.[chunkhash].css'),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
