@@ -2,6 +2,7 @@ import Renderer from './renderer'
 import ReactDOM from 'react-dom'
 import React from 'react'
 import mainStyle from './style_main'
+import { scheduler } from './global'
 
 export default class DialogRenderer extends Renderer {
 
@@ -128,7 +129,8 @@ export default class DialogRenderer extends Renderer {
                 mainStyle.aniScaleToMin,
             ]
         })
-        this.dialogContainer.addEventListener('animationend', onPrepared, false)
+        scheduler.scheduleOnce(500, onPrepared)
+        // this.dialogContainer.addEventListener('animationend', onPrepared, false)
     }
 
     renderContent() {

@@ -29,7 +29,7 @@ export default class GameTimerRenderer extends Renderer {
 
     render() {
         return <div className={mainStyle.gameTimer}>
-            {util.timeFormatMMSS(gameManager.getLeftTime())}
+            {util.timeFormat(gameManager.getLeftTime(), 'mm:ss')}
         </div>
     }
 

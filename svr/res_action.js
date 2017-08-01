@@ -1,9 +1,9 @@
 module.exports = {
     stand: 0,
-    moveUp: 2,
-    moveLeft: 1,
-    moveRight: 3,
-    moveDown: 4,
+    moveLeft: 37,
+    moveUp: 38,
+    moveRight: 39,
+    moveDown: 40,
     joinPlayer: 5,
     removePlayer: 6
 }

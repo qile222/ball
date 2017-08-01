@@ -1,8 +1,4 @@
+let reg = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
 module.exports = {
-    platform: 'pc',
-    browser: 'chrome',
-    resolution: {
-        x: 1024,
-        y: 768
-    }
+    platform: reg.test(navigator.userAgent) ? 'mobile' : 'pc',
 }

@@ -70,7 +70,7 @@ const config = {
             inject: 'body',
             showErrors: true,
             chunks: ['vendors', 'main'],
-            loginAgent: 'http://127.0.0.1:12310/getServer'
+            loginAgent: 'http://192.168.3.28:12310/getServer'
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors',

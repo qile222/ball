@@ -33,31 +33,26 @@ export default class Util {
         return array[Util.randomInt(array.length)]
     }
 
-    static timeFormat(timestamp) {
-        let date = new Date(timestamp)
-        let year = date.getFullYear()
-        let month = date.getMonth() + 1
-        let day = date.getDate()
-        let hours = date.getHours()
-        let minutes = date.getMinutes()
-        let seconds = date.getSeconds()
-        return year +
-            (month > 9 ? '-' + month : '-0' + month) +
-            (day > 9 ? '-' + day : '-0' + day) +
-            (hours > 9 ? ' ' + hours : ' 0' + hours) +
-            (minutes > 9 ? ':' + minutes : ':0' + minutes) +
-            (seconds > 9 ? ':' + seconds : ':0' + seconds)
-    }
-
-    static timeFormatMMSS(timestamp) {
-        let ss = Math.floor(timestamp / 1000)
-        let s = ss % 60
-        let m = (ss - s) / 60
-        return (m > 9 ? m : '0' + m) + (s > 9 ? ':' + s : ':0' + s)
-    }
-
-    static timeFormatHHMM(timestamp) {
-
+    static timeFormat(date, format) {
+        if (typeof date == 'number') {
+            date = new Date(date)
+        }
+        if (!format) {
+            format = 'yyyy-MM-dd hh:mm:ss'
+        }
+        let times = {
+            y: date.getFullYear(),
+            M: date.getMonth() + 1,
+            d: date.getDate(),
+            h: date.getHours(),
+            m: date.getMinutes(),
+            s: date.getSeconds()
+        }
+        let reg = /(y{1,4}|M{1,2}|d{1,2}|h{1,2}|m{1,2}|s{1,2})/g
+        return format.replace(reg, v => {
+            let str = '0' + times[v[0]]
+            return str.slice(-(Math.min(str.length, v.length)))
+        })
     }
 
     static toFixed(number, decimalCount) {
@@ -78,8 +73,7 @@ export default class Util {
         }
         xhr.timeout = params.timeout || 5000
         if (params.cb) {
-            xhr.ontimeout =
-                params.cb.bind(null, false, `timeout ${xhr.timeout}MS`)
+            xhr.ontimeout = params.cb.bind(null, false, 'timeout')
             xhr.onerror = params.cb.bind(null, false)
         }
         if (params.header) {

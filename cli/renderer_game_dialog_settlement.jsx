@@ -61,13 +61,13 @@ export default class GameDialogSettlementRenderer extends DialogRenderer {
                 </div>
                 <div>
                     <span>{lanRes.liveTime}</span>
-                    <span>{util.timeFormatMMSS(settlementData.liveTime)}</span>
+                    <span>{util.timeFormat(settlementData.liveTime, 'mm:ss')}</span>
                 </div>
             </div>
             <div>
                 <span>{lanRes.leftTime}</span>
                 <span>
-                    {util.timeFormatMMSS(gameManager.getLeftTime())}
+                    {util.timeFormat(gameManager.getLeftTime(), 'mm:ss')}
                 </span>
             </div>
         </div>

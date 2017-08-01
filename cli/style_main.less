@@ -87,6 +87,9 @@ button {
     border-radius: @borderRaidus;
     margin-left: 0.7rem;
     font-size: 1.1rem;
+    &:hover {
+        cursor: pointer;
+    }
     &:disabled {
         background: #cccccc;
     }
@@ -125,6 +128,9 @@ button {
     vertical-align: -0.15em;
     fill: @fontColor;
     overflow: hidden;
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 #container {
@@ -173,7 +179,7 @@ button {
     @rankTitleBorderWidth: 0.7rem;
     @rankCount: 10;
 
-    width: 300px;
+    width: 200px;
     background-color: rgba(0, 0, 0, 0.6);
     position: absolute;
     right: 1rem;
@@ -268,7 +274,7 @@ button {
         }
     }
 }
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 450px) {
     .gameRankBoard {
         left: 50%;
         transform: translate(-50%, 0);
@@ -297,6 +303,7 @@ button {
     .centerAlign;
     color: @dialogTitleColor;
     width: 80vw;
+    max-width: 600px;
     background-color: rgba(247, 254, 223, 1);
     display: table;
     border: solid 1px @fontColor;
@@ -351,7 +358,6 @@ button {
 }
 
 .gameSettlementDialog {
-    width: 90vh;
     > h1 {
         text-align: center;
         margin: 0;
