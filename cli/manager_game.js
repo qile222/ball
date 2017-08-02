@@ -40,6 +40,7 @@ export default class GameManager extends Manager {
     }
 
     enter(addr, port, token, resID) {
+        display.showLoading(true)
         this.offlineMode = false
         this.selectedResID = resID
         this.state = gameState.pendding
@@ -125,7 +126,9 @@ export default class GameManager extends Manager {
     }
 
     onKeyEvent(event) {
-        if (this.state != gameState.playing || this.leftTime < 1) {
+        if (!this.controllLogic ||
+            this.state != gameState.playing ||
+            this.leftTime < 1) {
             console.log('game pendding,drop user action')
             return
         }
@@ -195,9 +198,9 @@ export default class GameManager extends Manager {
     }
 
     onCreateMap(message) {
+        display.showLoading(false)
         let data = message.data
         util.setSeed(data.seed)
-        this.controllLogic = new ControllLogic()
         this.gameEndTime = data.gameEndTime
         this.keyFrameInterval = data.keyFrameInterval
         this.startTime = data.startTime
@@ -245,6 +248,7 @@ export default class GameManager extends Manager {
         if (playerID == memCache.get('player_info').id) {
             this.localPlayerLogic = playerLogic
         }
+        this.controllLogic = new ControllLogic()
         this.playerLogics.push(playerLogic)
         this.mapLogic.addEntity(resID, null, playerLogic, cmd.time)
     }
@@ -304,8 +308,10 @@ export default class GameManager extends Manager {
         console.log('game exit')
         this.state = gameState.ended
         netManager.disconnect('game')
-        this.controllLogic.destructor()
-        delete this.controllLogic
+        if (this.controllLogic) {
+            this.controllLogic.destructor()
+            delete this.controllLogic
+        }
         this.cmdLogic.destructor()
         delete this.cmdLogic
         this.mapLogic.destructor()

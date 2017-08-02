@@ -16,6 +16,7 @@ let fps = Math.floor(1000 / (device.platform == 'mobile' && 0 ? 30 : 60))
 scheduler.setFPS(fps)
 
 display.showStat(DEBUG)
+display.showLoading(false)
 
 loginManager.enter()
 

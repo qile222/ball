@@ -68,6 +68,10 @@ html, body {
 
 body {
     font-size: @fontSize;
+    min-width: 200px;
+    min-height: 200px;
+    overflow: hidden;
+    background-color: #252525;
 }
 
 .centerAlign (@position: absolute) {
@@ -301,6 +305,8 @@ button {
 
 @dialogCellPadding: 0.7rem;
 .dialogContainer {
+    min-width: 200px;
+    min-height: 200px;
     border-radius: @borderRaidus;
     .centerAlign;
     color: @dialogTitleColor;
@@ -309,6 +315,9 @@ button {
     background-color: rgba(247, 254, 223, 1);
     display: table;
     border: solid 1px @fontColor;
+    opacity: 0;
+    will-change: opacity;
+    // will-change: transform;
 
     > div {
         display: table-row;

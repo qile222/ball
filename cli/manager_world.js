@@ -35,6 +35,7 @@ export default class WorldManager extends Manager {
     }
 
     enter(addr, port, playerName) {
+        display.showLoading(true)
         netManager.connect(
             'world', addr + ':' + port, 'playerName=' + playerName
         )
@@ -74,6 +75,7 @@ export default class WorldManager extends Manager {
     }
 
     onEnterWorld(message) {
+        display.showLoading(false)
         let data = message.data
         memCache.set('player_info', {
             id: data.playerID,

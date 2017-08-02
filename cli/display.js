@@ -78,4 +78,8 @@ export default class Display {
         eventDispatcher.emit(this, 'display_stage_size_changed', this.stageSize)
     }
 
+    showLoading(isShow) {
+        document.getElementById('loading').style.visibility = 'hidden'
+    }
+
 }

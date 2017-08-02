@@ -10,7 +10,7 @@ export default class NetManager extends Manager {
         super()
         this.connections = {}
         if (DEBUG) {
-            scheduler.schedule(1000, this.heartBeatTest.bind(this))
+            scheduler.schedule(5000, this.heartBeatTest.bind(this))
         }
     }
 

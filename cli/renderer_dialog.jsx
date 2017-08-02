@@ -2,7 +2,9 @@ import Renderer from './renderer'
 import ReactDOM from 'react-dom'
 import React from 'react'
 import mainStyle from './style_main'
-import { scheduler } from './global'
+import { scheduler, util } from './global'
+
+const fadeTime = 250
 
 export default class DialogRenderer extends Renderer {
 
@@ -13,16 +15,12 @@ export default class DialogRenderer extends Renderer {
         this.mouseDownHandler = this.onMouseDownTitle.bind(this)
         this.mouseUpHandler = this.onMouseUpTitle.bind(this)
     }
-    
+
     componentWillMount() {
         super.componentWillMount()
         if (!this.state) {
             this.state = {}
         }
-        this.state.dialogContainerClassName = [
-            mainStyle.dialogContainer,
-            mainStyle.aniScaleToMax
-        ]
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -43,6 +41,16 @@ export default class DialogRenderer extends Renderer {
                 false
             )
         }
+        this.fadeInStartTime = util.time()
+        this.fadeInTimer = scheduler.schedule(0, () => {
+            let passedTime = util.time() - this.fadeInStartTime
+            if (passedTime > fadeTime) {
+                scheduler.unschedule(this.fadeInTimer)
+                this.fadeInTimer = null
+                passedTime = fadeTime
+            }
+            this.dialogContainer.style.opacity = passedTime / fadeTime
+        })
     }
 
     componentWillUnmount() {
@@ -55,6 +63,14 @@ export default class DialogRenderer extends Renderer {
         }
         this.removeEventListeners()
         this.closeDialog()
+        if (this.fadeInTimer) {
+            scheduler.unschedule(this.fadeInTimer)
+            this.fadeInTimer = null
+        }
+        if (this.fadeOutTimer) {
+            scheduler.unschedule(this.fadeOutTimer)
+            this.fadeOutTimer = null
+        }
     }
 
     openDialog() {
@@ -62,7 +78,7 @@ export default class DialogRenderer extends Renderer {
         if (this.state.title) {
             components.push(
                 <div
-                    ref={(ref)=>this.titleContainer=ref}
+                    ref={(ref) => this.titleContainer = ref}
                     className={mainStyle.dialogTitle}>
                     <h4>
                         {this.state.title}
@@ -107,7 +123,7 @@ export default class DialogRenderer extends Renderer {
             <div
                 style={this.state.style}
                 ref={(ref) => this.dialogContainer = ref}
-                className={this.state.dialogContainerClassName.join(' ')}>
+                className={mainStyle.dialogContainer}>
                 {components}
             </div>,
             this.node
@@ -123,14 +139,19 @@ export default class DialogRenderer extends Renderer {
     }
 
     prepareForClose(onPrepared) {
-        this.setState({
-            dialogContainerClassName: [
-                mainStyle.dialogContainer,
-                mainStyle.aniScaleToMin,
-            ]
+        this.fadeOutStartTime = util.time()
+        this.fadeOutTimer = scheduler.schedule(0, () => {
+            let passedTime = util.time() - this.fadeOutStartTime
+            if (passedTime > fadeTime) {
+                passedTime = fadeTime
+                scheduler.unschedule(this.fadeOutTimer)
+                this.fadeOutTimer = null
+                scheduler.scheduleOnce(0, ()=>{
+                    onPrepared()
+                })
+            }
+            this.dialogContainer.style.opacity = 1 - passedTime / fadeTime
         })
-        scheduler.scheduleOnce(500, onPrepared)
-        // this.dialogContainer.addEventListener('animationend', onPrepared, false)
     }
 
     renderContent() {
@@ -142,6 +163,9 @@ export default class DialogRenderer extends Renderer {
     }
 
     onMouseDownTitle(e) {
+        if (e.button != 0) {
+            return
+        }
         this.startX = e.screenX
         this.startY = e.screenY
         let style = window.getComputedStyle(this.dialogContainer)

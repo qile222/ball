@@ -1,6 +1,5 @@
 import React from 'react'
 import Manager from './manager'
-import commonRes from './res_common'
 import {util, cache, display, worldManager,
     eventDispatcher, scheduler} from './global'
 import LoginRenderer from './renderer_login'
