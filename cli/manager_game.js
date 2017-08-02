@@ -56,6 +56,7 @@ export default class GameManager extends Manager {
             if (frameDelta < 1) {
                 if (this.state == gameState.initing) {
                     this.joinPlayer()
+                    display.showLoading(false)
                 } else if (this.state != gameState.pendding) {
                     return
                 }
@@ -198,7 +199,6 @@ export default class GameManager extends Manager {
     }
 
     onCreateMap(message) {
-        display.showLoading(false)
         let data = message.data
         util.setSeed(data.seed)
         this.gameEndTime = data.gameEndTime

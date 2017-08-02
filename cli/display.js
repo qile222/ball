@@ -18,6 +18,7 @@ export default class Display {
             this.stage.clientWidth,
             this.stage.clientHeight
         )
+        this.loadingContainer = document.getElementById('loadingContainer')
         window.addEventListener('resize', this.onStageSizeChanged.bind(this))
     }
 
@@ -79,7 +80,7 @@ export default class Display {
     }
 
     showLoading(isShow) {
-        document.getElementById('loading').style.visibility = 'hidden'
+        this.loadingContainer.style.display = isShow ? 'block' : 'none'
     }
 
 }
