@@ -100,8 +100,8 @@ export default class MapRenderer extends Renderer {
         if (DEBUG) {
             fillText += ' draw:' + drawCount + '/' + entities.length
         }
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0)
         if (fillText != '') {
-            this.ctx.setTransform(1, 0, 0, 1, 0, 0)
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = '#ffffff'
             this.ctx.fillText(fillText, 0, map.height - 30)

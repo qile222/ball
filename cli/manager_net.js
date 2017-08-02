@@ -10,11 +10,12 @@ export default class NetManager extends Manager {
         super()
         this.connections = {}
         if (DEBUG) {
-            scheduler.schedule(5000, this.heartBeatTest.bind(this))
+            scheduler.schedule(10000, this.heartBeatTest.bind(this))
         }
     }
 
     heartBeatTest() {
+        console.log(1111)
         for (let i in this.connections) {
             this.connections[i].lastHeartBeatTime = util.time()
             this.connections[i].socket.send(

@@ -108,6 +108,9 @@ export default class Scheduler {
     }
 
     schedule(interval, cb) {
+        if (typeof interval != 'number') {
+            throw new Error('invalid interval')
+        }
         let node = new ScheduleNode(++this.idCursor, interval, this.state, cb)
         this.nodes.set(this.idCursor, node)
         return this.idCursor

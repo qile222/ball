@@ -13,7 +13,7 @@ module.exports = Object.assign({
         die: 3,
     },
     fastForwardTimeScale: 4,
-    initFastForwardTimeScale: 100000000,
+    initFastForwardTimeScale: 20,
     keyCodes : {
         arrowLeft: 37,
         arrowUp: 38,
