@@ -181,7 +181,7 @@ export class SaboteurEntityRenderer extends PolygonEntityRenderer {
             return false
         }
         let now = util.time()
-        let timeDiff = (now - this.startTime) % eatAniTime
+        let timeDiff = (now - this.startTime) % this.rotateAniTime
         this.rotation = twoPI * timeDiff / this.rotateAniTime
         return true
     }

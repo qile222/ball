@@ -81,9 +81,9 @@ module.exports = {
         static: false,
         initState: commonRes.lifeCycle.live,
         ext: {
-            sideCount: 6,
+            sideCount: 7,
             sideWidth: 3,
-            rotateAniTime: 500
+            rotateAniTime: 1000
         }
     }
 }

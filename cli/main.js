@@ -10,10 +10,8 @@ window.onerror = function () {
 }
 
 /*
-    卡出翔....
     为啥移动端浏览器就是不给满帧
 */
-console.log(device.platform)
 let fps = Math.floor(1000 / (device.platform == 'mobile' && 0 ? 30 : 60))
 scheduler.setFPS(fps)
 

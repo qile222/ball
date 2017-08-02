@@ -26,11 +26,49 @@ export default class KeyboardRenderer extends Renderer {
 
     componentDidMount() {
         super.componentDidMount()
-        let container = this.controllContainer
-        container.addEventListener('touchstart', this.onTouchStart.bind(this))
-        container.addEventListener('touchmove', this.onTouchMove.bind(this))
-        container.addEventListener('touchend', this.onTouchEnd.bind(this))
-        container.addEventListener('touchcancel', this.onTouchCancel.bind(this))
+        this.touchStartHandler = this.onTouchStart.bind(this)
+        this.touchMoveHandler = this.onTouchMove.bind(this)
+        this.touchEndHandler = this.onTouchEnd.bind(this)
+        this.touchCancelHandler = this.onTouchCancel.bind(this)
+        this.controllContainer.addEventListener(
+            'touchstart',
+            this.touchStartHandler,
+            { passive: false }
+        )
+        this.controllContainer.addEventListener(
+            'touchmove',
+            this.touchMoveHandler,
+            { passive: true }
+        )
+        this.controllContainer.addEventListener(
+            'touchend',
+            this.touchEndHandler
+        )
+        this.controllContainer.addEventListener(
+            'touchcancel',
+            this.touchCancelHandler
+        )
+        this.lastCaptureMoveTime = 0
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount()
+        this.controllContainer.removeEventListener(
+            'touchstart',
+            this.touchStartHandler
+        )
+        this.controllContainer.removeEventListener(
+            'touchmove',
+            this.touchMoveHandler
+        )
+        this.controllContainer.removeEventListener(
+            'touchend',
+            this.touchEndHandler
+        )
+        this.controllContainer.removeEventListener(
+            'touchcancel',
+            this.touchCancelHandler
+        )
     }
 
     render() {
@@ -61,7 +99,6 @@ export default class KeyboardRenderer extends Renderer {
             return
         }
         let boundingBox = this.controllPanel.getBoundingClientRect()
-        this.lastCaptureMoveTime = 0
         this.boundingBox = {
             x: boundingBox.left + boundingBox.width / 2,
             y: boundingBox.top + boundingBox.height / 2,
