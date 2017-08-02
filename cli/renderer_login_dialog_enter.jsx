@@ -71,7 +71,6 @@ export default class LoginEnterDialogRenderer extends DialogRenderer {
             <div>
                 <input
                     autoComplete='off'
-                    autoFocus={true}
                     defaultValue={this.props.playerName}
                     onInput={this.onInputName.bind(this)}
                     ref={(ref) => this.nameInput = ref}

@@ -178,7 +178,7 @@ export default class DialogRenderer extends Renderer {
             y = this.translateMaxY
         }
         this.dialogContainer.style.transform =
-            'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
+            'translate3d(' + x + 'px, ' + y + 'px, 0)'
         e.preventDefault()
         e.stopPropagation()
     }

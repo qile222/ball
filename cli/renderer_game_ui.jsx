@@ -6,8 +6,9 @@ import GameTimerRenderer from './renderer_game_timer'
 import GameDialogSettlementRenderer from './renderer_game_dialog_settlement'
 import GameDialogEndRenderer from './renderer_game_dialog_end'
 import NoticeDialogRenderer from './renderer_dialog_notice'
+import KeyboardRenderer from './renderer_keyboard'
 import lanRes from './res_lan'
-import { util, eventDispatcher, gameManager } from './global'
+import { util, eventDispatcher, gameManager, device } from './global'
 
 export default class GameUIRenderer extends Renderer {
 
@@ -50,43 +51,37 @@ export default class GameUIRenderer extends Renderer {
     }
 
     render() {
-        let components
+        let stateComponents
         if (this.state.endData) {
-            components = [
-                <GameDialogEndRenderer {...this.props}
-                    endData={this.state.endData} />
-            ]
+            stateComponents = <GameDialogEndRenderer
+                {...this.props}
+                endData={this.state.endData} />
         } else if (this.state.settlementData) {
-            components = [
-                <GameDialogSettlementRenderer
-                    onClickContinue={this.onClickGameContinue.bind(this)}
-                    {...this.props}
-                    settlementData={this.state.settlementData} />
-            ]
+            stateComponents = <GameDialogSettlementRenderer
+                {...this.props}
+                onClickContinue={this.onClickGameContinue.bind(this)}
+                settlementData={this.state.settlementData} />
         } else {
-            components = [
-                <GameTimerRenderer {...this.props} />,
-                <GameRankboardRenderer {...this.props} />,
-            ]
-        }
-        if (this.state.exitHint) {
-            components.push(
-                <NoticeDialogRenderer
-                    onClickClose={this.clickExitGame.bind(this)}>
-                    {this.state.exitHint}
-                </NoticeDialogRenderer>
-            )
-        }
-        if (this.state.abnormalHint) {
-            components.push(
-                <NoticeDialogRenderer
-                    onClickClose={this.clickExitGame.bind(this)}>
-                    {this.state.abnormalHint}
-                </NoticeDialogRenderer>
-            )
+            stateComponents = <div>
+                {device.platform == 'mobile' && <KeyboardRenderer />}
+                <GameTimerRenderer {...this.props} />
+                <GameRankboardRenderer {...this.props} />
+            </div>
         }
 
-        return <div className={mainStyle.gameUI}>{components}</div>
+        return <div className={mainStyle.gameUI}>
+            {stateComponents}
+            {this.state.abnormalHint && <NoticeDialogRenderer
+                onClickClose={this.clickExitGame.bind(this)}>
+                {this.state.abnormalHint}
+            </NoticeDialogRenderer>}
+
+            {this.state.exitHint && <NoticeDialogRenderer
+                onClickClose={this.clickExitGame.bind(this)}>
+                {this.state.exitHint}
+            </NoticeDialogRenderer>}
+
+        </div>
     }
 
     onClickGameContinue() {

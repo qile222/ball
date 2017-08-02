@@ -60,6 +60,18 @@ export default class Util {
         return Math.round(number * p) / p
     }
 
+    static getRadian(x1, y1, x2, y2) {
+        var x = x1 - x2
+        var y = y1 - y2
+        var hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+        var radian = Math.acos(x / hypotenuse)
+        if (y1 > y2) {
+            return Math.PI * 2 - radian
+        } else {
+            return radian
+        }
+    }
+
     static request(params) {
         let xhr = new XMLHttpRequest()
         xhr.responseType = 'json'
@@ -107,7 +119,7 @@ export default class Util {
                         arr[i + 1] = arr[i]
                     }
                     arr[first] = tmp
-                    ++middle
+                        ++middle
                 }
             }
         }

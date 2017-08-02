@@ -1,7 +1,7 @@
 import actionRes from './res_action'
 import Logic from './logic'
 import { gameManager } from './global'
-import device from './device'
+import {keyCodes} from './res_common'
 
 class ControllLogic extends Logic {
 
@@ -25,10 +25,15 @@ class KeyboardImpl extends ControllLogic {
     onKeyEvent(event) {
         let type = event.type
         let action = event.keyCode
-        if (action != actionRes.moveLeft &&
-            action != actionRes.moveUp &&
-            action != actionRes.moveRight &&
-            action != actionRes.moveDown) {
+        if (action == keyCodes.arrowLeft) {
+            action = actionRes.moveLeft
+        } else if (action == keyCodes.arrowUp) {
+            action = actionRes.moveUp
+        } else if (action == keyCodes.arrowRight) {
+            action = actionRes.moveRight
+        } else if (action == keyCodes.arrowDown) {
+            action = actionRes.moveDown
+        } else {
             return true
         }
         if (type == 'keyup') {
@@ -66,4 +71,4 @@ class AccelerationImpl extends ControllLogic {
 
 }
 
-module.exports = device.platform == 'mobile' ? AccelerationImpl : KeyboardImpl
+module.exports = KeyboardImpl

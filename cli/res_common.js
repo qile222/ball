@@ -1,7 +1,6 @@
 import commonRes from './res_svr_common'
 
 module.exports = Object.assign({
-    fps: Math.floor(1000 / 60),
     gridPixel: 30,
     runningStates: {
         stop: 0,
@@ -15,4 +14,11 @@ module.exports = Object.assign({
     },
     fastForwardTimeScale: 6,
     initFastForwardTimeScale: 100000000,
+    keyCodes : {
+        arrowLeft: 37,
+        arrowUp: 38,
+        arrowRight: 39,
+        arrowDown: 40,
+    },
+    keyboardMoveCaptureInterval: 100
 }, commonRes)

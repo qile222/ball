@@ -3,7 +3,7 @@ module.exports = {
     '10000': {
         id: 10000,
         name: 'Circle',
-        speed: 0.075,
+        speed: 0.055,
         states: ['move', 'eat'],
         radius: 15,
         probability: 0,

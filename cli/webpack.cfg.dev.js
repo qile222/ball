@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const buildDir = path.resolve(__dirname, 'build/')
 const node_modules = path.resolve(__dirname, 'node_modules/')
-const ResWebpackPlugin = require ('./webpack.plugin.res.js')
+const ResWebpackPlugin = require('./webpack.plugin.res.js')
 const svrDir = path.resolve(__dirname, '../svr/')
 
 const config = {
@@ -27,31 +27,29 @@ const config = {
         extensions: ['.js', '.jsx', '.css', '.less']
     },
     module: {
-        rules: [
-            {
-                test: /^(?!webpack\.|\.).*\.jsx?$/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['es2015', 'react'],
-                        plugins: ['transform-runtime']
-                    }
-                },
-                exclude: [
-                    node_modules,
-                    buildDir,
-                ],
-            }, {
-                test: /\.less$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader?modules!less-loader'
-                }),
-            }, {
-                test: /\.(png|jpg)$/,
-                loader: 'url-loader',
-            }
-        ],
+        rules: [{
+            test: /^(?!webpack\.|\.).*\.jsx?$/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['es2015', 'react'],
+                    plugins: ['transform-runtime']
+                }
+            },
+            exclude: [
+                node_modules,
+                buildDir,
+            ],
+        }, {
+            test: /\.less$/,
+            loader: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: 'css-loader?modules!less-loader'
+            }),
+        }, {
+            test: /\.(png|jpg)$/,
+            loader: 'url-loader',
+        }],
         noParse: [
             /react\.min\.js$/,
         ]

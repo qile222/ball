@@ -31,6 +31,7 @@ export default class Scheduler {
         this.preTime = this.startTime
         this.timeScale = 1
         this.idCursor = 0
+        this.fps = 0
     }
 
     setTimeScale(timeScale) {
@@ -41,23 +42,20 @@ export default class Scheduler {
         return this.timeScale
     }
 
+    setFPS(fps) {
+        this.fps = fps
+    }
+
     update() {
         if (this.state != runningStates.running) {
             return
         }
         let now = Util.time()
         let dt = (now - this.preTime) * this.timeScale
+        if (dt < this.fps) {
+            return
+        }
         this.preTime = now
-        // let tickCount = 1
-        // if (dt < 100) {
-        //     return
-        // }
-        // let dt = (now - this.preTime) * this.timeScale
-        // let tickCount = floor(dt / fps)
-        // if (tickCount > 1) {
-        //     console.log('tick', tickCount, dt)
-        // }
-        // this.preTime = now - (dt - tickCount * fps) / this.timeScale
         for (let [id, node] of this.nodes) {
             if (node.state == runningStates.running) {
                 node.scheduleTime += dt

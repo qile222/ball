@@ -9,6 +9,7 @@ import Scheduler from './scheduler'
 import Cache from './cache'
 import MemCache from './cache_mem'
 import Util from './util'
+import device from './device'
 
 const epsilon = commonRes.epsilon
 
@@ -41,23 +42,23 @@ export class Rect {
 
     isContainPoint(vec2) {
         return vec2.x - this.x > epsilon &&
-               vec2.y - this.y > epsilon &&
-               vec2.x - this.x + this.width < epsilon &&
-               vec2.y <= this.y + this.height < epsilon
+            vec2.y - this.y > epsilon &&
+            vec2.x - this.x + this.width < epsilon &&
+            vec2.y <= this.y + this.height < epsilon
     }
 
     isIntersection1(rect) {
         return this.x - rect.x - rect.width < epsilon &&
-               rect.x - this.x - this.width < epsilon &&
-               this.y - rect.y - rect.height < epsilon  &&
-               rect.y - this.y - this.height < epsilon
+            rect.x - this.x - this.width < epsilon &&
+            this.y - rect.y - rect.height < epsilon &&
+            rect.y - this.y - this.height < epsilon
     }
 
     isIntersection2(x, y, width, height) {
         return this.x - x - width < epsilon &&
-               x - this.x - this.width < epsilon &&
-               this.y - y - height < epsilon &&
-               y - this.y - this.height < epsilon
+            x - this.x - this.width < epsilon &&
+            this.y - y - height < epsilon &&
+            y - this.y - this.height < epsilon
     }
 
 }
@@ -71,7 +72,7 @@ export class Color3B {
     }
 
     toString() {
-        return 'rgb(' + this.r +',' + this.g + ',' + this.b + ')'
+        return 'rgb(' + this.r + ',' + this.g + ',' + this.b + ')'
     }
 
 }
@@ -86,33 +87,21 @@ export class Color4B {
     }
 
     toString() {
-        return 'rgba(' + this.r +',' + this.g +
+        return 'rgba(' + this.r + ',' + this.g +
             ',' + this.b + ', ' + this.a + ')'
     }
 
 }
 
-class ConsoleImpl {
-
-    log() {
-
-    }
-
-    warn() {
-
-    }
-
-    assert() {
-
-    }
-
-    error() {
-
-    }
-
-}
-
 window.DEBUG = true
+export const console = DEBUG && window.console || new Proxy({}, {
+    get: (target, name) => () => {
+
+    },
+    set: (target, name, value) => {
+
+    }
+})
 export const util = Util
 export const eventDispatcher = new EventDispatcher()
 export const cache = new Cache()
@@ -123,4 +112,4 @@ export const netManager = new NetManager()
 export const gameManager = new GameManager()
 export const worldManager = new WorldManager()
 export const loginManager = new LoginManager()
-export const console = DEBUG && window.console || new ConsoleImpl
+module.exports.device = device
