@@ -1,6 +1,6 @@
 # ball
 这是一个多人在线的即时H5游戏, 点[这里](http://rawgit.com/lolBig/ball/master/cli/dist/)预览。
-# 客户端文件描述
+# 客户端文件描述
 - cache*.js 缓存
     - [cache_mem.js](https://github.com/lolBig/ball/blob/master/cli/cache_mem.js) 内存
     - [cache.js](https://github.com/lolBig/ball/blob/master/cli/cache.js) 离线缓存
@@ -9,7 +9,7 @@
 - [event_dispatcher.js](https://github.com/lolBig/ball/blob/master/cli/event_dispatcher.js) 事件管理
 - [global.js](https://github.com/lolBig/ball/blob/master/cli/global.js) 全局
 - logic*.js 逻辑层
-    - [logic_cmd.js](https://github.com/lolBig/ball/blob/master/cli/logic_cmd.js) 逻辑帧
+    - [logic_cmd.js](https://github.com/lolBig/ball/blob/master/cli/logic_cmd.js) 逻辑帧
     - [logic_controll.js](https://github.com/lolBig/ball/blob/master/cli/logic_controll.js) 用户输入
     - [logic_entity.js](https://github.com/lolBig/ball/blob/master/cli/logic_entity.js) 实体
     - [logic_map.js](https://github.com/lolBig/ball/blob/master/cli/logic_map.js) 地图
@@ -45,8 +45,8 @@
     - [renderer_world_chat.js](https://github.com/lolBig/ball/blob/master/cli/renderer_world_chat.jsx) 聊天
     - [renderer_world.js](https://github.com/lolBig/ball/blob/master/cli/renderer_world.jsx) 大厅
     - res*.js 配置表
-        - [res_action.js](https://github.com/lolBig/ball/blob/master/cli/res_action.js) 玩家指令
-        - [res_common.js](https://github.com/lolBig/ball/blob/master/cli/res_common.js) 通用
+        - [res_action.js](https://github.com/lolBig/ball/blob/master/cli/res_action.js) 玩家指令
+        - [res_common.js](https://github.com/lolBig/ball/blob/master/cli/res_common.js) 通用
         - [res_entities.js](https://github.com/lolBig/ball/blob/master/cli/res_entities.js) 实体
         - [res_error_code.js](https://github.com/lolBig/ball/blob/master/cli/res_error_code.js) 错误代码
         - [res_icon_font.js](https://github.com/lolBig/ball/blob/master/cli/res_icon_font.js) SVG
@@ -59,7 +59,7 @@
     - [util.js](https://github.com/lolBig/ball/blob/master/cli/util.js) 工具
     - [webpack.cfg.dev.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dev.js) 开发环境构建
     - [webpack.cfg.dist.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dist.js) 生产环境构建
-    - [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
+    - [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
 
 # 服务端文件描述
 - agent*.js 代理
@@ -71,7 +71,7 @@
 - [deploy.js](https://github.com/lolBig/ball/blob/master/svr/deploy.json)on pm2部署
 - [logger.js](https://github.com/lolBig/ball/blob/master/svr/logger.js) 日志
 - logic*.js 逻辑
-    - [logic_room.js](https://github.com/lolBig/ball/blob/master/svr/logic_room.js) 游戏房间
+    - [logic_room.js](https://github.com/lolBig/ball/blob/master/svr/logic_room.js) 游戏房间
     - [logic_player.js](https://github.com/lolBig/ball/blob/master/svr/logic_player.js) 玩家
 - [message.js](https://github.com/lolBig/ball/blob/master/svr/message.js) 协议
 - res*.js 配置表
@@ -88,21 +88,21 @@
 #
 
 # 实现
-- 客户端
-    - 分为登陆、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
+- 客户端
+    - 分为登陆、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
     - 长连接采用websocket。
     - Icon采用SVG中的Symbol。
     - 样式用less进行预处理。
     - HTTP通过CORS跨域。
 - 服务端
-    - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
+    - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
     - 分为世界、聊天、游戏三个服务器。
     - HTTP请求采用Express进行路由。
 - 帧同步
     - 实时游戏一般采用帧同步和状态同步进行客户端的同步，这里采用的是帧同步。
-        - 每隔一段时间广播客户端上传的指令，客户端负责执行广播下来的逻辑帧指令。
+        - 每隔一段时间广播客户端上传的指令，客户端负责执行广播下来的逻辑帧指令。
         - 因为所有逻辑都放在客户端执行，所以服务器压力比起状态同步来说小很多，但是防作弊就比较麻烦。
-        - 通过快进的方式进行断线重连或者中途加入。
+        - 通过快进的方式进行断线重连或者中途加入。
         - 录像只保存玩家指令，replay的时候按时间点播放，所以一个录像文件非常小。
         - 每个客户端之间所有跟逻辑相关的处理都必须在相同的时间，同时浮点数，随机数，排序，内存分配等的处理也需要保持一致性，否则一个点错了，后面的全部是错的。
-    - 这里同步的间隔是100ms/帧，这个时间跟游戏类型相关。如果游戏操作的灵敏度较高，比如CS这种FPS游戏，这个时间需要调得更低，否则客户端会有明显操作延迟；但是如果是回合制游戏，比如炉石，同步时间调成2000ms/帧，客户端也不会有很明显的延迟。
+    - 这里同步的间隔是100ms/帧，这个时间跟游戏类型相关。如果游戏操作的灵敏度较高，比如CS这种FPS游戏，这个时间需要调得更低，否则客户端会有明显操作延迟；但是如果是回合制游戏，比如炉石，同步时间调成2000ms/帧，客户端也不会有很明显的延迟。
