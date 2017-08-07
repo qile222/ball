@@ -15,7 +15,6 @@ export default class NetManager extends Manager {
     }
 
     heartBeatTest() {
-        console.log(1111)
         for (let i in this.connections) {
             this.connections[i].lastHeartBeatTime = util.time()
             this.connections[i].socket.send(

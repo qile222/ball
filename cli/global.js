@@ -63,36 +63,6 @@ export class Rect {
 
 }
 
-export class Color3B {
-
-    constructor(r, g, b) {
-        this.r = r || 0
-        this.g = g || 0
-        this.b = b || 0
-    }
-
-    toString() {
-        return 'rgb(' + this.r + ',' + this.g + ',' + this.b + ')'
-    }
-
-}
-
-export class Color4B {
-
-    constructor(r, g, b, a) {
-        this.r = r || 0
-        this.g = g || 0
-        this.b = b || 0
-        this.a = a || 1
-    }
-
-    toString() {
-        return 'rgba(' + this.r + ',' + this.g +
-            ',' + this.b + ', ' + this.a + ')'
-    }
-
-}
-
 window.DEBUG = true
 export const console = DEBUG && window.console || new Proxy({}, {
     get: (target, name) => () => {

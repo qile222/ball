@@ -29,6 +29,11 @@ export default class Util {
         return ret
     }
 
+    // [0x000000, 0xFFFFFF]
+    static randomColor() {
+        return '#' + Util.randomInt(0x1000000).toString(16)
+    }
+
     static randomFromArray(array) {
         return array[Util.randomInt(array.length)]
     }

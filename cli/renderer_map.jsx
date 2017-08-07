@@ -30,7 +30,6 @@ export default class MapRenderer extends Renderer {
             this,
             this.onStageSizeChanged.bind(this)
         )
-        this.textureCache = {}
         this.watchingEntityLogic = null
         this.entities = []
         let entities = gameManager.getMapLogic().getEntities()
@@ -57,10 +56,10 @@ export default class MapRenderer extends Renderer {
     update(dt) {
         let map = this.refs.map
         let viewPort = this.viewPort
-        let fillText = ''
+        let watchPosition
         if (this.watchingEntityLogic) {
             let mapSize = gameManager.getMapLogic().getSize()
-            let watchPosition = this.watchingEntityLogic.getPosition()
+            watchPosition = this.watchingEntityLogic.getPosition()
             viewPort.x = watchPosition.x - viewPort.width / 2
             if (viewPort.x < 0) {
                 viewPort.x = 0
@@ -79,17 +78,9 @@ export default class MapRenderer extends Renderer {
                     viewPort.y = maxY
                 }
             }
-            if (DEBUG) {
-                fillText += 'coor:'+util.toFixed(watchPosition.x, 2) +
-                    ',' +
-                    util.toFixed(watchPosition.y, 2)
-            }
         }
         this.ctx.clearRect(0, 0, map.width, map.height)
-        this.ctx.drawImage(
-            this.textureCache.grid, viewPort.x, viewPort.y, viewPort.width,
-            viewPort.height, 0, 0, viewPort.width, viewPort.height
-        )
+        this.gridRenderer.draw(this.ctx)
         let entities = this.entities
         let drawCount = 0
         for (let entity of entities) {
@@ -97,11 +88,16 @@ export default class MapRenderer extends Renderer {
                 ++drawCount
             }
         }
-        if (DEBUG) {
-            fillText += ' draw:' + drawCount + '/' + entities.length
-        }
         this.ctx.setTransform(1, 0, 0, 1, 0, 0)
-        if (fillText != '') {
+        this.ctx.globalAlpha = 1
+        if (DEBUG) {
+            let fillText = 'draw:' + drawCount + '/' + entities.length
+            if (watchPosition) {
+                fillText += ' coor:' +
+                    util.toFixed(watchPosition.x, 2) +
+                    ',' +
+                    util.toFixed(watchPosition.y, 2)
+            }
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = '#ffffff'
             this.ctx.fillText(fillText, 0, map.height - 30)
@@ -152,8 +148,10 @@ export default class MapRenderer extends Renderer {
         ctx.lineWidth = 1
         ctx.strokeStyle = '#2a2a2a'
         ctx.stroke()
-        this.textureCache.grid = new Image()
-        this.textureCache.grid.src = ctx.canvas.toDataURL('img/png')
+
+        let gridTexture = new Image()
+        gridTexture.src = ctx.canvas.toDataURL('img/png')
+        this.gridRenderer = new EntityRenderers.ImageRenderer(gridTexture, this)
 
         let stageSize = display.getStageSize()
         this.viewPort = new Rect(0, 0, stageSize.width, stageSize.height)
