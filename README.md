@@ -1,9 +1,27 @@
-# ball
-这是一个多人在线的即时H5游戏, 点[这里](http://rawgit.com/lolBig/ball/master/cli/dist/)预览。
-# 客户端文件描述
+# 概览
+这是一个类似球球大作战的多人在线的即时H5游戏, 点[这里](http://rawgit.com/lolBig/ball/master/cli/dist/)预览。
+![Scerenshot](https://raw.githubusercontent.com/lolBig/ball/master/screenshot.png)
+# 构建
+
+- 服务端
+```
+cd svr/
+npm install
+vim deploy.js #把各个地址替换成自己的。
+node app.js #或者pm2 start deploy.json
+```
+- 客户端
+```
+cd cli/
+npm install
+vim package.json #将webpack-dev-server中的--host替换成自己ip或者去掉。
+npm run dev #或者npm run deploy
+```
+
+# 客户端结构
 - cache*.js 缓存
     - [cache_mem.js](https://github.com/lolBig/ball/blob/master/cli/cache_mem.js) 内存
-    - [cache.js](https://github.com/lolBig/ball/blob/master/cli/cache.js) 离线缓存
+    - [cache.js](https://github.com/lolBig/ball/blob/master/cli/cache.js) 离线
 - [device.js](https://github.com/lolBig/ball/blob/master/cli/device.js) 平台信息
 - [display.js](https://github.com/lolBig/ball/blob/master/cli/display.js) 场景控制
 - [event_dispatcher.js](https://github.com/lolBig/ball/blob/master/cli/event_dispatcher.js) 事件管理
@@ -20,10 +38,10 @@
         - [logic_state_split.js](https://github.com/lolBig/ball/blob/master/cli/logic_state_split.js) 破坏
 - [main.js](https://github.com/lolBig/ball/blob/master/cli/main.js) 入口
 - manager*.js 控制层
-    - [manager_game.js](https://github.com/lolBig/ball/blob/master/cli/manager_game.js) 逻辑相关
-    - [manager_login.js](https://github.com/lolBig/ball/blob/master/cli/manager_login.js) 登录相关
-    - [manager_net.js](https://github.com/lolBig/ball/blob/master/cli/manager_net.js) 网络相关
-    - [manager_world.js](https://github.com/lolBig/ball/blob/master/cli/manager_world.js) 大厅相关
+    - [manager_game.js](https://github.com/lolBig/ball/blob/master/cli/manager_game.js)游戏
+    - [manager_login.js](https://github.com/lolBig/ball/blob/master/cli/manager_login.js) 登录
+    - [manager_net.js](https://github.com/lolBig/ball/blob/master/cli/manager_net.js) 网络
+    - [manager_world.js](https://github.com/lolBig/ball/blob/master/cli/manager_world.js) 大厅
 - render*.js 渲染层
     - renderer_dialog*.js 弹窗
         - [renderer_dialog_notice.js](https://github.com/lolBig/ball/blob/master/cli/renderer_dialog_notice.jsx) 确认
@@ -44,24 +62,24 @@
         - [renderer_widget_switch.js](https://github.com/lolBig/ball/blob/master/cli/renderer_widget_switch.jsx) 切换页
     - [renderer_world_chat.js](https://github.com/lolBig/ball/blob/master/cli/renderer_world_chat.jsx) 聊天
     - [renderer_world.js](https://github.com/lolBig/ball/blob/master/cli/renderer_world.jsx) 大厅
-    - res*.js 配置表
-        - [res_action.js](https://github.com/lolBig/ball/blob/master/cli/res_action.js) 玩家指令
-        - [res_common.js](https://github.com/lolBig/ball/blob/master/cli/res_common.js) 通用
-        - [res_entities.js](https://github.com/lolBig/ball/blob/master/cli/res_entities.js) 实体
-        - [res_error_code.js](https://github.com/lolBig/ball/blob/master/cli/res_error_code.js) 错误代码
-        - [res_icon_font.js](https://github.com/lolBig/ball/blob/master/cli/res_icon_font.js) SVG
-        - [res_lan.js](https://github.com/lolBig/ball/blob/master/cli/res_lan.js) 语言
-        - [res_protocol.js](https://github.com/lolBig/ball/blob/master/cli/res_protocol.js) 协议
-    - [scheduler.js](https://github.com/lolBig/ball/blob/master/cli/scheduler.js) 计时器
-    - [style_main.less](https://github.com/lolBig/ball/blob/master/cli/style_main.less) 主样式
-    - [style_static.less](https://github.com/lolBig/ball/blob/master/cli/style_static.less) Base64后的资源
-    - [template.html](https://github.com/lolBig/ball/blob/master/cli/template.html) 模板文件
-    - [util.js](https://github.com/lolBig/ball/blob/master/cli/util.js) 工具
-    - [webpack.cfg.dev.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dev.js) 开发环境构建
-    - [webpack.cfg.dist.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dist.js) 生产环境构建
-    - [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
+- res*.js 配置表
+    - [res_action.js](https://github.com/lolBig/ball/blob/master/cli/res_action.js) 玩家指令
+    - [res_common.js](https://github.com/lolBig/ball/blob/master/cli/res_common.js) 通用
+    - [res_entities.js](https://github.com/lolBig/ball/blob/master/cli/res_entities.js) 实体
+    - [res_error_code.js](https://github.com/lolBig/ball/blob/master/cli/res_error_code.js) 错误代码
+    - [res_icon_font.js](https://github.com/lolBig/ball/blob/master/cli/res_icon_font.js) SVG Symbol
+    - [res_lan.js](https://github.com/lolBig/ball/blob/master/cli/res_lan.js) 语言
+    - [res_protocol.js](https://github.com/lolBig/ball/blob/master/cli/res_protocol.js) 协议
+- [scheduler.js](https://github.com/lolBig/ball/blob/master/cli/scheduler.js) 计时器
+- [style_main.less](https://github.com/lolBig/ball/blob/master/cli/style_main.less) 主样式
+- [style_static.less](https://github.com/lolBig/ball/blob/master/cli/style_static.less) Base64后的资源
+- [template.html](https://github.com/lolBig/ball/blob/master/cli/template.html) 模板文件
+- [util.js](https://github.com/lolBig/ball/blob/master/cli/util.js) 工具
+- [webpack.cfg.dev.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dev.js) 开发构建
+- [webpack.cfg.dist.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dist.js) 生产构建
+- [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
 
-# 服务端文件描述
+# 服务端结构
 - agent*.js 代理
     - [agent_game.js](https://github.com/lolBig/ball/blob/master/svr/agent_game.js) 游戏
     - [agent_static.js](https://github.com/lolBig/ball/blob/master/svr/agent_static.js) 资源
@@ -89,11 +107,11 @@
 
 # 实现
 - 客户端
-    - 分为登陆、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
+    - 分为登录、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
     - 长连接采用websocket。
     - Icon采用SVG中的Symbol。
-    - 样式用less进行预处理。
-    - HTTP通过CORS跨域。
+    - 样式通过less进行预处理。
+    - 登录界面拉取服务器列表的AJAX请求通过CORS跨域。
 - 服务端
     - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
     - 分为世界、聊天、游戏三个服务器。
