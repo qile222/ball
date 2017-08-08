@@ -27,7 +27,7 @@ npm run dev #或者npm run deploy
 - [event_dispatcher.js](https://github.com/lolBig/ball/blob/master/cli/event_dispatcher.js) 事件管理
 - [global.js](https://github.com/lolBig/ball/blob/master/cli/global.js) 全局
 - logic*.js 逻辑层
-    - [logic_cmd.js](https://github.com/lolBig/ball/blob/master/cli/logic_cmd.js) 逻辑帧
+    - [logic_cmd.js](https://github.com/lolBig/ball/blob/master/cli/logic_cmd.js) 逻辑帧
     - [logic_controll.js](https://github.com/lolBig/ball/blob/master/cli/logic_controll.js) 用户输入
     - [logic_entity.js](https://github.com/lolBig/ball/blob/master/cli/logic_entity.js) 实体
     - [logic_map.js](https://github.com/lolBig/ball/blob/master/cli/logic_map.js) 地图
@@ -89,7 +89,7 @@ npm run dev #或者npm run deploy
 - [deploy.js](https://github.com/lolBig/ball/blob/master/svr/deploy.json)on pm2部署
 - [logger.js](https://github.com/lolBig/ball/blob/master/svr/logger.js) 日志
 - logic*.js 逻辑
-    - [logic_room.js](https://github.com/lolBig/ball/blob/master/svr/logic_room.js) 游戏房间
+    - [logic_room.js](https://github.com/lolBig/ball/blob/master/svr/logic_room.js) 游戏房间
     - [logic_player.js](https://github.com/lolBig/ball/blob/master/svr/logic_player.js) 玩家
 - [message.js](https://github.com/lolBig/ball/blob/master/svr/message.js) 协议
 - res*.js 配置表
@@ -113,14 +113,14 @@ npm run dev #或者npm run deploy
     - 样式通过less进行预处理。
     - 登录界面拉取服务器列表的AJAX请求通过CORS跨域。
 - 服务端
-    - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
+    - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
     - 分为世界、聊天、游戏三个服务器。
     - HTTP请求采用Express进行路由。
 - 帧同步
     - 实时游戏一般采用帧同步和状态同步进行客户端的同步，这里采用的是帧同步。
-        - 每隔一段时间广播客户端上传的指令，客户端负责执行广播下来的逻辑帧指令。
+        - 每隔一段时间广播客户端上传的指令，客户端负责执行广播下来的逻辑帧指令。
         - 因为所有逻辑都放在客户端执行，所以服务器压力比起状态同步来说小很多，但是防作弊就比较麻烦。
-        - 通过快进的方式进行断线重连或者中途加入。
+        - 通过快进的方式进行断线重连或者中途加入。
         - 录像只保存玩家指令，replay的时候按时间点播放，所以一个录像文件非常小。
         - 每个客户端之间所有跟逻辑相关的处理都必须在相同的时间，同时浮点数，随机数，排序，内存分配等的处理也需要保持一致性，否则一个点错了，后面的全部是错的。
-    - 这里同步的间隔是100ms/帧，这个时间跟游戏类型相关。如果游戏操作的灵敏度较高，比如CS这种FPS游戏，这个时间需要调得更低，否则客户端会有明显操作延迟；但是如果是回合制游戏，比如炉石，同步时间调成2000ms/帧，客户端也不会有很明显的延迟。
+    - 这里同步的间隔是100ms/帧，这个时间跟游戏类型相关。如果游戏操作的灵敏度较高，比如CS这种FPS游戏，这个时间需要调得更低，否则客户端会有明显操作延迟；但是如果是回合制游戏，比如炉石，同步时间调成2000ms/帧，客户端也不会有很明显的延迟。
