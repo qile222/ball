@@ -77,7 +77,7 @@ npm run dev #或者npm run deploy
 - [util.js](https://github.com/lolBig/ball/blob/master/cli/util.js) 工具
 - [webpack.cfg.dev.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dev.js) 开发构建
 - [webpack.cfg.dist.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dist.js) 生产构建
-- [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
+- [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
 
 # 服务端结构
 - agent*.js 代理
