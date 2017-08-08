@@ -18,7 +18,7 @@ vim package.json #将webpack-dev-server中的--host替换成自己ip或者去掉
 npm run dev #或者npm run deploy
 ```
 
-# 客户端结构
+# 客户端结构
 - cache*.js 缓存
     - [cache_mem.js](https://github.com/lolBig/ball/blob/master/cli/cache_mem.js) 内存
     - [cache.js](https://github.com/lolBig/ball/blob/master/cli/cache.js) 离线
@@ -63,8 +63,8 @@ npm run dev #或者npm run deploy
     - [renderer_world_chat.js](https://github.com/lolBig/ball/blob/master/cli/renderer_world_chat.jsx) 聊天
     - [renderer_world.js](https://github.com/lolBig/ball/blob/master/cli/renderer_world.jsx) 大厅
 - res*.js 配置表
-    - [res_action.js](https://github.com/lolBig/ball/blob/master/cli/res_action.js) 玩家指令
-    - [res_common.js](https://github.com/lolBig/ball/blob/master/cli/res_common.js) 通用
+    - [res_action.js](https://github.com/lolBig/ball/blob/master/cli/res_action.js) 玩家指令
+    - [res_common.js](https://github.com/lolBig/ball/blob/master/cli/res_common.js) 通用
     - [res_entities.js](https://github.com/lolBig/ball/blob/master/cli/res_entities.js) 实体
     - [res_error_code.js](https://github.com/lolBig/ball/blob/master/cli/res_error_code.js) 错误代码
     - [res_icon_font.js](https://github.com/lolBig/ball/blob/master/cli/res_icon_font.js) SVG Symbol
@@ -77,7 +77,7 @@ npm run dev #或者npm run deploy
 - [util.js](https://github.com/lolBig/ball/blob/master/cli/util.js) 工具
 - [webpack.cfg.dev.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dev.js) 开发构建
 - [webpack.cfg.dist.js](https://github.com/lolBig/ball/blob/master/cli/webpack.cfg.dist.js) 生产构建
-- [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
+- [webpack.plugin.res.js](https://github.com/lolBig/ball/blob/master/cli/webpack.plugin.res.js) 从svr拷贝配置表的webpack插件
 
 # 服务端结构
 - agent*.js 代理
@@ -106,8 +106,8 @@ npm run dev #或者npm run deploy
 #
 
 # 实现
-- 客户端
-    - 分为登录、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
+- 客户端
+    - 分为登录、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
     - 长连接采用websocket。
     - Icon采用SVG中的Symbol。
     - 样式通过less进行预处理。
