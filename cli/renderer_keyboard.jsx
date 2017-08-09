@@ -51,6 +51,10 @@ export default class KeyboardRenderer extends Renderer {
         this.lastCaptureMoveTime = 0
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return false
+    }
+
     componentWillUnmount() {
         super.componentWillUnmount()
         this.controllContainer.removeEventListener(
@@ -121,13 +125,13 @@ export default class KeyboardRenderer extends Renderer {
 
     onTouchMove(event) {
         // event.preventDefault()
-        let touch = this.getStartTouch(event.changedTouches)
-        if (!touch) {
-            return
-        }
         let now = util.time()
         let diff = now - this.lastCaptureMoveTime
         if (diff < keyboardMoveCaptureInterval) {
+            return
+        }
+        let touch = this.getStartTouch(event.changedTouches)
+        if (!touch) {
             return
         }
         this.lastCaptureMoveTime = now

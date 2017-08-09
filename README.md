@@ -1,5 +1,5 @@
 # 概览
-这是一个类似球球大作战的多人在线的即时H5游戏，用于前端入门， 点[这里](http://rawgit.com/lolBig/ball/master/cli/dist/)预览。
+这是一个多人在线的即时H5游戏，玩法类似手机上流行的球球大作战，用于前端入门。从6月中旬开始写，断断续续一直写到现在，点[这里](http://rawgit.com/lolBig/ball/master/cli/dist/)进行预览。
 ![Scerenshot](https://raw.githubusercontent.com/lolBig/ball/master/screenshot.png)
 # 构建
 
@@ -14,15 +14,40 @@ node app.js #或者pm2 start deploy.json
 ```
 cd cli/
 npm install
-vim package.json #将webpack-dev-server中的--host替换成自己ip或者去掉。
+vim package.json #将webpack-dev-server中的--host替换成自己或者去掉。
 npm run dev #或者npm run deploy
 ```
+
+# 实现
+- 客户端
+    - 连点bug
+    - 分为登录、世界、游戏三个场景，采用传统的分层架构，分为Renderer、Manager和Logic，没有使用Redux。Renderer采用React，游戏内的地图和实体等通过Canvas渲染，目前手头上的设备除了UC浏览器维持在35-45帧（不知道哪个地方姿势不对），其它的基本可以跑满。
+    - 长连接采用websocket。
+    - AJAX请求通过CORS跨域。
+    - Icon采用SVG Symbol。
+    - 样式通过less进行预处理。
+    - 针对Renderer做了基本的响应式设计。
+- 服务端
+    - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
+    - 分为世界、聊天、游戏三个服务器。
+    - HTTP请求采用Express进行路由。
+    - 数据没有落地，全部在内存。
+- 帧同步
+    - 实时游戏一般采用帧同步和状态同步进行客户端的同步，这里采用的是帧同步。
+        - 客户端分为渲染帧和逻辑帧。渲染帧就是平常的UI渲染，这个部分能跑多快就跑多块，Canvas的渲染通过requestAnimationFrame，DOM的渲染则交给React；逻辑帧是100ms一次，负责AI、碰撞检测之类的逻辑处理（这部分如果计算量非常大可以开一个Worker线程，目前通过一些优化之后，页面每帧的idel时间比例很大，所以没有放到Worker）。
+        - 逻辑帧的时间同步跟游戏类型相关。如果游戏操作的灵敏度较高，比如CS这种FPS游戏，这个时间需要调得更低，否则客户端会有明显操作延迟；但是如果是炉石这种卡牌游戏，同步时间调成1000ms，客户端也不会有很明显的延迟感觉。
+        - 服务端每隔一段时间把客户端上传的指令合并成一个逻辑帧广播到客户端，客户端负责执行广播下来的逻辑帧指令。
+        - 因为所有逻辑都放在客户端执行，所以服务器压力比起状态同步来说小很多。但是因为客户端有游戏内的所有数据，所以防作弊就比较麻烦，比如Dota1里面的全图挂。
+        - 通过快进的方式进行断线重连或者中途加入。
+        - 录像只保存玩家指令，replay的时候按时间点播放，所以一个录像文件非常小。
+        - 每个客户端之间所有跟逻辑相关的处理都必须在相同的时间，同时浮点数，随机数，排序，内存分配等的处理也需要保持一致性，否则一个地方错了，将引起连锁反应导致后面全是错的，而且复现是非常非常困难的。
+        - 通过对客户端上传的数据比对来进行最终的结算。
 
 # 客户端结构
 - cache*.js 缓存
     - [cache_mem.js](https://github.com/lolBig/ball/blob/master/cli/cache_mem.js) 内存
     - [cache.js](https://github.com/lolBig/ball/blob/master/cli/cache.js) 离线
-- [device.js](https://github.com/lolBig/ball/blob/master/cli/device.js) 平台信息
+- [device.js](https://github.com/lolBig/ball/blob/master/cli/device.js) 设备信息
 - [display.js](https://github.com/lolBig/ball/blob/master/cli/display.js) 场景控制
 - [event_dispatcher.js](https://github.com/lolBig/ball/blob/master/cli/event_dispatcher.js) 事件管理
 - [global.js](https://github.com/lolBig/ball/blob/master/cli/global.js) 全局
@@ -70,6 +95,7 @@ npm run dev #或者npm run deploy
     - [res_icon_font.js](https://github.com/lolBig/ball/blob/master/cli/res_icon_font.js) SVG Symbol
     - [res_lan.js](https://github.com/lolBig/ball/blob/master/cli/res_lan.js) 语言
     - [res_protocol.js](https://github.com/lolBig/ball/blob/master/cli/res_protocol.js) 协议
+    - res_svr*.js 从svr拷贝过来的配置表
 - [scheduler.js](https://github.com/lolBig/ball/blob/master/cli/scheduler.js) 计时器
 - [style_main.less](https://github.com/lolBig/ball/blob/master/cli/style_main.less) 主样式
 - [style_static.less](https://github.com/lolBig/ball/blob/master/cli/style_static.less) Base64后的资源
@@ -102,27 +128,3 @@ npm run dev #或者npm run deploy
     - [server_world.js](https://github.com/lolBig/ball/blob/master/svr/server_world.js) 大厅
 - [token.js](https://github.com/lolBig/ball/blob/master/svr/token.js) token
 - [util.js](https://github.com/lolBig/ball/blob/master/svr/util.js) 工具
-
-#
-
-# 实现
-- 客户端
-    - 分为登录、世界、游戏三个场景，UI采用React，游戏内的地图和实体等通过Canvas渲染。
-    - 长连接采用websocket。
-    - Icon采用SVG中的Symbol。
-    - 样式通过less进行预处理。
-    - 登录界面拉取服务器列表的AJAX请求通过CORS跨域。
-- 服务端
-    - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
-    - 分为世界、聊天、游戏三个服务器。
-    - HTTP请求采用Express进行路由。
-    - 数据没有落地，全部在内存。
-- 帧同步
-    - 实时游戏一般采用帧同步和状态同步进行客户端的同步，这里采用的是帧同步。
-        - 客户端分为渲染帧和逻辑帧。渲染帧就是平常的UI渲染，通过requestAnimationFrame把逻辑数据渲染到Canvas，能跑多快就跑多快；逻辑帧是100ms一次，负责AI、碰撞检测之类的逻辑处理，这部分可以放到Worker里面做。
-        - 逻辑帧的时间同步跟游戏类型相关。如果游戏操作的灵敏度较高，比如CS这种FPS游戏，这个时间需要调得更低，否则客户端会有明显操作延迟；但是如果是回合制游戏，比如炉石，同步时间调成2000ms，客户端也不会有很明显的延迟。
-        - 服务端每隔一段时间把客户端上传的指令合并成一个逻辑帧广播到客户端，客户端负责执行广播下来的逻辑帧指令。
-        - 因为所有逻辑都放在客户端执行，所以服务器压力比起状态同步来说小很多，但是防作弊就比较麻烦。
-        - 通过快进的方式进行断线重连或者中途加入。
-        - 录像只保存玩家指令，replay的时候按时间点播放，所以一个录像文件非常小。
-        - 每个客户端之间所有跟逻辑相关的处理都必须在相同的时间，同时浮点数，随机数，排序，内存分配等的处理也需要保持一致性，否则一个点错了，后面的全部是错的，而且复现是非常困难的，可能这辈子都没法复现。

@@ -51,6 +51,7 @@ export default class DialogRenderer extends Renderer {
             }
             this.dialogContainer.style.opacity = passedTime / fadeTime
         })
+        this.maskNode.style.visibility = 'hidden'
     }
 
     componentWillUnmount() {
@@ -125,6 +126,9 @@ export default class DialogRenderer extends Renderer {
                 ref={(ref) => this.dialogContainer = ref}
                 className={mainStyle.dialogContainer}>
                 {components}
+                <div
+                    ref={ref => this.maskNode = ref}
+                    className={mainStyle.mask}>0000</div>
             </div>,
             this.node
         )
@@ -139,6 +143,7 @@ export default class DialogRenderer extends Renderer {
     }
 
     prepareForClose(onPrepared) {
+        this.maskNode.style.visibility = 'visible'
         this.fadeOutStartTime = util.time()
         this.fadeOutTimer = scheduler.schedule(0, () => {
             let passedTime = util.time() - this.fadeOutStartTime
@@ -146,9 +151,7 @@ export default class DialogRenderer extends Renderer {
                 passedTime = fadeTime
                 scheduler.unschedule(this.fadeOutTimer)
                 this.fadeOutTimer = null
-                scheduler.scheduleOnce(0, ()=>{
-                    onPrepared()
-                })
+                scheduler.scheduleOnce(0, onPrepared)
             }
             this.dialogContainer.style.opacity = 1 - passedTime / fadeTime
         })
