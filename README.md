@@ -20,7 +20,6 @@ npm run dev #或者npm run deploy
 
 # 实现
 - 客户端
-    - 连点bug
     - 分为登录、世界、游戏三个场景，采用传统的分层架构，分为Renderer、Manager和Logic，没有使用Redux。Renderer采用React，游戏内的地图和实体等通过Canvas渲染，目前手头上的设备除了UC浏览器维持在35-45帧（不知道哪个地方姿势不对），其它的基本可以跑满。
     - 长连接采用websocket。
     - AJAX请求通过CORS跨域。
