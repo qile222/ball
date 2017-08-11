@@ -88,10 +88,10 @@ let tasks = [
         let worldAgent = new WorldAgent(deploy.worldAgent.port)
         worldAgent.on('initFinished', initListener)
     },
-    // function() {
-    //     let worldAgent = new StaticAgent(deploy.staticAgent.port)
-    //     worldAgent.on('initFinished', initListener)
-    // },
+    function() {
+        let staticAgent = new StaticAgent(deploy.staticAgent.port)
+        staticAgent.on('initFinished', initListener)
+    },
 ]
 
 for (let task of tasks) {

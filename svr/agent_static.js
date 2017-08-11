@@ -13,16 +13,20 @@ const Agent = require('./agent')
 const tokenExpireTime = 5 * 60
 const tokenInspectRule = '60 * * * *'
 
-class WorldAgent extends Agent {
+class StaticAgent extends Agent {
 
     constructor(port) {
         super(port)
+        this.app.use('/preview', express.static(__dirname + '/assets'))
+        this.app.use((req, res, next) => {
+            res.status(404).send(`${this.constructor.name} unknown url`)
+        })
     }
 
     handleRequest(req, res, next) {
-        res.status(404).send(`${this.constructor.name} unknown url`)
+        next(null)
     }
 
 }
 
-module.exports = WorldAgent
+module.exports = StaticAgent

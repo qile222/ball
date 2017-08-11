@@ -50,7 +50,7 @@ class Server extends EventEmitter {
             this.emit('initFinished')
         })
         this.app.use((req, res, next) => {
-            res.send('hello ' + this.constructor.name)
+            res.send(req.query.cb + '({message:"success"});')
         })
     }
 
