@@ -26,6 +26,7 @@ npm run dev #或者npm run deploy
     - Icon采用SVG Symbol。
     - 样式通过less进行预处理。
     - 针对Renderer做了基本的响应式设计。
+    - 使用Webpack进行构建。
 - 服务端
     - 采用NodeJS，核心逻辑比较简单，主要就是负责广播逻辑帧。
     - 分为世界、聊天、游戏三个服务器。
