@@ -1,6 +1,5 @@
 # 概览
 这是一个多人在线的即时H5游戏，玩法类似手机上流行的球球大作战，用于前端入门。
-![Scerenshot](https://raw.githubusercontent.com/lolBig/ball/master/screenshot.png)
 # 构建
 
 - 服务端
